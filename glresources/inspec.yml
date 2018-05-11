@@ -1,8 +1,8 @@
 name: glresources
-title: InSpec Profile
-maintainer: The Authors
-copyright: The Authors
-copyright_email: you@example.com
+title: Shared resources for gather-log inspection
+maintainer: Will Fisher <will@chef.io>
+copyright: Will Fisher
+copyright_email: will@chef.io
 license: Apache-2.0
-summary: An InSpec Compliance Profile
+summary: This contains custom resources for inspec for parsing files from chef-product gatherlogs
 version: 0.1.0

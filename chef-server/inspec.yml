@@ -1,10 +1,10 @@
 name: chef-server
-title: InSpec Profile
-maintainer: The Authors
-copyright: The Authors
-copyright_email: you@example.com
+title: InSpec profile for Chef-Server generated gather-logs
+maintainer: Will Fisher <will@chef.io>
+copyright: Will Fisher
+copyright_email: will@chef.io
 license: Apache-2.0
-summary: An InSpec Compliance Profile
+summary: InSpec profile for Chef-Server generated gather-logs
 version: 0.1.0
 
 depends:

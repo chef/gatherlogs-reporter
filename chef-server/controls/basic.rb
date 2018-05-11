@@ -44,6 +44,15 @@ control "chef-server.gatherlogs.disk_usage" do
       its('size') { should cmp > required_size_on_var }
     end
   end
+
+  # sometimes users have a separate mount for /var/opt/opscode, lets check that
+  if df.mount('/var/opt/opscode')
+    describe df.mount('/var/opt/opscode') do
+      its('used_percent') { should cmp < 100 }
+      its('available') { should cmp > required_available_on_var }
+      its('size') { should cmp > required_size_on_var }
+    end
+  end
 end
 
 control "chef-server.gatherlogs.platform" do
