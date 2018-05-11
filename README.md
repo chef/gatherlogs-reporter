@@ -1,6 +1,6 @@
 # Gatherlogs Inspec Profile
 
-This is a proof of concept to see if using inspec to do some initial 
+This is a proof of concept to see if using inspec to do some initial
 validation on gatherlog output from chef-products is viable.
 
 Get inspec from: http://inspec.io
@@ -14,7 +14,7 @@ Get inspec from: http://inspec.io
 
 The basic usage is that you will need to be in the directory with the
 expanded gather-logs tar file. You should be running this in the same
-directory as you would find the `installed-packages.txt` or 
+directory as you would find the `installed-packages.txt` or
 `platform_version.txt` files.
 
 Run `inspec` like this to validate the gather-log files in the current directory.
@@ -36,3 +36,33 @@ alias inspec_chefserver="inspec exec /PATH/TO/REPO/chef-server"
 alias inspec_automate="inspec exec /PATH/TO/REPO/automate"
 ```
 
+## Example output
+
+```
+Profile: InSpec profile for Chef-Server generated gather-logs (chef-server)
+Version: 0.1.0
+Target:  local://
+
+  ×  chef-server.gatherlogs.chef-server: check that chef-server is installed (1 failed)
+     ✔  installed_packages should exist
+     ×  installed_packages version should cmp >= "12.17.0"
+
+     expected it to be >= "12.17.0"
+          got: 12.15.8
+
+     (compared using `cmp` matcher)
+
+  ✔  chef-server.gatherlogs.disk_usage: check that the chef-server has plenty of free space
+     ✔  "/" disk_usage used_percent should cmp < 100
+     ✔  "/" disk_usage available should cmp > 10
+     ✔  "/" disk_usage size should cmp > 40
+  ✔  chef-server.gatherlogs.platform: check platform is valid
+     ✔  platform_version content should not match /Platform and version are unknown/
+  ×  chef-server.gatherlogs.reporting-with-2018-partition-tables: make sure installed reporting version has 2018 parititon tables fix
+     ×  installed_packages version should cmp >= "1.7.10"
+
+     expected it to be >= "1.7.10"
+          got: 1.7.1
+
+     (compared using `cmp` matcher)
+```
