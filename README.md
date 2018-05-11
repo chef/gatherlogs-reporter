@@ -1,13 +1,13 @@
-# Gatherlogs Inspec Profile
+# Gatherlogs InSpec Profile
 
-This is a proof of concept to see if using inspec to do some initial
+This is a proof of concept to see if using InSpec to do some initial
 validation on gatherlog output from chef-products is viable.
 
-Get inspec from: http://inspec.io
+Get InSpec from: http://inspec.io
 
 ## Requirements
 
-1. inspec (currently tested with Inspec 2.0+ but should work with Inspec v1
+1. inspec (currently tested with InSpec v2 but should work with InSpec v1
 2. git clone of this repo
 
 ## Usage
