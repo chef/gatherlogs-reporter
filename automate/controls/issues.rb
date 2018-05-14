@@ -9,11 +9,17 @@ describe file('/tmp') do
 end
 
 # you add controls here
-control 'tmp-1.0' do                        # A unique ID for this control
-  impact 0.7                                # The criticality, if this control fails.
-  title 'Create /tmp directory'             # A human-readable title
-  desc 'An optional description...'
-  describe file('/tmp') do                  # The actual test
-    it { should be_directory }
+control 'automate.gatherlogs.missing-data-collector-token' do
+  impact 0.5
+  title 'Check to see if there are errors about missing data collector tokens'
+  desc '
+  If nodes are not showing up in the Automate UI we should check to make sure
+  that there are no complaints about missing data collector tokens
+  '
+
+  %w{ console.log current }.each do |logfile|
+    describe file(::File.join('var/log/delivery/delivery', logfile)) do                  # The actual test
+      its('content') { should_not match(/Data Collector request made without access token/) }
+    end
   end
 end
