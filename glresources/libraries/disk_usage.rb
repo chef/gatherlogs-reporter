@@ -12,6 +12,16 @@ class DiskUsage < Inspec.resource(1)
     @content[name]
   end
 
+  def exists?(name)
+    @content.has_key?(name)
+  end
+
+  def each(&block)
+    @content.keys.each do |mount|
+      yield @content[mount]
+    end
+  end
+
   private
 
   def parse_mounts(input)
