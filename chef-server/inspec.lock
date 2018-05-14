@@ -1,7 +1,0 @@
----
-lockfile_version: 1
-depends:
-- name: glresources
-  resolved_source:
-    path: "/Users/wfisher/projects/support/profiles/gatherlogs/glresources"
-  version_constraints: "[]"
