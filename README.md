@@ -66,3 +66,7 @@ Target:  local://
 
      (compared using `cmp` matcher)
 ```
+
+## TODO
+
+* [ ] It would be nice if we could test to see if `noexec` is set on `/tmp`
