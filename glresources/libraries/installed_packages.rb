@@ -33,7 +33,7 @@ class InstalledPackages < Inspec.resource(1)
       result = content.match(/#{name}-(\d+\.\d+\.\d+)-\d+.\w.\w/)
       result[1] unless result.nil?
     else
-      raise Inspec::Exceptions::ResourceSkipped, "installed_packages currently doesn't support #{pv.os}"
+      raise Inspec::Exceptions::ResourceSkipped, "installed_packages currently doesn't support #{platform_version.os.inspect}"
     end
   end
 
