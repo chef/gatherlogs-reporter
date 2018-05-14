@@ -48,6 +48,12 @@ $ inspec_automate --reporter json-min | jq ".controls[] | { id, status, code_des
 }
 ```
 
+### Or possibly to only see the failed controls with messages
+
+```bash
+inspec_chefserver --reporter json-min | jq -r '.controls[] | { id, status, code_desc, message } | select( .status | contains("failed"))'
+```
+
 ### Aliases cause typing is bad
 
 Some aliases to reduce the amount of typing
