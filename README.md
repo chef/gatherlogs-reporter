@@ -27,6 +27,29 @@ inspec exec /PATH/TO/REPO/automate
 # etc.....
 ```
 
+### Large diff outputs make things ugly
+
+So some tests will cause a large diff output to print to the screen and makes it
+very difficult to tell what is failing.
+
+You can get around this problem by running the commands like this to get just the bare minimum:
+
+```bash
+$ inspec_automate --reporter json-min | jq ".controls[] | { id, status, code_desc }"
+{
+  "id": "automate.gatherlogs.missing-data-collector-token",
+  "status": "failed",
+  "code_desc": "File var/log/delivery/delivery/console.log content should not match /Data Collector request made without access token/"
+}
+{
+  "id": "automate.gatherlogs.missing-data-collector-token",
+  "status": "failed",
+  "code_desc": "File var/log/delivery/delivery/current content should not match /Data Collector request made without access token/"
+}
+```
+
+### Aliases cause typing is bad
+
 Some aliases to reduce the amount of typing
 
 ```bash

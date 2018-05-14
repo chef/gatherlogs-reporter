@@ -1,12 +1,7 @@
 # encoding: utf-8
 # copyright: 2018, The Authors
 
-title 'sample section'
-
-# you can also use plain tests
-describe file('/tmp') do
-  it { should be_directory }
-end
+title 'GatherLog inspec profile to check for common problems with Chef Automate'
 
 # you add controls here
 control 'automate.gatherlogs.missing-data-collector-token' do
