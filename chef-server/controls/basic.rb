@@ -14,6 +14,20 @@ control "chef-server.gatherlogs.chef-server" do
   end
 end
 
+services = service_status(:chef_server)
+
+services.each do |service|
+  control "chef-server.gatherlogs.service_status.#{service.name}" do
+    title "check that #{service.name} is running"
+    desc "make sure that the #{service.name} is reporting as running"
+
+    describe service do
+      its('status') { should eq 'run' }
+      its('runtime') { should cmp >= 60 }
+    end
+  end
+end
+
 df = disk_usage()
 
 %w(/ /var /var/opt /var/opt/opscode /var/log).each do |mount|

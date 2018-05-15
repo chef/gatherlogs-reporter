@@ -18,3 +18,16 @@ control 'automate.gatherlogs.missing-data-collector-token' do
     end
   end
 end
+
+control 'automate.gatherlogs.rogue-notificatinos-process' do
+  impact 0.5
+  title 'Check to see if there is a rogue notifications process'
+  desc "
+  On occasion the notifications.sh process will not restart properly or get
+  orphaned and will be owned by PID 1.  Once this happens it's not possible to
+  restart it using `automate-ctl restart notifications` and requires killing
+  the process by hand.
+  "
+
+  
+end
