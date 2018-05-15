@@ -4,7 +4,7 @@
 title 'GatherLog inspec profile to check for common problems with Chef Automate'
 
 # you add controls here
-control 'automate.gatherlogs.missing-data-collector-token' do
+control 'gatherlogs.automate.missing-data-collector-token' do
   impact 0.5
   title 'Check to see if there are errors about missing data collector tokens'
   desc '
@@ -17,17 +17,4 @@ control 'automate.gatherlogs.missing-data-collector-token' do
       its('content') { should_not match(/Data Collector request made without access token/) }
     end
   end
-end
-
-control 'automate.gatherlogs.rogue-notificatinos-process' do
-  impact 0.5
-  title 'Check to see if there is a rogue notifications process'
-  desc "
-  On occasion the notifications.sh process will not restart properly or get
-  orphaned and will be owned by PID 1.  Once this happens it's not possible to
-  restart it using `automate-ctl restart notifications` and requires killing
-  the process by hand.
-  "
-
-  
 end

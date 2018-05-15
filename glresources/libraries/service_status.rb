@@ -11,6 +11,10 @@ class ServiceStatus < Inspec.resource(1)
     @content[service.to_sym] if @content.has_key?(service.to_sym)
   end
 
+  def exists?
+    inspec.file(status_file).exists?
+  end
+
   def each(&block)
     @content.each do |service,service_object|
       yield service_object
@@ -30,11 +34,20 @@ class ServiceStatus < Inspec.resource(1)
 
   def parse_services(content)
     services = {}
+    internal = true
     content.each_line do |line|
+      next if line =~ /[-]+/
+      next if line.empty?
+      next if line =~ /Internal Services/
+      if line =~ /External Services/
+        internal = false
+        next
+      end
+
       service_line, log_line = line.gsub(/[:\(\)]/, '').split(';')
       status, service, dummy, pid, runtime = service_line.split(/\s+/)
 
-      services[service] = ServiceObject.new(name: service, status: status, pid: pid, runtime: runtime.to_i)
+      services[service] = ServiceObject.new(name: service, status: status, pid: pid, runtime: runtime.to_i, internal: internal)
     end
 
     services
@@ -45,7 +58,7 @@ class ServiceStatus < Inspec.resource(1)
     if f.file?
       f.content
     else
-      raise Inspec::Exceptions::ResourceSkipped, "Can't read #{filename}"
+      ''
     end
   end
 end
@@ -64,6 +77,6 @@ class ServiceObject
   end
 
   def to_s
-    @args[:name]
+    @args[:name] || 'Unknown'
   end
 end

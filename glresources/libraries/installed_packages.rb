@@ -10,7 +10,7 @@ class InstalledPackages < Inspec.resource(1)
   end
 
   def exist?
-    content.match?(@package_name)
+    content && content.match?(@package_name)
   end
   alias_method :exists?, :exist?
 

@@ -35,17 +35,33 @@ very difficult to tell what is failing.
 You can get around this problem by running the commands like this to get just the bare minimum:
 
 ```bash
-$ inspec_automate --reporter json-min | jq ".controls[] | { id, status, code_desc }"
-{
-  "id": "automate.gatherlogs.missing-data-collector-token",
-  "status": "failed",
-  "code_desc": "File var/log/delivery/delivery/console.log content should not match /Data Collector request made without access token/"
-}
-{
-  "id": "automate.gatherlogs.missing-data-collector-token",
-  "status": "failed",
-  "code_desc": "File var/log/delivery/delivery/current content should not match /Data Collector request made without access token/"
-}
+$ inspec_automate --reporter json-min | jq '[.controls[] | { id, status, code_desc, msg: .message[0:160] } | select( .status | contains("failed"))]'
+[
+  {
+    "id": "chef-server.gatherlogs.service_status.notifications",
+    "status": "failed",
+    "code_desc": "notifications status should eq \"run\"",
+    "msg": "\nexpected: \"run\"\n     got: \"down\"\n\n(compared using ==)\n"
+  },
+  {
+    "id": "chef-server.gatherlogs.service_status.notifications",
+    "status": "failed",
+    "code_desc": "notifications runtime should cmp >= 60",
+    "msg": "\nexpected it to be >= 60\n     got: 10\n\n(compared using `cmp` matcher)\n"
+  },
+  {
+    "id": "automate.gatherlogs.missing-data-collector-token",
+    "status": "failed",
+    "code_desc": "File var/log/delivery/delivery/console.log content should not match /Data Collector request made without access token/",
+    "msg": "expected \"2018-05-11 07:25:58.763 [info] <0.1069.0> Application lager started on node 'delivery@127.0.0.1'\\n20...>,<<\\\"chef-web-cia\\\">>}]}}\\n2018-05-11 13:30:25"
+  },
+  {
+    "id": "automate.gatherlogs.missing-data-collector-token",
+    "status": "failed",
+    "code_desc": "File var/log/delivery/delivery/current content should not match /Data Collector request made without access token/",
+    "msg": "expected \"2018-05-11_12:25:54.04292 Exec: /opt/delivery/embedded/service/delivery/erts-7.3/bin/erlexec -noshel...ef-web-cia\\\">>}]}}\\r\\n2018-05-11_18:30:25.52439"
+  }
+]
 ```
 
 ### Or possibly to only see the failed controls with messages
@@ -99,3 +115,4 @@ Target:  local://
 ## TODO
 
 * [ ] It would be nice if we could test to see if `noexec` is set on `/tmp`
+* [ ] Figure out how to write a custom reporter for InSpec
