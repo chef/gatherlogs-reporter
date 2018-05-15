@@ -36,8 +36,8 @@ class ServiceStatus < Inspec.resource(1)
     services = {}
     internal = true
     content.each_line do |line|
-      next if line =~ /[-]+/
-      next if line.empty?
+      next if line =~ /[-]+/ # ------
+      next if line =~ /^\s+$/ # blank lines
       next if line =~ /Internal Services/
       if line =~ /External Services/
         internal = false
