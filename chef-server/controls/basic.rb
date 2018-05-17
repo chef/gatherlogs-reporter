@@ -73,3 +73,15 @@ df = disk_usage()
     end
   end
 end
+
+control "gatherlogs.chef-server.umask" do
+  title "check that we have a reasonable umask setting"
+  desc "
+    if this is not set correctly it can lead to issues with files not being
+    accessible to the services
+  "
+
+  describe file('umask.txt') do
+    its('content') { should match /0022/ }
+  end
+end
