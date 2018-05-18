@@ -8,5 +8,7 @@ summary: InSpec profile for automate generated gather-logs
 version: 0.1.0
 
 depends:
+  - name: common
+    path: ../common  
   - name: glresources
     path: ../glresources

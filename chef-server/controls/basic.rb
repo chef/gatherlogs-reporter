@@ -1,14 +1,6 @@
 title 'Basic checks for the chef-server configuration'
 
-control "gatherlogs.chef-server.platform" do
-  title "check platform is valid"
-  desc "make sure the platform does not contain an unknown value"
-  impact 1.0
-
-  describe platform_version do
-    its('content') { should_not match(/Platform and version are unknown/) }
-  end
-end
+include_controls 'common'
 
 chef_server = installed_packages('chef-server-core')
 
@@ -71,17 +63,5 @@ df = disk_usage()
       its('used_percent') { should cmp < 100 }
       its('available') { should cmp > 1 }
     end
-  end
-end
-
-control "gatherlogs.chef-server.umask" do
-  title "check that we have a reasonable umask setting"
-  desc "
-    if this is not set correctly it can lead to issues with files not being
-    accessible to the services
-  "
-
-  describe file('umask.txt') do
-    its('content') { should match /0022/ }
   end
 end

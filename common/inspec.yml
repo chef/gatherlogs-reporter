@@ -1,14 +1,12 @@
-name: chef-server
-title: InSpec profile for Chef-Server generated gather-logs
+name: common
+title: InSpec Profile for common gatherlog checks
 maintainer: Will Fisher <will@chef.io>
 copyright: Will Fisher
 copyright_email: will@chef.io
 license: Apache-2.0
-summary: InSpec profile for Chef-Server generated gather-logs
+summary: This contains common checks for inspec for chef-product gatherlogs
 version: 0.1.0
 
 depends:
-  - name: common
-    path: ../common
   - name: glresources
     path: ../glresources
