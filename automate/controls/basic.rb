@@ -24,7 +24,7 @@ services = service_status(:automate)
 
 services.each do |service|
   control "gatherlogs.automate.service_status.#{service.name}" do
-    title "check that #{service.name} is running"
+    title "check that #{service.name} service is running"
     desc "
     #{service.name} service is not running or has a short runtime, check the logs
     and make sure the service is not flapping.
