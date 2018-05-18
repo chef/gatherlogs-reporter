@@ -6,7 +6,7 @@ chef_server = installed_packages('chef-server-core')
 
 control "gatherlogs.chef-server.package" do
   title "check that chef-server is installed"
-  desc "make sure the chef-server package shows up in the installed packages"
+  desc "The installed version of Chef-Server is old and should be upgraded"
 
   impact 1.0
 
@@ -20,9 +20,9 @@ end
 control "gatherlogs.chef-server.postgreql-upgrade-applied" do
   title "make sure customer is using chef-server version that includes postgresl 9.6"
   desc "
-    This is a quick check to see if the user is running an older version
-    of chef-server that uses postgresql 9.2.  If so a major upgrade to
-    postgresql 9.6 will be required as part of the upgrade.
+    Chef Server < 12.16.2 uses PostgreSQL 9.2 and will perform a major upgrade
+    to 9.6.  Please make sure there is enough disk space available to perform
+    the upgrade as it will duplicate the database on disk.
   "
 
   impact 0.5

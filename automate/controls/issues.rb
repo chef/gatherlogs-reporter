@@ -8,8 +8,11 @@ control 'gatherlogs.automate.missing-data-collector-token' do
   impact 0.5
   title 'Check to see if there are errors about missing data collector tokens'
   desc '
-  If nodes are not showing up in the Automate UI we should check to make sure
-  that there are no complaints about missing data collector tokens
+  Automate is complaining about missing data collector tokens, some nodes may
+  not be visible in Automate.
+
+  Check to make sure that the Chef-Server or client.rb files have the correct
+  data collector token configured. See: https://docs.chef.io/data_collection.html
   '
 
   %w{ console.log current }.each do |logfile|

@@ -2,12 +2,14 @@ GEM
   remote: https://rubygems.org/
   specs:
     paint (2.0.1)
+    word_wrap (1.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   paint
+  word_wrap
 
 BUNDLED WITH
    1.16.1
