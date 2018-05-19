@@ -22,17 +22,32 @@ end
 
 services = service_status(:automate)
 
-services.each do |service|
-  control "gatherlogs.automate.service_status.#{service.name}" do
+services.internal do |service|
+  control "gatherlogs.automate.internal_service_status.#{service.name}" do
     title "check that #{service.name} service is running"
     desc "
-    #{service.name} service is not running or has a short runtime, check the logs
+    Internal #{service.name} service is not running or has a short runtime, check the logs
     and make sure the service is not flapping.
     "
 
     describe service do
       its('status') { should eq 'run' }
       its('runtime') { should cmp >= 60 }
+    end
+  end
+end
+
+services.external do |service|
+  control "gatherlogs.automate.external_service_status.#{service.name}" do
+    title "check that external #{service.name} is running"
+    desc "
+      External #{service.name} service is not running or has a short runtime, check the logs
+      and make sure the service is not flapping.
+    "
+
+    describe service do
+      its('status') { should eq 'run' }
+      its('connection_status') { should eq 'OK' }
     end
   end
 end
