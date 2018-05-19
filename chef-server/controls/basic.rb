@@ -35,14 +35,32 @@ end
 
 services = service_status(:chef_server)
 
-services.each do |service|
-  control "gatherlogs.chef-server.service_status.#{service.name}" do
-    title "check that #{service.name} is running"
-    desc "make sure that the #{service.name} is reporting as running"
+services.internal do |service|
+  control "gatherlogs.chef-server.internal_service_status.#{service.name}" do
+    title "check that internal #{service.name} is running"
+    desc "
+      Internal #{service.name} service is not running or has a short runtime, check the logs
+      and make sure the service is not flapping.
+    "
 
     describe service do
       its('status') { should eq 'run' }
       its('runtime') { should cmp >= 60 }
+    end
+  end
+end
+
+services.external do |service|
+  control "gatherlogs.chef-server.external_service_status.#{service.name}" do
+    title "check that external #{service.name} is running"
+    desc "
+      External #{service.name} service is not running or has a short runtime,
+      check the logs and make sure the service is not flapping.
+    "
+
+    describe service do
+      its('status') { should eq 'run' }
+      its('connection_status') { should eq 'OK' }
     end
   end
 end
