@@ -8,111 +8,75 @@ Get InSpec from: http://inspec.io
 ## Requirements
 
 1. inspec (currently tested with InSpec v2 but should work with InSpec v1
-2. git clone of this repo
+2. ruby 2.4+
+3. bundler
+
+## Installation
+
+1. Download code and the gems
+
+  ```bash
+  git clone https://github.com/teknofire/gatherlogs-inspec-profiles
+  cd gatherlogs-inspec-profiles
+  bundle
+  ```
+
+2. Add `gatherlogs-inspec-profiles/bin` to your path, put this in your `.bashrc` or the equivalent file for your shell.
+
+  ```
+  export PATH=$PATH:PATH/TO/gatherlogs-inspec-profiles/bin;
+  ```
 
 ## Usage
 
-The basic usage is that you will need to be in the directory with the
-expanded gather-logs tar file. You should be running this in the same
-directory as you would find the `installed-packages.txt` or
-`platform_version.txt` files.
+You will need to be in the directory with the expanded gather-logs tar file to run this tool and should be in the same directory where you find the `installed-packages.txt` or `platform_version.txt` files.
 
-Run `inspec` like this to validate the gather-log files in the current directory.
+Currently available profiles
+  * `chef-server`
+  * `automate`
+
+Run `check_log` like this to validate the gather-log files in the current directory.
 
 ```
 # to check gather-logs from chef-server use
-inspec exec /PATH/TO/REPO/chef-server
+check_log chef-server
 # to check gather-logs from automate use
-inspec exec /PATH/TO/REPO/automate
+check_log automate
 # etc.....
 ```
 
-### Large diff outputs make things ugly
+Available options
 
-So some tests will cause a large diff output to print to the screen and makes it
-very difficult to tell what is failing.
-
-You can get around this problem by running the commands like this to get just the bare minimum:
-
-```bash
-$ inspec_automate --reporter json-min | jq '[.controls[] | { id, status, code_desc, msg: .message[0:160] } | select( .status | contains("failed"))]'
-[
-  {
-    "id": "chef-server.gatherlogs.service_status.notifications",
-    "status": "failed",
-    "code_desc": "notifications status should eq \"run\"",
-    "msg": "\nexpected: \"run\"\n     got: \"down\"\n\n(compared using ==)\n"
-  },
-  {
-    "id": "chef-server.gatherlogs.service_status.notifications",
-    "status": "failed",
-    "code_desc": "notifications runtime should cmp >= 60",
-    "msg": "\nexpected it to be >= 60\n     got: 10\n\n(compared using `cmp` matcher)\n"
-  },
-  {
-    "id": "automate.gatherlogs.missing-data-collector-token",
-    "status": "failed",
-    "code_desc": "File var/log/delivery/delivery/console.log content should not match /Data Collector request made without access token/",
-    "msg": "expected \"2018-05-11 07:25:58.763 [info] <0.1069.0> Application lager started on node 'delivery@127.0.0.1'\\n20...>,<<\\\"chef-web-cia\\\">>}]}}\\n2018-05-11 13:30:25"
-  },
-  {
-    "id": "automate.gatherlogs.missing-data-collector-token",
-    "status": "failed",
-    "code_desc": "File var/log/delivery/delivery/current content should not match /Data Collector request made without access token/",
-    "msg": "expected \"2018-05-11_12:25:54.04292 Exec: /opt/delivery/embedded/service/delivery/erts-7.3/bin/erlexec -noshel...ef-web-cia\\\">>}]}}\\r\\n2018-05-11_18:30:25.52439"
-  }
-]
 ```
-
-### Or possibly to only see the failed controls with messages
-
-```bash
-inspec_chefserver --reporter json-min | jq -r '.controls[] | { id, status, code_desc, message } | select( .status | contains("failed"))'
-```
-
-### Aliases cause typing is bad
-
-Some aliases to reduce the amount of typing
-
-```bash
-# check chef-server gather-logs
-alias inspec_chefserver="inspec exec /PATH/TO/REPO/chef-server"
-# check automate gather-logs
-alias inspec_automate="inspec exec /PATH/TO/REPO/automate"
+Usage: check_logs [OPTIONS] PROFILENAME
+Options:
+  -f, --failed    Only show failed controls
+  -q, --quiet     Only show minimal information
+  -h, --help      Print this message
 ```
 
 ## Example output
 
 ```
-Profile: InSpec profile for Chef-Server generated gather-logs (chef-server)
-Version: 0.1.0
-Target:  local://
+$ check_log chef-server -f -q
 
-  ×  chef-server.gatherlogs.chef-server: check that chef-server is installed (1 failed)
-     ✔  installed_packages should exist
-     ×  installed_packages version should cmp >= "12.17.0"
+InSpec profile for Chef-Server generated gather-logs
+  × gatherlogs.chef-server.package: check that chef-server is installed
+    ⓘ The installed version of Chef-Server is old and should be upgraded
 
-     expected it to be >= "12.17.0"
-          got: 12.15.8
+  × gatherlogs.chef-server.postgreql-upgrade-applied: make sure customer is using chef-server version that includes postgresl 9.6
+    ⓘ Chef Server < 12.16.2 uses PostgreSQL 9.2 and will perform a major upgrade
+      to 9.6.  Please make sure there is enough disk space available to perform
+      the upgrade as it will duplicate the database on disk.
 
-     (compared using `cmp` matcher)
-
-  ✔  chef-server.gatherlogs.disk_usage: check that the chef-server has plenty of free space
-     ✔  "/" disk_usage used_percent should cmp < 100
-     ✔  "/" disk_usage available should cmp > 10
-     ✔  "/" disk_usage size should cmp > 40
-  ✔  chef-server.gatherlogs.platform: check platform is valid
-     ✔  platform_version content should not match /Platform and version are unknown/
-  ×  chef-server.gatherlogs.reporting-with-2018-partition-tables: make sure installed reporting version has 2018 parititon tables fix
-     ×  installed_packages version should cmp >= "1.7.10"
-
-     expected it to be >= "1.7.10"
-          got: 1.7.1
-
-     (compared using `cmp` matcher)
+  × chef-server.gatherlogs.reporting-with-2018-partition-tables: make sure installed reporting version has 2018 parititon tables fix
+    ⓘ Reporting < 1.7.10 has a bug where it does not create the 2018
+      partition tables. In order to fix this the user should install >= 1.8.0
+      and follow the instructions in this KB:
+      https://getchef.zendesk.com/hc/en-us/articles/360001425252-Fixing-missing-2018-Reporting-partition-tables
 ```
 
 ## TODO
 
 * [ ] It would be nice if we could test to see if `noexec` is set on `/tmp`
-* [ ] Figure out how to write a custom reporter for InSpec
+* [x] Figure out how to write a custom reporter for InSpec (hacked around using json output and formater script)

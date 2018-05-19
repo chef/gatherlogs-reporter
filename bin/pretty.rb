@@ -20,7 +20,7 @@ while flag = ARGV.shift
     quiet = true
   when '-h', '--help'
     puts <<-EOH
-Usage: pretty.rb [OPTIONS]
+Usage: check_logs [OPTIONS] PROFILENAME
 Options:
   -f, --failed    Only show failed controls
   -q, --quiet     Only show minimal information

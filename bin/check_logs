@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 PROFILENAME"
+  exit 1
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+args=""
+
+while [[ $# -gt 0 ]]; do
+  key="$1"
+
+  case $key in
+    -f|--failed)
+    args+="-f "
+    shift
+    ;;
+    -q|--quiet)
+    args+="-q "
+    shift
+    ;;
+    -h|--help)
+    args+="-h "
+    $DIR/pretty.rb -h
+    exit
+    ;;
+    *)
+    PROFILENAME=$1
+    shift # past argument
+    ;;
+  esac
+done
+
+
+inspec exec "${DIR}/../${PROFILENAME}" --reporter json | $DIR/pretty.rb $args
