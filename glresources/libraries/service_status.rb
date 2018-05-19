@@ -15,8 +15,14 @@ class ServiceStatus < Inspec.resource(1)
     inspec.file(status_file).exists?
   end
 
-  def each(&block)
-    @content.each do |service,service_object|
+  def internal(&block)
+    @content[:internal].each do |service,service_object|
+      yield service_object
+    end
+  end
+
+  def external(&block)
+    @content[:external].each do |service,service_object|
       yield service_object
     end
   end
@@ -33,11 +39,11 @@ class ServiceStatus < Inspec.resource(1)
   end
 
   def parse_services(content)
-    services = {}
+    services = { internal: {}, external: {} }
     internal = true
     content.each_line do |line|
-      next if line =~ /[-]+/ # ------
-      next if line =~ /^\s+$/ # blank lines
+      next if line[0] == '-'
+      next if line =~ /^\s*$/ # blank lines
       next if line =~ /Internal Services/
       if line =~ /External Services/
         internal = false
@@ -45,9 +51,15 @@ class ServiceStatus < Inspec.resource(1)
       end
 
       service_line, log_line = line.gsub(/[:\(\)]/, '').split(';')
-      status, service, dummy, pid, runtime = service_line.split(/\s+/)
 
-      services[service] = ServiceObject.new(name: service, status: status, pid: pid, runtime: runtime.to_i, internal: internal)
+      if internal
+        status, service, dummy, pid, runtime = service_line.split(/\s+/)
+        services[:internal][service] = ServiceObject.new(name: service, status: status, pid: pid, runtime: runtime.to_i, internal: internal)
+      else
+        status, service, dummy, constatus, dummy, host = service_line.split(/\s+/)
+        services[:external][service] = ServiceObject.new(name: service, status: status, internal: internal, connection_status: constatus, host: host)
+      end
+
     end
 
     services

@@ -4,11 +4,19 @@ class PlatformVersion < Inspec.resource(1)
 
   attr_accessor :content
   def initialize
-    @content = read_content 
+    @content = read_content
   end
 
   def rhel?
     content.match?('Red Hat Enterprise Linux Server')
+  end
+
+  def ubuntu?
+    content.match?('Ubuntu')
+  end
+
+  def ubuntu_version
+    puts SimpleConfig.new(content).inspect
   end
 
   def rhel_version
@@ -19,6 +27,7 @@ class PlatformVersion < Inspec.resource(1)
 
   def os
     return :rhel if rhel?
+    return :ubuntu if ubuntu?
   end
 
   def os_version
@@ -30,7 +39,7 @@ class PlatformVersion < Inspec.resource(1)
   def read_content
     f = inspec.file('platform_version.txt')
     if f.file?
-      f.content 
+      f.content
     else
       raise Inspec::Exceptions::ResourceSkipped, "Can't read platform_version.txt"
     end

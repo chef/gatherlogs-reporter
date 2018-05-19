@@ -32,6 +32,9 @@ class InstalledPackages < Inspec.resource(1)
     when :rhel
       result = content.match(/#{name}-(\d+\.\d+\.\d+)-\d+.\w.\w/)
       result[1] unless result.nil?
+    when :ubuntu
+      result = content.match(/#{name}\s+(\d+\.\d+\.\d+)/)
+      result[1] unless result.nil?
     else
       raise Inspec::Exceptions::ResourceSkipped, "installed_packages currently doesn't support #{platform_version.os.inspect}"
     end
