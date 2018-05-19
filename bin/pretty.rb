@@ -5,6 +5,10 @@ require 'paint'
 require 'word_wrap'
 require 'word_wrap/core_ext'
 
+FAILED = '#FF3333'.freeze
+PASSED = '#32CD32'.freeze
+SKIPPED = '#BEBEBE'.freeze
+
 failed_only = false
 quiet = false
 
@@ -28,10 +32,20 @@ end
 
 content = STDIN.read
 
-output = JSON.parse(content)
+begin
+  output = JSON.parse(content)
+rescue
+  puts Paint["Error parsing json output from inspec", FAILED]
+  puts content
+  exit 1
+end
 
 def tabbed_text(text)
   text.gsub("\n", "\n      ")
+end
+
+def info_text(text)
+  Paint["ⓘ #{tabbed_text(text)}\n", '#FF8C00']
 end
 
 def clean_up_message(result)
@@ -48,10 +62,6 @@ def clean_up_message(result)
 
   tabbed_text(output)[0..700]
 end
-
-FAILED = '#FF3333'.freeze
-PASSED = '#32CD32'.freeze
-SKIPPED = '#BEBEBE'.freeze
 
 output['profiles'].each do |profile|
   puts "\n" + profile['title']
@@ -85,7 +95,7 @@ output['profiles'].each do |profile|
     next if result_messages.empty?
     puts Paint["  #{control_badge} #{control['id']}: #{control['title']}", control_color]
     if control['desc'] && control_color == FAILED
-      puts Paint["    ⓘ #{tabbed_text(control['desc'].gsub("\n", ' ').fit(100))}\n", '#FF8C00']
+      puts '    ' + info_text(control['desc'])
     end
     puts result_messages if !quiet && control.has_key?('desc')
     # puts result_messages.inspect
