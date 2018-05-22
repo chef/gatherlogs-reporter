@@ -1,36 +1,40 @@
 #!/usr/bin/env sh
 
-if [ $# -lt 1 ]; then
-  echo "Usage: $0 PROFILENAME"
-  exit 1
-fi
-
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 args=""
 
-while [[ $# -gt 0 ]]; do
-  key="$1"
+if [ $# -lt 1 ]; then
+  $DIR/pretty.rb -h
+  exit 1
+fi
 
-  case $key in
-    -f|--failed)
-    args+="-f "
-    shift
-    ;;
-    -q|--quiet)
-    args+="-q "
-    shift
-    ;;
-    -h|--help)
-    args+="-h "
-    $DIR/pretty.rb -h
-    exit
-    ;;
-    *)
-    PROFILENAME=$1
-    shift # past argument
-    ;;
+# find flags and profilenames
+flags=()
+profiles=""
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -*) flags+="$1 "; shift ;;
+    *) profiles+="${DIR}/../${1} "; shift ;;
+  esac
+done
+set -- $flags
+
+# parse flags
+while getopts fqh opt; do
+  case $opt in
+    f)
+      args+="-f " ;;
+    q)
+      args+="-q " ;;
+    h)
+      args+="-h "
+      $DIR/pretty.rb -h
+      exit 1 ;;
+    \?)
+      echo "Invalid argument $OPTARG"
+      exit 1 ;;
   esac
 done
 
-
-inspec exec "${DIR}/../${PROFILENAME}" --reporter json | $DIR/pretty.rb $args
+inspec exec $profiles --reporter json | $DIR/pretty.rb $args

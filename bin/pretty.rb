@@ -22,9 +22,9 @@ while flag = ARGV.shift
     puts <<-EOH
 Usage: check_logs [OPTIONS] PROFILENAME
 Options:
-  -f, --failed    Only show failed controls
-  -q, --quiet     Only show minimal information
-  -h, --help      Print this message
+  -f        Only show failed controls
+  -q        Only show minimal information
+  -h        Print this message
     EOH
     exit
   end
