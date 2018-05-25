@@ -10,7 +10,7 @@ fi
 
 # find flags and profilenames
 flags=()
-profiles=""
+profiles=()
 
 while [[ $# -gt 0 ]]; do
   case $1 in
