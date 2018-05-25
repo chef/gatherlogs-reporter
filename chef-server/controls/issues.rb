@@ -21,3 +21,21 @@ control 'gatherlogs.chef-server.413-request-entity-too-large' do
     end
   end
 end
+
+control 'gatherlogs.chef-server.depsolver-timeouts' do
+  impact 1.0
+  title 'Check for depsolver timeouts'
+  desc '
+  It appears that depsolver is being killed and causing a failure to
+  complete the cookbook run_list calculation in the allotted time.
+  Chef-client runs may report this as 412/503 API errors.
+
+  KB: https://getchef.zendesk.com/hc/en-us/articles/204381030-Troubleshoot-Cookbook-Dependency-Issues
+  '
+
+  %w{ erchef.log current }.each do |logfile|
+    describe file(::File.join("var/log/opscode/opscode-erchef/#{logfile}")) do
+      its('content') { should_not match(%r{Supervisor pooler_chef_depsolver_member_sup had child chef_depsolver_worker started with {chef_depsolver_worker,start_link,undefined} at .* exit with reason killed in context child_terminated})}
+    end
+  end
+end
