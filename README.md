@@ -7,7 +7,7 @@ Get InSpec from: http://inspec.io
 
 ## Requirements
 
-1. inspec (currently tested with InSpec v2 but should work with InSpec v1
+1. inspec (currently tested with v2 but should work with v1)
 2. ruby 2.4+
 3. bundler
 
