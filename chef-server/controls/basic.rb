@@ -20,9 +20,11 @@ end
 control "gatherlogs.chef-server.postgreql-upgrade-applied" do
   title "make sure customer is using chef-server version that includes postgresl 9.6"
   desc "
-    Chef Server < 12.16.2 uses PostgreSQL 9.2 and will perform a major upgrade
-    to 9.6.  Please make sure there is enough disk space available to perform
-    the upgrade as it will duplicate the database on disk.
+    Chef Server < 12.16.2 uses PostgreSQL 9.2.
+
+    Upgrading to a newer version of Chef Server requires a major upgrade to
+    9.6, make sure there is enough free disk space create a copy during the
+    upgrade process.  
   "
 
   impact 0.5
