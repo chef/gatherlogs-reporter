@@ -75,10 +75,8 @@ output['profiles'].each do |profile|
 
       case result['status']
       when 'passed'
-        if control_color != FAILED
-          color = PASSED
-          badge = '✓'
-        end
+        color = PASSED
+        badge = '✓'
       when 'skipped'
         if control_color != FAILED
           control_color = color = SKIPPED
