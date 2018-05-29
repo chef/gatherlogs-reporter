@@ -18,12 +18,12 @@ class LogAnalysis < Inspec.resource(1)
   end
 
   def to_s
-    "log_analysis(#{grep_expr})"
+    "log_analysis(#{logfile}, #{grep_expr})"
   end
 
   private
 
   def read_content
-    inspec.command("grep \"#{grep_expr}\" #{logfile}").stdout.split("\n")
+    inspec.command("egrep '#{grep_expr}' #{logfile}").stdout.split("\n")
   end
 end
