@@ -64,6 +64,9 @@ def clean_up_message(result)
 end
 
 output['profiles'].each do |profile|
+  # don't show profiles that have no controls
+  next if profile['controls'].empty?
+
   puts "\n" + profile['title']
 
   profile['controls'].each do |control|
