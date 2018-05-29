@@ -71,7 +71,6 @@ df = disk_usage()
   end
 end
 
-
 control "gatherlogs.common.sysctl-settings" do
   title "check that the sysctl settings make sense"
   desc "
@@ -89,6 +88,6 @@ control "gatherlogs.common.sysctl-settings" do
     its('vm_dirty_background_ratio') { should cmp >= 10 }
     its('vm_dirty_background_ratio') { should cmp <= 60 }
     its('vm_dirty_expire_centisecs') { should cmp >= 10000 }
-    its('vm_dirty_expire_centisecs') { should cmp >= 30000 }
+    its('vm_dirty_expire_centisecs') { should cmp <= 30000 }
   end
 end

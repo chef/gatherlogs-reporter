@@ -25,3 +25,19 @@ control "gatherlogs.common.umask" do
     its('content') { should match /0022/ }
   end
 end
+
+dmesg_oom = log_analysis('dmesg.txt', 'Out of memory: Kill process')
+
+control "gatherlogs.common.dmesg-oom-killer-invoked" do
+  title "Check to see if the kernel OOM kill was invoked"
+  desc "
+  #{dmesg_oom.hits} entries for 'Out of memory: Kill process' where found in 'dmesg.txt'
+
+  Please make sure that the system has enough RAM available to it handle the
+  client load on the system.
+  "
+
+  describe dmesg_oom do
+    it { should_not exist }
+  end
+end
