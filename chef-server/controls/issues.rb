@@ -16,8 +16,9 @@ control 'gatherlogs.chef-server.413-request-entity-too-large' do
   '
 
   %w{ access.log current }.each do |logfile|
-    describe file(::File.join('var/log/opscode/nginx', logfile)) do                  # The actual test
-      its('content') { should_not match(%r{HTTP/1\.\d" 413}) }
+    request_entity_413 = log_analysis(::File.join('var/log/opscode/nginx', logfile), 'HTTP/1\.\d" 413')
+    describe request_entity_413 do
+      it { should_not exist }
     end
   end
 end
@@ -34,8 +35,10 @@ control 'gatherlogs.chef-server.depsolver-timeouts' do
   '
 
   %w{ erchef.log current }.each do |logfile|
-    describe file(::File.join("var/log/opscode/opscode-erchef/#{logfile}")) do
-      its('content') { should_not match(%r{Supervisor pooler_chef_depsolver_member_sup had child chef_depsolver_worker started with {chef_depsolver_worker,start_link,undefined} at .* exit with reason killed in context child_terminated})}
+    depsolver = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", "Supervisor pooler_chef_depsolver_member_sup had child chef_depsolver_worker started with {chef_depsolver_worker,start_link,undefined} at .* exit with reason killed in context child_terminated")
+
+    describe depsolver do
+      it { should_not exist }
     end
   end
 end
