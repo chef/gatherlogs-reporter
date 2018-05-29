@@ -11,14 +11,13 @@ class SysctlA < Inspec.resource(1)
   end
 
   def exists?
-    @content.empty?
+    !@content.empty?
   end
 
   private
 
   def parse_sysctl(content)
     data = {}
-
     content.each_line do |line|
       matched = line.match /^\s*([^=]*?)\s*=\s*(.*?)\s*$/
       next if matched.nil?

@@ -21,3 +21,22 @@ control 'gatherlogs.automate.missing-data-collector-token' do
     end
   end
 end
+
+logstash = log_analysis('var/log/delivery/logstash*/current', 'java.lang.OutOfMemoryError: Java heap space')
+
+control 'gatherlogs.automate.logstash-out-of-memory' do
+  impact 1
+  title 'Check to see if logstash is running out of heap space'
+  desc "
+  Found #{logstash.hits} messages about 'java.lang.OutOfMemoryError: Java heap space'
+  in 'var/log/delivery/logstash*/current'
+
+  When logstash runs out of heap space the process will get killed and restarted
+  this will cause a delay in the processing of the queue and can cause it to
+  expand.
+  "
+
+  describe logstash do
+    it { should_not exist }
+  end
+end
