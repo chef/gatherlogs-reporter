@@ -13,6 +13,14 @@ class LogAnalysis < Inspec.resource(1)
     @messages.count
   end
 
+  def first
+    @messages.first
+  end
+
+  def content
+    @messages
+  end
+
   def exists?
     hits > 0
   end
