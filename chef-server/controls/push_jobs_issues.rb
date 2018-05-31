@@ -1,7 +1,5 @@
 pushjobs = installed_packages('opscode-push-jobs-server')
 
-
-
 %w{ access.log current error.log }.each do |logfile|
   pushjobs_hostname = log_analysis("var/log/opscode/nginx/#{logfile}", 'host not found in upstream .* in /var/opt/opscode/nginx/etc/addon.d/10-push_jobs_upstreams.conf')
 
