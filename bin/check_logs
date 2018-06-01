@@ -21,15 +21,20 @@ done
 set -- $flags
 
 # parse flags
-while getopts fqh opt; do
+while getopts avh opt; do
   case $opt in
-    f)
-      args+="-f " ;;
-    q)
-      args+="-q " ;;
+    a)
+      args+="-a " ;;
+    v)
+      args+="-v " ;;
     h)
       args+="-h "
-      $DIR/pretty.rb -h
+      echo "Usage: check_logs [OPTIONS] PROFILENAME
+Options:
+    -a        Show all controls (only failed controls are shown by default)
+    -v        Show verbose control results
+    -h        Print this message
+      "
       exit 1 ;;
     \?)
       echo "Invalid argument $OPTARG"
