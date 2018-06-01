@@ -71,7 +71,7 @@ df = disk_usage()
   end
 end
 
-control "gatherlogs.common.sysctl-settings" do
+control "gatherlogs.automate.sysctl-settings" do
   title "check that the sysctl settings make sense"
   desc "
     Recommended sysctl settings are not correct, recommend that these get updated
