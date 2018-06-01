@@ -64,6 +64,7 @@ output['profiles'].each do |profile|
     result_messages = []
     control_badge = '✓'
     control_color = PASSED
+
     control['results'].each do |result|
       next if !all_controls && result['status'] != 'failed'
 

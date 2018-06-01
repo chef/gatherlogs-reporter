@@ -36,8 +36,7 @@ control "gatherlogs.common.dmesg-oom-killer-invoked" do
   Please make sure that the system has enough RAM available to handle the
   client load on the system.
 
-  Automate: https://pages.chef.io/rs/255-VFB-268/images/ScalingChefAutomate_2017.pdf
-
+  For Automate review: https://pages.chef.io/rs/255-VFB-268/images/ScalingChefAutomate_2017.pdf
   "
 
   describe dmesg_oom do
@@ -50,14 +49,13 @@ dmesg_contrack = log_analysis('dmesg.txt', 'nf_conntrack: table full, dropping p
 control "gatherlogs.common.dmesg-nf_conntrack-table-full-error" do
   title "Check to see if the kernel is reporting the nf_conntrack table is full"
   desc "
-  #{dmesg_contrack.hits} entries for 'nf_conntrack: table full, dropping packet.'
-  where found in 'dmesg.txt'
+  #{dmesg_contrack.hits} entries for 'nf_conntrack: table full, dropping packet.' where found in 'dmesg.txt'
 
   One possible cause of this can happen when there is a large number of push-job
   clients checking into the node all at once.
 
-  Check the current value using
-  Run `sysctl -w sysctl -w net.netfilter.nf_conntrack_max=131072`
+  Check the current value using: `sysctl net.netfilter.nf_conntrack_max`
+  Update setting using: `sysctl -w sysctl -w net.netfilter.nf_conntrack_max=131072`
   "
 
   describe dmesg_contrack do
