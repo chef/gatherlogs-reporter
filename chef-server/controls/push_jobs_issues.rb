@@ -3,7 +3,7 @@ pushjobs = installed_packages('opscode-push-jobs-server')
 %w{ access.log current error.log }.each do |logfile|
   pushjobs_hostname = log_analysis("var/log/opscode/nginx/#{logfile}", 'host not found in upstream .* in /var/opt/opscode/nginx/etc/addon.d/10-push_jobs_upstreams.conf')
 
-  control "chef-server.gatherlogs.push-jobs-server-hostname-misconfigured-#{logfile}" do
+  control "gatherlogs.chef-server.push-jobs-server-hostname-misconfigured-#{logfile}" do
     title "Check for misconfiguration for hostname of push-jobs server"
     desc "
     Nginx is unable to communicate with the push-jobs service.

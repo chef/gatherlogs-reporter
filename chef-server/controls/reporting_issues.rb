@@ -1,6 +1,6 @@
 reporting = installed_packages('opscode-reporting')
 
-control "chef-server.gatherlogs.reporting-with-2018-partition-tables" do
+control "gatherlogs.chef-server.reporting-with-2018-partition-tables" do
   title "make sure installed reporting version has 2018 parititon tables fix"
   desc "
     Reporting < 1.7.10 has a bug where it does not create the 2018
