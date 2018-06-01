@@ -12,6 +12,7 @@ class InstalledPackages < Inspec.resource(1)
   def exist?
     content && content.match?(@package_name)
   end
+
   alias_method :exists?, :exist?
 
   def version
@@ -27,6 +28,8 @@ class InstalledPackages < Inspec.resource(1)
   end
 
   def package_version(name)
+    return unless self.exists?
+    
     case platform_version.os
     # case :rhel
     when :rhel
