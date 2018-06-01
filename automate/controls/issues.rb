@@ -16,8 +16,9 @@ control 'gatherlogs.automate.missing-data-collector-token' do
   '
 
   %w{ console.log current }.each do |logfile|
-    describe file(::File.join('var/log/delivery/delivery', logfile)) do                  # The actual test
-      its('content') { should_not match(/Data Collector request made without access token/) }
+    data_collector = log_analysis(::File.join('var/log/delivery/delivery', logfile), 'Data Collector request made without access token')
+    describe data_collector do                  # The actual test
+      it { should_not exist }
     end
   end
 end
