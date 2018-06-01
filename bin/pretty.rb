@@ -9,24 +9,15 @@ FAILED = '#FF3333'.freeze
 PASSED = '#32CD32'.freeze
 SKIPPED = '#BEBEBE'.freeze
 
-failed_only = false
-quiet = false
+all_controls = false
+verbose = false
 
 while flag = ARGV.shift
   case flag
-  when '-f', '--failed'
-    failed_only = true
-  when '-q', '--quiet'
-    quiet = true
-  when '-h', '--help'
-    puts <<-EOH
-Usage: check_logs [OPTIONS] PROFILENAME
-Options:
-  -f        Only show failed controls
-  -q        Only show minimal information
-  -h        Print this message
-    EOH
-    exit
+  when '-a', '--all'
+    all_controls = true
+  when '-v', '--verbose'
+    verbose = true
   end
 end
 
@@ -74,7 +65,7 @@ output['profiles'].each do |profile|
     control_badge = '✓'
     control_color = PASSED
     control['results'].each do |result|
-      next if failed_only && result['status'] != 'failed'
+      next if !all_controls && result['status'] != 'failed'
 
       case result['status']
       when 'passed'
@@ -98,7 +89,7 @@ output['profiles'].each do |profile|
     if control['desc'] && control_color == FAILED
       puts '    ' + info_text(control['desc'])
     end
-    puts result_messages if !quiet && control.has_key?('desc')
+    puts result_messages if verbose && control.has_key?('desc')
     # puts result_messages.inspect
   end
 end
