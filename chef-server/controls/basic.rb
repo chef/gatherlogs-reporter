@@ -6,7 +6,10 @@ chef_server = installed_packages('chef-server-core')
 
 control "gatherlogs.chef-server.package" do
   title "check that chef-server is installed"
-  desc "The installed version of Chef-Server is old and should be upgraded"
+  desc "
+  The installed version of Chef-Server is old and should be upgraded
+  Installed version: #{chef_server.version}
+  "
 
   impact 1.0
 
@@ -24,7 +27,7 @@ control "gatherlogs.chef-server.postgreql-upgrade-applied" do
 
     Upgrading to a newer version of Chef Server requires a major upgrade to
     9.6, make sure there is enough free disk space create a copy during the
-    upgrade process.  
+    upgrade process.
   "
 
   impact 0.5
