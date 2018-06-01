@@ -40,8 +40,6 @@ def info_text(text)
 end
 
 def clean_up_message(result)
-  # return if result.nil?
-  # puts result
   output = case result['status']
            when 'skipped'
              result['skip_message']
@@ -91,6 +89,5 @@ output['profiles'].each do |profile|
       puts '    ' + info_text(control['desc'])
     end
     puts result_messages if verbose && control.has_key?('desc')
-    # puts result_messages.inspect
   end
 end
