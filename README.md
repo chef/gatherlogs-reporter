@@ -50,9 +50,10 @@ Available options
 ```
 Usage: check_logs [OPTIONS] PROFILENAME
 Options:
-  -f, --failed    Only show failed controls
-  -q, --quiet     Only show minimal information
-  -h, --help      Print this message
+ Options:
+     -a        Show all controls (only failed controls are shown by default)
+     -v        Show verbose control results
+     -h        Print this message
 ```
 
 ## Example output
