@@ -3,6 +3,11 @@ class InstalledPackages < Inspec.resource(1)
   desc 'attempt to detect the chef product'
 
   def initialize(name)
+    # This is needed because automate-ctl gatherlogs doesn't include a
+    # `installed-packages.txt`
+    # Also, the method used for exist? on Automate is not ideal as another
+    # product could include version-manifest.json and would give a false postive
+    # if requesting the automate package version.
     if name == 'automate'
       filename = 'opt/delivery/version-manifest.json'
       @package = AutomateVersionManifestJson.new(name, read_content(filename))
