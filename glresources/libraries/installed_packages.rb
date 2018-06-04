@@ -62,7 +62,7 @@ class InstalledPackagesTxt
   def package_version(os)
     return unless exist?
 
-    case os
+    case os.to_sym
     when :rhel
       result = content.match(/#{@package_name}-(\d+\.\d+\.\d+)-\d+.\w.\w/)
       result[1] unless result.nil?
