@@ -33,7 +33,6 @@ class InstalledPackages < Inspec.resource(1)
     if f.file?
       f.content
     else
-      puts 'foo'
       nil
     end
   end
