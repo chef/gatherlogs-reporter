@@ -41,3 +41,22 @@ control 'gatherlogs.automate.logstash-out-of-memory' do
     it { should_not exist }
   end
 end
+
+automate = installed_packages('automate')
+
+control "gatherlogs.automate.broken-reaper-cron-file-1.8.3" do
+  title "Check for version of Automate with broken reaper cron file"
+  desc "
+  It appears you are running Automate 1.8.3, which creates a broken reaper cron
+  file in `/etc/cron.d/reaper`. Cron requires that the file contains a blank line
+  before the end of the file and will fail to run if it's not included.
+
+  Please upgrade to a newer version of Automate to ensure reaper run correctly.
+  "
+
+  impact 1.0
+
+  describe automate do
+    its('version') { should_not cmp == '1.8.3'}
+  end
+end
