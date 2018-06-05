@@ -25,6 +25,10 @@ class LogAnalysis < Inspec.resource(1)
     hits > 0
   end
 
+  def log_exists?
+    inspec.file(logfile).exist?
+  end
+
   def to_s
     "log_analysis(#{logfile}, #{grep_expr})"
   end
