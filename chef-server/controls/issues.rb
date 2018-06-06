@@ -42,3 +42,30 @@ control 'gatherlogs.chef-server.depsolver-timeouts' do
     end
   end
 end
+
+
+%w{ erchef.log current crash.log requests.log }.each do |logfile|
+  erchef_depsolver = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", "failed_to_start_child,pooler_chef_depsolver_pool_sup")
+
+  control "gatherlogs.chef-server.erchef-depsolver-startup-failure-#{logfile}" do
+    impact 1.0
+    title 'Check for erchef startup errors for depsolver'
+    desc "
+    It appears that the erchef process if failing to start due to an error starting
+    depsolver child processes.  This commonlly happens when the umask for root is
+    set to something other than '0022' and a new gem is installed on the server.
+
+    To find the gem causing the problem run the following command:
+    find /opt/opscode/embedded/lib/ruby/gems -name \"*gemspec\" ! -perm -a+r
+
+    And then fix it using:
+    chmod 664 PATH/TO/GEMSPEC/FILE
+
+    #{erchef_depsolver.hits} entries found for #{erchef_depsolver.grep_expr}
+    "
+
+    describe erchef_depsolver do
+      it { should_not exist }
+    end
+  end
+end

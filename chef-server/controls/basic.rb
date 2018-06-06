@@ -50,7 +50,7 @@ services.internal do |service|
 
     describe service do
       its('status') { should eq 'run' }
-      its('runtime') { should cmp >= 60 }
+      its('runtime') { should cmp >= 80 }
     end
   end
 end
