@@ -51,7 +51,7 @@ end
     impact 1.0
     title 'Check for erchef startup errors for depsolver'
     desc "
-    It appears that the erchef process if failing to start due to an error starting
+    It appears that the erchef process if failing due to an error starting
     depsolver child processes.  This commonlly happens when the umask for root is
     set to something other than '0022' and a new gem is installed on the server.
 
