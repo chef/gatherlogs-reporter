@@ -71,3 +71,21 @@ control "gatherlogs.chef-server.erchef-depsolver-startup-failure" do
     its('hits') { should cmp >= 1 }
   end
 end
+
+control "gatherlogs.chef-server.rabbitmq-connection-failure" do
+  impact 1.0
+  title 'Check for erchef errors for rabbitmq connection errors'
+  desc "
+  It appears that the erchef process if having issues connecting to RabbitMQ.
+
+  Please check that the connection details for RabbitMQ are correct and that
+  there are no errors logged by RabbitMQ.
+  "
+
+  common_logs.erchef do |logfile|
+    erchef_rabbitmq = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", 'Could not connect, scheduling reconnect.", error: {{error,{badmatch,{error,{auth_failure_likely,{socket_closed_unexpectedly.*5672')
+    describe erchef_rabbitmq do
+      its('hits') { should cmp <= 5 }
+    end
+  end
+end
