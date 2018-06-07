@@ -34,7 +34,7 @@ control 'gatherlogs.chef-server.depsolver-timeouts' do
   KB: https://getchef.zendesk.com/hc/en-us/articles/204381030-Troubleshoot-Cookbook-Dependency-Issues
   '
 
-  %w{ erchef.log current }.each do |logfile|
+  common_logs.erchef do |logfile|
     depsolver = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", "Supervisor pooler_chef_depsolver_member_sup had child chef_depsolver_worker started with {chef_depsolver_worker,start_link,undefined} at .* exit with reason killed in context child_terminated")
 
     describe depsolver do
@@ -44,28 +44,31 @@ control 'gatherlogs.chef-server.depsolver-timeouts' do
 end
 
 
-%w{ erchef.log current crash.log requests.log }.each do |logfile|
-  erchef_depsolver = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", "failed_to_start_child,pooler_chef_depsolver_pool_sup")
+control "gatherlogs.chef-server.erchef-depsolver-startup-failure" do
+  impact 1.0
+  title 'Check for erchef startup errors for depsolver'
+  desc "
+  It appears that the erchef process if failing due to an error starting
+  depsolver child processes.  This commonlly happens when the umask for root is
+  set to something other than '0022' and a new gem is installed on the server.
 
-  control "gatherlogs.chef-server.erchef-depsolver-startup-failure-#{logfile}" do
-    impact 1.0
-    title 'Check for erchef startup errors for depsolver'
-    desc "
-    It appears that the erchef process if failing due to an error starting
-    depsolver child processes.  This commonlly happens when the umask for root is
-    set to something other than '0022' and a new gem is installed on the server.
+  To find the gem causing the problem run the following command:
+  find /opt/opscode/embedded/lib/ruby/gems -name \"*gemspec\" ! -perm -a+r
 
-    To find the gem causing the problem run the following command:
-    find /opt/opscode/embedded/lib/ruby/gems -name \"*gemspec\" ! -perm -a+r
+  And then fix it using:
+  chmod 664 PATH/TO/GEMSPEC/FILE
+  "
 
-    And then fix it using:
-    chmod 664 PATH/TO/GEMSPEC/FILE
-
-    #{erchef_depsolver.hits} entries found for #{erchef_depsolver.grep_expr}
-    "
-
+  common_logs.erchef do |logfile|
+    erchef_depsolver = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", '{{error,{shutdown,{failed_to_start_child,pooler_chef_depsolver_pool_sup,{shutdown,{failed_to_start_child,pooler,{{timeout,"unable to start members"}')
     describe erchef_depsolver do
       it { should_not exist }
     end
   end
+
+  erchef_listener = log_analysis('ss_ontap.txt', '127.0.0.1:8000 ')
+  describe erchef_listener do
+    its('hits') { should cmp >= 1 }
+  end
+end
 end
