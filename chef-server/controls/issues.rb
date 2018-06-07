@@ -71,4 +71,3 @@ control "gatherlogs.chef-server.erchef-depsolver-startup-failure" do
     its('hits') { should cmp >= 1 }
   end
 end
-end
