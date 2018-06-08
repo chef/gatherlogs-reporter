@@ -22,6 +22,22 @@ class DiskUsage < Inspec.resource(1)
     end
   end
 
+  # need to normalize the filesize
+  def to_filesize(size)
+    units = {
+      'B'  => 1 / (1024 * 1024),
+      'K' => 1 / 1024,
+      'M' => 1,
+      'G' => 1024,
+      'T' => 1024 * 1024
+    }
+
+    unit = size[-1]
+    unit = 'B' if !units.keys.include?(unit)
+
+    "#{size[0..-1].to_f * units[unit]}M"
+  end
+
   private
 
   def parse_mounts(input)
@@ -45,7 +61,7 @@ class DiskUsage < Inspec.resource(1)
       row = data.shift
       normalized_row = row.size == 1 ? row + data.shift : row;
       device, size, used, available, used_percent, mount = normalized_row
-      output[mount] = DiskUsageItem.new(mount, {:device=>device, :size=>size.to_i, :used=>used.to_i, :available=>available.to_i, :used_percent=>used_percent.to_i, :mount=>mount})
+      output[mount] = DiskUsageItem.new(mount, {:device=>device, :size=>to_filesize(size), :used=>to_filesize(used), :available=>to_filesize(available), :used_percent=>used_percent.to_i, :mount=>mount})
     end
 
     output
