@@ -66,7 +66,7 @@ df = disk_usage()
 
     describe df.mount(mount) do
       its('used_percent') { should cmp < 100 }
-      its('available') { should cmp > 1 }
+      its('available') { should cmp > disk_usage.to_filesize('250M') }
     end
   end
 end
