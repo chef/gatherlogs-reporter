@@ -50,7 +50,7 @@ class InstalledPackagesTxt
   def initialize(name, packages_content, os)
     @package_name = name
     @content = packages_content
-    @version = package_version(os.to_sym)
+    @version = package_version(os)
   end
 
   def exist?
@@ -60,6 +60,7 @@ class InstalledPackagesTxt
   private
 
   def package_version(os)
+    return if os.nil?
     return unless exist?
 
     case os.to_sym

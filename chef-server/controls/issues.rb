@@ -89,3 +89,22 @@ control "gatherlogs.chef-server.rabbitmq-connection-failure" do
     end
   end
 end
+
+control "gatherlogs.chef-server.erchef-bad_actor-permission-errors" do
+  impact 1.0
+  title 'Check for erchef for permission errors related to bad_actor'
+  desc "
+  This usually indicates that a user has been disassociated with an organization
+  but is still assigned permissions to some object in the chef-server database.
+
+  Search the opscode-erchef logs for `bad_actor` messages to find the user that still has permissions and remove
+  them from all objects in the organization.
+  "
+
+  common_logs.erchef do |logfile|
+    erchef_bad_actor = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", 'status=400.*bad_actor')
+    describe erchef_bad_actor do
+      its('hits') { should cmp == 0 }
+    end
+  end
+end
