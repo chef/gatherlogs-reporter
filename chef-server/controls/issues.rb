@@ -92,7 +92,7 @@ end
 
 control "gatherlogs.chef-server.erchef-bad_actor-permission-errors" do
   impact 1.0
-  title 'Check for erchef for permission errors related to bad_actor'
+  title 'Check erchef for permission errors related to bad_actor'
   desc "
   This usually indicates that a user has been disassociated with an organization
   but is still assigned permissions to some object in the chef-server database.
