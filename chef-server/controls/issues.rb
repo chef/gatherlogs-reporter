@@ -94,11 +94,16 @@ control "gatherlogs.chef-server.erchef-bad_actor-permission-errors" do
   impact 1.0
   title 'Check erchef for permission errors related to bad_actor'
   desc "
-  This usually indicates that a user has been disassociated with an organization
-  but is still assigned permissions to some object in the chef-server database.
+  This usually indicates that a user has been disassociated from an organization
+  or deleted completely from the chef-server.  In these cases it's possible for
+  some permissions for that user to still exist on some objects in the organization.
 
-  Search the opscode-erchef logs for `bad_actor` messages to find the user that still has permissions and remove
-  them from all objects in the organization.
+  Users should not be added directly to objects and instead should be associated
+  with groups that are then added to the permissions for objects.  This simplifies
+  the clean up process when removing users.
+
+  Search the opscode-erchef logs for `bad_actor` messages to find the user that
+  is causing the error and remove them from all objects in the organization.
   "
 
   common_logs.erchef do |logfile|
