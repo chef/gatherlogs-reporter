@@ -18,7 +18,7 @@ control 'gatherlogs.automate.missing-data-collector-token' do
   %w{ console.log current }.each do |logfile|
     data_collector = log_analysis(::File.join('var/log/delivery/delivery', logfile), 'Data Collector request made without access token')
     describe data_collector do                  # The actual test
-      it { should_not exist }
+      its('last_entry') { should be_empty }
     end
   end
 end
@@ -38,7 +38,7 @@ control 'gatherlogs.automate.logstash-out-of-memory' do
   "
 
   describe logstash do
-    it { should_not exist }
+    its('last_entry') { should be_empty }
   end
 end
 

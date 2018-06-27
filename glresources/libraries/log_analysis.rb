@@ -17,6 +17,20 @@ class LogAnalysis < Inspec.resource(1)
     @messages.first
   end
 
+  def last
+    @messages.last
+  end
+
+  def empty?
+    @messages.empty?
+  end
+
+  # this is for use in the matchers so we can get a better UX with the latest
+  # log entry text showing up in the verbose output
+  def last_entry
+    last || ''
+  end
+
   def content
     @messages
   end
