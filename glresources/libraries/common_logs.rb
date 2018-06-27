@@ -10,4 +10,14 @@ class CommonLogs < Inspec.resource(1)
       files
     end
   end
+
+  def nginx(&block)
+    files = %w{ current error.log access.log internal-chef.access.log }
+    if block_given?
+      files.each { |f| yield f }
+    else
+      files
+    end
+  end
+
 end
