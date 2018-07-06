@@ -2,7 +2,7 @@ class LogAnalysis < Inspec.resource(1)
   name 'log_analysis'
   desc 'Parse log files to find issues'
 
-  attr_accessor :logfile, :grep_expr
+  attr_accessor :logfile, :grep_expr, :messages
   def initialize(log, expr)
     @grep_expr = expr
     @logfile = log

@@ -91,3 +91,25 @@ control "gatherlogs.automate2.sysctl-settings" do
     its('vm_dirty_expire_centisecs') { should cmp <= 30000 }
   end
 end
+
+failed_preflight_checks = log_analysis("chef-automate_preflight-check.txt", 'FAIL')
+control "gatherlogs.automate2.failed_preflight_checks" do
+  impact 1.0
+  title 'Check automate preflight output for any failed tests'
+  desc "
+Automate preflight checks are reporting issues failures, the failure for 'automate already deployed'
+is expected but other failures are being reported.
+
+If sysctl settings are being reported as failed be sure to update your 'syctl.conf'
+with the required settings to ensure they persist through system reboots
+
+Please check the chef-automate_preflight-check.txt for ways to remediate the failed tests.
+
+Failed checks:
+#{failed_preflight_checks.messages.join("\n")}
+  "
+
+  describe failed_preflight_checks do
+    its('hits') { should cmp == 1 }
+  end
+end
