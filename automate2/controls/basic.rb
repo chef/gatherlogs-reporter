@@ -133,4 +133,3 @@ control "gatherlogs.automate2.notifications-failed-to-send" do
     its('last_entry') { should be_empty }
   end
 end
-# Notifications.WebhookSender.Impl [error] Request id:e0abe11a-ccec-4471-83aa-77aa7bc5baf9 failed to post. Code 400. Body: Summary or Text is required.
