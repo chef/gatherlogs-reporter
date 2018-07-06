@@ -4,7 +4,13 @@ class ServiceStatus < Inspec.resource(1)
 
   def initialize(product)
     @product = product
-    @content = parse_services(read_content(status_file))
+    status_content = read_content(status_file)
+    @content = case @product.to_sym
+    when :automate, :chef_server
+      parse_services(status_content)
+    when :automate2
+      parse_a2_services(status_content)
+    end
   end
 
   def method_missing(service)
@@ -35,7 +41,24 @@ class ServiceStatus < Inspec.resource(1)
       'delivery-ctl-status.txt'
     when :chef_server
       'private-chef-ctl_status.txt'
+    when :automate2
+      'chef-automate_status.txt'
     end
+  end
+
+  def parse_a2_services(content)
+    services = { internal: {}, external: {} }
+
+    content.each_line do |line|
+      next if line =~ /^chef-automate_status$/
+      next if line =~ /^\s*$/ # blank lines
+      next if line =~ /^Service Name/
+
+      service, status, health, runtime, pid = line.split(/\s+/)
+      services[:internal][service] = ServiceObject.new(name: service, status: status, pid: pid, runtime: runtime.to_i, health: health, internal: true)
+    end
+
+    services
   end
 
   def parse_services(content)
