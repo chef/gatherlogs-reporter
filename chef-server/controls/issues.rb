@@ -141,3 +141,22 @@ control "gatherlogs.chef-server.nginx-upstream-host-error" do
     end
   end
 end
+
+control "gatherlogs.chef-server.solr4-memory-allocation-error" do
+  impact 1.0
+  title 'Check solr4 for errors related to memory allocations'
+  desc "
+SOLR4 service is unable to allocate enough memory to operate correctly. Please
+make sure that the system has not run out of physical RAM or swap space.
+
+If `opscode_solr4['heap_size']` is specified in `/etc/opscode/chef-server.rb` ensure
+that this value is no more than 50% of the total RAM and less than 8192, which ever value
+is smaller.
+  "
+
+  common_logs.solr4 do |logfile|
+    describe log_analysis("var/log/opscode/opscode-solr4/#{logfile}", 'Cannot allocate memory') do
+      its('last_entry') { should be_empty }
+    end
+  end
+end

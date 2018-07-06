@@ -20,4 +20,13 @@ class CommonLogs < Inspec.resource(1)
     end
   end
 
+  def solr4(&block)
+    files = %w{ current }
+    if block_given?
+      files.each { |f| yield f }
+    else
+      files
+    end
+  end
+
 end
