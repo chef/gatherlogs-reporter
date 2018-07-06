@@ -133,3 +133,25 @@ control "gatherlogs.automate2.notifications-failed-to-send" do
     its('last_entry') { should be_empty }
   end
 end
+
+log_limit = ENV['LOG_LIMIT'] || 10000
+es_gc = log_analysis("journalctl_chef-automate.txt", 'automate-elasticsearch.default.*\[gc\]', tail: log_limit)
+control "gatherlogs.automate2.elasticsearch-high-gc-counts" do
+  impact 1.0
+  title 'Check to see if the ElasticSearch is reporting large number of GC events'
+  desc "
+  The ElasticSearch service is reporting a large number of GC events, this is usually
+  an indication that the heap size needs to be increased.
+
+  Instructions on how to adjust your ElasticSearch heap size: https://automate.chef.io/docs/configuration/#setting-elasticsearch-heap
+
+  #{es_gc.hits} total messages found in last #{log_limit} journalctl log entries
+
+  Last matching log entry:
+  #{es_gc.last_entry}
+  "
+
+  describe es_gc do
+    its('hits') { should cmp <= 10 }
+  end
+end
