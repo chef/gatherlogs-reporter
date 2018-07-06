@@ -34,6 +34,7 @@ You will need to be in the directory with the expanded gather-logs tar file to r
 Currently available profiles
   * `chef-server`
   * `automate`
+  * `automate2`
 
 Run `check_log` like this to validate the gather-log files in the current directory.
 
@@ -80,4 +81,3 @@ InSpec profile for Chef-Server generated gather-logs
 ## TODO
 
 * [ ] It would be nice if we could test to see if `noexec` is set on `/tmp`
-* [x] Figure out how to write a custom reporter for InSpec (hacked around using json output and formater script)
