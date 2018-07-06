@@ -24,6 +24,8 @@ class DiskUsage < Inspec.resource(1)
 
   # need to normalize the filesize
   def to_filesize(size)
+    # size = '0' if size.nil?
+
     units = {
       'B'  => 1 / (1024 * 1024),
       'K' => 1 / 1024,
@@ -45,6 +47,9 @@ class DiskUsage < Inspec.resource(1)
     lines = input.split("\n")
     lines.delete_at(0)
     lines.each do |line|
+      next if line.length == 0
+      next if line =~ /^df -h$/
+
       line.gsub!(/\s+/, " ")
       diskusage << line.split(" ")
     end

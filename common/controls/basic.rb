@@ -38,9 +38,10 @@ control "gatherlogs.common.dmesg-oom-killer-invoked" do
 
   For Automate review: https://pages.chef.io/rs/255-VFB-268/images/ScalingChefAutomate_2017.pdf
   "
+  only_if { dmesg_oom.log_exists? }
 
   describe dmesg_oom do
-    it { should_not exist }
+    its('last_entry') { should be_empty }
   end
 end
 
@@ -58,7 +59,10 @@ control "gatherlogs.common.dmesg-nf_conntrack-table-full-error" do
   Update setting using: `sysctl -w sysctl -w net.netfilter.nf_conntrack_max=131072`
   "
 
+  only_if { dmesg_contrack.log_exists? }
+
   describe dmesg_contrack do
-    it { should_not exist }
+
+    its('last_entry') { should be_empty }
   end
 end
