@@ -3,7 +3,8 @@ class LogAnalysis < Inspec.resource(1)
   desc 'Parse log files to find issues'
 
   attr_accessor :logfile, :grep_expr, :messages
-  def initialize(log, expr)
+  def initialize(log, expr, options = {})
+    @options = options || {}
     @grep_expr = expr
     @logfile = log
     @messages = read_content
@@ -50,6 +51,18 @@ class LogAnalysis < Inspec.resource(1)
   private
 
   def read_content
-    inspec.command("egrep '#{grep_expr}' #{logfile}").stdout.split("\n")
+    cmd = ""
+    piped = false
+    if @options[:tail]
+      piped = true
+      cmd << "tail -n#{@options[:tail].to_i} #{logfile} | "
+    end
+
+    cmd << "egrep '#{grep_expr}'"
+    unless piped
+      cmd << " #{logfile}"
+    end
+
+    inspec.command(cmd).stdout.split("\n")
   end
 end
