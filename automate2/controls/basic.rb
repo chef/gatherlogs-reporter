@@ -113,3 +113,24 @@ Failed checks:
     its('hits') { should cmp == 1 }
   end
 end
+
+
+notification_error = log_analysis("journalctl_chef-automate.txt", 'Notifications.WebhookSender.Impl \[error\] .* failed to post')
+control "gatherlogs.automate2.notifications-failed-to-send" do
+  impact 1.0
+  title 'Check to see if the notifications services is reporting errors sending messages'
+  desc "
+  The notification service is encountering an error when trying to set a message to the
+  webhook endpoint
+
+  #{notification_error.hits} total errors found
+
+  Last matching log entry:
+  #{notification_error.last_entry}
+  "
+
+  describe notification_error do
+    its('last_entry') { should be_empty }
+  end
+end
+# Notifications.WebhookSender.Impl [error] Request id:e0abe11a-ccec-4471-83aa-77aa7bc5baf9 failed to post. Code 400. Body: Summary or Text is required.
