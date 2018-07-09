@@ -36,6 +36,13 @@ class LogAnalysis < Inspec.resource(1)
     @messages
   end
 
+  def summary
+    <<-EOS
+Found #{hits} messages about '#{grep_expr}'
+Last entry: #{last_entry}
+    EOS
+  end
+
   def exists?
     hits > 0
   end
