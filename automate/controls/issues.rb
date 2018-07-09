@@ -60,3 +60,42 @@ control "gatherlogs.automate.broken-reaper-cron-file-1.8.3" do
     its('version') { should_not cmp == '1.8.3'}
   end
 end
+
+es_disk = log_analysis('var/log/delivery/elasticsearch/current', 'high disk watermark exceeded on one or more nodes')
+
+control 'gatherlogs.automate.elasticsearch-disk-space-errors' do
+  impact 1
+  title 'Check to see if ElasticSearch is erroring because of available disk space'
+  desc "
+When ElasticSearch detects that there is not enough free space on the disk it will
+stop accepting new documents to prevent corrupting the database.  You will need
+to clean up space on disk to fix this issue.
+
+To configure the data retention policy in Automate please review:
+https://docs.chef.io/data_retention_chef_automate.html
+
+#{es_disk.summary}
+  "
+
+  describe es_disk do
+    its('last_entry') { should be_empty }
+  end
+end
+
+# Cannot allocate 762886488 bytes of memory
+rabbit_mem = log_analysis('var/log/delivery/rabbitmq/current', 'Cannot allocate \d+ bytes of memory')
+
+control 'gatherlogs.automate.rabbitmq-memory-allocation-error' do
+  impact 1
+  title 'Check to see if RabbitMQ is erroring because of memory allocation errors'
+  desc "
+RabbitMQ is unable to allocate enough memory to operate correctly. Please check
+that there is enough RAM available on the system
+
+#{rabbit_mem.summary}
+  "
+
+  describe rabbit_mem do
+    its('last_entry') { should be_empty }
+  end
+end
