@@ -69,9 +69,10 @@ control 'gatherlogs.automate.elasticsearch-disk-space-errors' do
   desc "
 When ElasticSearch detects that there is not enough free space on the disk it will
 stop accepting new documents to prevent corrupting the database.  You will need
-to clean up space on disk to fix this issue.
+to free up disk space to fix this issue.
 
-To configure the data retention policy in Automate please review:
+Make sure that the Automate Reaper is enable and working, to configure the data
+retention policy in Automate please review:
 https://docs.chef.io/data_retention_chef_automate.html
 
 #{es_disk.summary}
