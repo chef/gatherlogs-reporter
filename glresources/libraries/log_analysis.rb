@@ -58,18 +58,15 @@ Last entry: #{last_entry}
   private
 
   def read_content
-    cmd = ""
-    piped = false
-    if @options[:tail]
-      piped = true
-      cmd << "tail -n#{@options[:tail].to_i} #{logfile} | "
+    cmd = []
+
+    if @options[:a2service]
+      cmd << "grep '#{@options[:a2service]}' #{logfile}"
+      cmd << "egrep '#{grep_expr}'"
+    else
+      cmd << "egrep '#{grep_expr}' #{logfile}"
     end
 
-    cmd << "egrep '#{grep_expr}'"
-    unless piped
-      cmd << " #{logfile}"
-    end
-
-    inspec.command(cmd).stdout.split("\n")
+    inspec.command(cmd.join(' | ')).stdout.split("\n")
   end
 end
