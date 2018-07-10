@@ -36,21 +36,6 @@ services.internal do |service|
     end
   end
 end
-#
-# services.external do |service|
-#   control "gatherlogs.automate.external_service_status.#{service.name}" do
-#     title "check that external #{service.name} is running"
-#     desc "
-#       External #{service.name} service is not running or has a short runtime, check the logs
-#       and make sure the service is not flapping.
-#     "
-#
-#     describe service do
-#       its('status') { should eq 'run' }
-#       its('connection_status') { should eq 'OK' }
-#     end
-#   end
-# end
 
 df = disk_usage()
 
@@ -115,7 +100,7 @@ Failed checks:
 end
 
 
-notification_error = log_analysis("journalctl_chef-automate.txt", 'Notifications.WebhookSender.Impl \[error\] .* failed to post')
+notification_error = log_analysis("journalctl_chef-automate.txt", 'Notifications.WebhookSender.Impl \[error\] .* failed to post', a2service: 'notifications-service.default')
 control "gatherlogs.automate2.notifications-failed-to-send" do
   impact 1.0
   title 'Check to see if the notifications services is reporting errors sending messages'
