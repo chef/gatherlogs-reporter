@@ -42,4 +42,5 @@ Options:
   esac
 done
 
+echo "Running inspec..."
 inspec exec $profiles --reporter json | $DIR/pretty.rb $args
