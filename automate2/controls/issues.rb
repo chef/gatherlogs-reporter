@@ -8,6 +8,8 @@ control "gatherlogs.automate2.upgrade_failed" do
 It appears that there was a failure during the upgrade process for Automate, please
 check the logs and contact support to see about getting this fixed.
 
+For more info see: https://automate.chef.io/release-notes/20180706210448/#hanging-stuck-upgrades
+
 #{upgrade_failed.summary}
   "
 
