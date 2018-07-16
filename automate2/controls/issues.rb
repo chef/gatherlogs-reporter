@@ -17,3 +17,23 @@ For more info see: https://automate.chef.io/release-notes/20180706210448/#hangin
     its('last_entry') { should be_empty }
   end
 end
+
+ldap_group_too_large = log_analysis("journalctl_chef-automate.txt", 'upstream sent too big header while reading response header from upstream.*dex/auth/ldap', a2service: 'automate-load-balancer.default')
+control "gatherlogs.automate2.auth_upstream_header_too_big" do
+  impact 1.0
+  title 'Check to see if Automate is reporting a failure getting data from an upstream LDAP source'
+  desc "
+Automate is reporting errors fetching data from an upstream LDAP source. This is commonly
+occurs when LDAP returns too many groups.  You will need to specify group search filters
+to reduce the number of groups returned by ldap.
+
+For more info see: https://automate.chef.io/docs/ldap/#group-search
+
+#{ldap_group_too_large.summary}
+  "
+
+  describe ldap_group_too_large do
+    its('last_entry') { should be_empty }
+  end
+end
+#
