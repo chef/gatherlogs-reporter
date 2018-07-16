@@ -24,10 +24,11 @@ control "gatherlogs.automate2.auth_upstream_header_too_big" do
   title 'Check to see if Automate is reporting a failure getting data from an upstream LDAP source'
   desc "
 Automate is reporting errors fetching data from an upstream LDAP source. This is commonly
-occurs when LDAP returns too many groups.  You will need to specify group search filters
-to reduce the number of groups returned by ldap.
+occurs when LDAP returns too many groups or referencing LDAP groups by distinguished names (DN).
 
-For more info see: https://automate.chef.io/docs/ldap/#group-search
+See this link to on how to resolve this issue:
+
+https://automate.chef.io/docs/ldap/#other-common-issues
 
 #{ldap_group_too_large.summary}
   "
