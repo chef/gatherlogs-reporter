@@ -62,9 +62,8 @@ class InstalledPackagesTxt
   def package_version(os)
     return if os.nil?
     return unless exist?
-
     case os.to_sym
-    when :rhel
+    when :rhel, :centos
       result = content.match(/#{@package_name}-(\d+\.\d+\.\d+)-\d+.\w.\w/)
       result[1] unless result.nil?
     when :ubuntu
