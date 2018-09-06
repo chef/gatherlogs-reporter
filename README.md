@@ -78,6 +78,15 @@ InSpec profile for Chef-Server generated gather-logs
       https://getchef.zendesk.com/hc/en-us/articles/360001425252-Fixing-missing-2018-Reporting-partition-tables
 ```
 
+## Autocompletions
+
+If you use the zsh shell you can add autocompletions for the `check_log` command by adding the following
+to your `~/.zshrc` config
+
+```
+source "/PATH/TO/gatherlogs/completions/check_logs.zsh"
+```
+
 ## TODO
 
 * [ ] It would be nice if we could test to see if `noexec` is set on `/tmp`
