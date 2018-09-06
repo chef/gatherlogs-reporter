@@ -21,8 +21,17 @@ done
 set -- $flags
 
 # parse flags
-while getopts avh opt; do
+while getopts avph opt; do
   case $opt in
+    p)
+      declare -a profile_list
+      profile_list=$(ls -d ${DIR}/../*/inspec.yml | awk -F / '{print $(NF-1)}')
+      for p in $profile_list; do
+        if [[ $p != "common" && $p != "glresources" ]]; then
+          echo $p
+        fi
+      done
+      exit 0 ;;
     a)
       args+="-a " ;;
     v)
@@ -31,6 +40,7 @@ while getopts avh opt; do
       args+="-h "
       echo "Usage: check_logs [OPTIONS] PROFILENAME
 Options:
+    -p        List available profiles
     -a        Show all controls (only failed controls are shown by default)
     -v        Show verbose control results
     -h        Print this message
