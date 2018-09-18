@@ -74,3 +74,21 @@ https://automate.chef.io/docs/configuration/#setting-elasticsearch-heap
     its('last_entry') { should be_empty }
   end
 end
+
+# max virtual memory areas vm.max_map_count [256000] is too low, increase to at     least [262144]
+es_vmc = log_analysis("journalctl_chef-automate.txt", 'max virtual memory areas vm.max_map_count \[\w+\] is too low, increase to at least \[\w+\]', a2service: 'automate-elasticsearch.default')
+control "gatherlogs.automate2.elasticsearch_max_map_count_error" do
+  impact 1.0
+  title 'Check to see if Automate ES is reporting a error with vm.max_map_count setting'
+  desc "
+Automate is reporting that the vm.max_map_count is not set correctly. This is a sysctl setting
+that should be checked by the automate pre-flight tests.  If you recently rebooted make sure
+the settings are set in /etc/sysctl.conf
+
+#{es_vmc.summary}
+  "
+
+  describe es_vmc do
+    its('last_entry') { should be_empty }
+  end
+end
