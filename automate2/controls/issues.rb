@@ -23,7 +23,7 @@ control "gatherlogs.automate2.auth_upstream_header_too_big" do
   impact 1.0
   title 'Check to see if Automate is reporting a failure getting data from an upstream LDAP source'
   desc "
-Automate is reporting errors fetching data from an upstream LDAP source. This is commonly
+Automate is reporting errors fetching data from an upstream LDAP source. This commonly
 occurs when LDAP returns too many groups or referencing LDAP groups by distinguished names (DN).
 
 See this link to on how to resolve this issue:
