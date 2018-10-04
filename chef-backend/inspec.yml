@@ -1,0 +1,14 @@
+name: chef-backend
+title: InSpec profile for Chef-Backend generated gather-logs
+maintainer: Will Fisher <will@chef.io>
+copyright: Will Fisher
+copyright_email: will@chef.io
+license: Apache-2.0
+summary: InSpec profile for Chef-Backend generated gather-logs
+version: 0.1.0
+
+depends:
+  - name: common
+    path: ../common
+  - name: glresources
+    path: ../glresources
