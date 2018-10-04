@@ -8,9 +8,13 @@ class InstalledPackages < Inspec.resource(1)
     # Also, the method used for exist? on Automate is not ideal as another
     # product could include version-manifest.json and would give a false postive
     # if requesting the automate package version.
-    if name == 'automate'
+    case name
+    when 'automate'
       filename = 'opt/delivery/version-manifest.json'
-      @package = AutomateVersionManifestJson.new(name, read_content(filename))
+      @package = VersionManifestJson.new(name, read_content(filename))
+    when 'chef-backend'
+      filename = 'opt/chef-backend/version-manifest.json'
+      @package = VersionManifestJson.new(name, read_content(filename))
     else
       filename = 'installed-packages.txt'
       @package = InstalledPackagesTxt.new(name, read_content(filename), platform_version.os)
@@ -75,7 +79,7 @@ class InstalledPackagesTxt
   end
 end
 
-class AutomateVersionManifestJson
+class VersionManifestJson
   attr_accessor :content, :version
 
   def initialize(name, packages_content)
