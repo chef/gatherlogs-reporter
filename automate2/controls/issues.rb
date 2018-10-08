@@ -85,6 +85,12 @@ Automate is reporting that the vm.max_map_count is not set correctly. This is a 
 that should be checked by the automate pre-flight tests.  If you recently rebooted make sure
 the settings are set in /etc/sysctl.conf
 
+Fix the system tuning failures indicated above by running the following:
+sysctl -w vm.max_map_count=262144
+
+To make these changes permanent, add the following to /etc/sysctl.conf:
+vm.max_map_count=262144
+
 #{es_vmc.summary}
   "
 

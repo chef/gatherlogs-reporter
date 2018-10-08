@@ -111,6 +111,13 @@ class ServiceObject
     @args[field.to_sym] if @args.has_key?(field.to_sym)
   end
 
+  def summary
+    %w{ name status runtime health }.map { |key|
+      next unless @args.include?(key.to_sym)
+      "#{key.capitalize}: #{@args[key.to_sym]}"
+    }.join(', ')
+  end
+
   def to_s
     @args[:name] || 'Unknown'
   end
