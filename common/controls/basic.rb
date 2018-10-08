@@ -38,8 +38,7 @@ client load on the system.
 
 #{dmesg_oom.summary}
 
-For Automate review: https://pages.chef.io/rs/255-VFB-268/images/ScalingChefAutomate_2017.pdf
-  "
+For Automate review: https://pages.chef.io/rs/255-VFB-268/images/ScalingChefAutomate_2017.pdf"
   only_if { dmesg_oom.log_exists? }
 
   describe dmesg_oom do
