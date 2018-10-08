@@ -26,20 +26,23 @@ services.internal do |service|
   control "gatherlogs.automate2.internal_service_status.#{service.name}" do
     title "check that #{service.name} service is running"
     desc "
-    Internal #{service.name} service is not running or has a short runtime, check the logs
-    and make sure the service is not flapping.
+    There was a problem with the #{service.name} service.  Please check that it's
+    running, doesn't have a short run time, or the health checks are reporting an issue.
+
+    #{service.summary}
     "
 
     describe service do
       its('status') { should eq 'running' }
-      its('runtime') { should cmp >= 80 }
+      its('health') { should eq 'ok' }
+      its('runtime') { should cmp >= 90 }
     end
   end
 end
 
 df = disk_usage()
 
-%w(/ /hab /var/log).each do |mount|
+%w(/ /hab /var /var/log).each do |mount|
   control "gatherlogs.automate2.critical_disk_usage.#{mount}" do
     title "check that the automate has plenty of free space"
     desc "
