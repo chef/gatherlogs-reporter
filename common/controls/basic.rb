@@ -31,12 +31,14 @@ dmesg_oom = log_analysis('dmesg.txt', 'Out of memory: Kill process')
 control "gatherlogs.common.dmesg-oom-killer-invoked" do
   title "Check to see if the kernel OOM kill was invoked"
   desc "
-  #{dmesg_oom.hits} entries for 'Out of memory: Kill process' where found in 'dmesg.txt'
+Entries for 'Out of memory: Kill process' where found in 'dmesg.txt'
 
-  Please make sure that the system has enough RAM available to handle the
-  client load on the system.
+Please make sure that the system has enough RAM available to handle the
+client load on the system.
 
-  For Automate review: https://pages.chef.io/rs/255-VFB-268/images/ScalingChefAutomate_2017.pdf
+#{dmesg_oom.summary}
+
+For Automate review: https://pages.chef.io/rs/255-VFB-268/images/ScalingChefAutomate_2017.pdf
   "
   only_if { dmesg_oom.log_exists? }
 
