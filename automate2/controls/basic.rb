@@ -25,12 +25,10 @@ services = service_status(:automate2)
 services.internal do |service|
   control "gatherlogs.automate2.internal_service_status.#{service.name}" do
     title "check that #{service.name} service is running"
-    desc "
-    There was a problem with the #{service.name} service.  Please check that it's
-    running, doesn't have a short run time, or the health checks are reporting an issue.
+    desc "There was a problem with the #{service.name} service.  Please check that it's
+running, doesn't have a short run time, or the health checks are reporting an issue.
 
-    #{service.summary}
-    "
+#{service.summary}"
 
     describe service do
       its('status') { should eq 'running' }

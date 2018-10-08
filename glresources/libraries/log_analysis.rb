@@ -37,10 +37,10 @@ class LogAnalysis < Inspec.resource(1)
   end
 
   def summary
-    <<-EOS
+    <<-EOS.strip
 Found #{hits} messages about '#{grep_expr}'
 Last entry: #{last_entry}
-    EOS
+EOS
   end
 
   def exists?
