@@ -20,7 +20,7 @@ end
 
 df = disk_usage()
 
-%w(/ /var /var/opt /var/opt/chef-backend /var/log).each do |mount|
+%w(/ /var /var/opt /var/opt/chef-backend /var/log /var/log/chef-backend).each do |mount|
   control "gatherlogs.chef-server.critical_disk_usage.#{mount}" do
     title "check that #{mount} has plenty of free space"
     desc "
