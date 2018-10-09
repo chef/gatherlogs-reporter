@@ -10,6 +10,8 @@ class ServiceStatus < Inspec.resource(1)
       parse_services(status_content)
     when :automate2
       parse_a2_services(status_content)
+    when :chef_backend
+      parse_backend_services(status_content)
     end
   end
 
@@ -41,6 +43,8 @@ class ServiceStatus < Inspec.resource(1)
       'delivery-ctl-status.txt'
     when :chef_server
       'private-chef-ctl_status.txt'
+    when :chef_backend
+      'chef-backend-ctl-status.txt'
     when :automate2
       'chef-automate_status.txt'
     end
@@ -55,6 +59,24 @@ class ServiceStatus < Inspec.resource(1)
       next if line =~ /^Service Name/
 
       service, status, health, runtime, pid = line.split(/\s+/)
+      services[:internal][service] = ServiceObject.new(name: service, status: status, pid: pid, runtime: runtime.to_i, health: health, internal: true)
+    end
+
+    services
+  end
+
+  def parse_backend_services(content)
+    services = { internal: {}, external: {} }
+
+    content.each_line do |line|
+      #skip header
+      match = line.match(/^(\w+)\s+(\w+) \(pid (\w+)\)\s+(\dd \dh \d\dm \d\ds)\s+(.*)$/)
+      next if match.nil?
+
+      dummy, service, status, pid, runtime, health = *match.to_a
+      days, hours, minutes, seconds = *runtime.split(/\s/).map(&:to_i)
+      runtime = days * (24 * 3600) + hours * 3600 + minutes * 60 + seconds
+
       services[:internal][service] = ServiceObject.new(name: service, status: status, pid: pid, runtime: runtime.to_i, health: health, internal: true)
     end
 
