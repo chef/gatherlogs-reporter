@@ -35,6 +35,7 @@ Currently available profiles
   * `chef-server`
   * `automate`
   * `automate2`
+  * `chef-backend`
 
 Run `check_log` like this to validate the gather-log files in the current directory.
 
