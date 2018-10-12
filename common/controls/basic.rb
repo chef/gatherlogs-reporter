@@ -36,9 +36,10 @@ Entries for 'Out of memory: Kill process' where found in 'dmesg.txt'
 Please make sure that the system has enough RAM available to handle the
 client load on the system.
 
-#{dmesg_oom.summary}
-
 For Automate review: https://pages.chef.io/rs/255-VFB-268/images/ScalingChefAutomate_2017.pdf"
+
+  tag summary: dmesg_oom.summary
+
   only_if { dmesg_oom.log_exists? }
 
   describe dmesg_oom do
@@ -63,7 +64,6 @@ control "gatherlogs.common.dmesg-nf_conntrack-table-full-error" do
   only_if { dmesg_contrack.log_exists? }
 
   describe dmesg_contrack do
-
     its('last_entry') { should be_empty }
   end
 end
