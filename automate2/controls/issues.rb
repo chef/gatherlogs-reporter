@@ -6,9 +6,9 @@ control "gatherlogs.automate2.upgrade_failed" do
   title 'Check to see if Automate is reporting a failure during the hab sup upgrade process'
   desc "
 It appears that there was a failure during the upgrade process for Automate, please
-check the logs and contact support to see about getting this fixed.
+check the logs and contact support to see about getting this fixed."
 
-For more info see: https://automate.chef.io/release-notes/20180706210448/#hanging-stuck-upgrades"
+  tag kb: 'https://automate.chef.io/release-notes/20180706210448/#hanging-stuck-upgrades'
   tag summary: upgrade_failed.summary
 
   describe upgrade_failed do
@@ -78,7 +78,7 @@ control "gatherlogs.automate2.elasticsearch_max_map_count_error" do
   impact 1.0
   title 'Check to see if Automate ES is reporting a error with vm.max_map_count setting'
   desc "
-Automate is reporting that the vm.max_map_count is not set correctly. This is a sysctl setting
+ElasticSearch is reporting that the vm.max_map_count is not set correctly. This is a sysctl setting
 that should be checked by the automate pre-flight tests.  If you recently rebooted make sure
 the settings are set in /etc/sysctl.conf
 

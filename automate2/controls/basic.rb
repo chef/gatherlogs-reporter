@@ -90,10 +90,8 @@ If sysctl settings are being reported as failed be sure to update your 'syctl.co
 with the required settings to ensure they persist through system reboots
 
 Please check the chef-automate_preflight-check.txt for ways to remediate the failed tests.
-
-Failed checks:
-#{failed_preflight_checks.messages.join("\n")}
   "
+  tag summary: failed_preflight_checks.messages
 
   describe failed_preflight_checks do
     its('hits') { should cmp == 1 }
@@ -105,15 +103,9 @@ notification_error = log_analysis("journalctl_chef-automate.txt", 'Notifications
 control "gatherlogs.automate2.notifications-failed-to-send" do
   impact 1.0
   title 'Check to see if the notifications services is reporting errors sending messages'
-  desc "
-  The notification service is encountering an error when trying to set a message to the
-  webhook endpoint
+  desc 'The notification service is encountering an error when trying to set a message to the webhook endpoint'
 
-  #{notification_error.hits} total errors found
-
-  Last matching log entry:
-  #{notification_error.last_entry}
-  "
+  tag summary: notification_error.summary
 
   describe notification_error do
     its('last_entry') { should be_empty }
