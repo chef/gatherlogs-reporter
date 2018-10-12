@@ -74,9 +74,9 @@ to free up disk space to fix this issue.
 Make sure that the Automate Reaper is enable and working, to configure the data
 retention policy in Automate please review:
 https://docs.chef.io/data_retention_chef_automate.html
-
-#{es_disk.summary}
   "
+
+  tag summary: es_disk.summary
 
   describe es_disk do
     its('last_entry') { should be_empty }
@@ -92,9 +92,8 @@ control 'gatherlogs.automate.rabbitmq-memory-allocation-error' do
   desc "
 RabbitMQ is unable to allocate enough memory to operate correctly. Please check
 that there is enough RAM available on the system
-
-#{rabbit_mem.summary}
   "
+  tag summary: rabbit_mem.summary
 
   describe rabbit_mem do
     its('last_entry') { should be_empty }

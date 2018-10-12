@@ -8,6 +8,7 @@ require 'word_wrap/core_ext'
 FAILED = '#FF3333'.freeze
 PASSED = '#32CD32'.freeze
 SKIPPED = '#BEBEBE'.freeze
+INFO = '#FF8C00'.freeze
 
 all_controls = false
 verbose = false
@@ -31,12 +32,45 @@ rescue
   exit 1
 end
 
-def tabbed_text(text)
-  text.gsub("\n", "\n      ")
+def tabbed_text(text, spaces = 0)
+  text = Array(text).join("\n")
+
+  text.gsub("\n", "\n#{' ' * (6 + spaces.to_i)}")
 end
 
-def info_text(text)
-  Paint["ⓘ #{tabbed_text(text)}\n", '#FF8C00']
+def desc_text(control)
+  text = Array(control['desc'])
+  return if text.empty?
+
+  labeled_output '⇨ ', tabbed_text(text, 1) + "\n"
+end
+
+def kb_text(control)
+  text = Array(control['tags']['kb'])
+  return if text.empty?
+
+  labeled_output 'KB', tabbed_text(text, 2)
+end
+
+
+def summary_text(control)
+  text = control['tags']['summary']
+  return if text.nil?
+
+  labeled_output '🛈 ', tabbed_text(text, 1) + "\n"
+end
+
+def labeled_output(label, output, override_colors = {})
+  colors = { label: INFO, output: :nothing }.merge(override_colors)
+  Paint%[
+    "%{label_output} #{output}",
+    colors[:output],
+    label_output: [label, colors[:label]]
+  ]
+end
+
+def tabbed_output(output)
+  puts '    ' + output unless output.nil? || output.empty?
 end
 
 def clean_up_message(result)
@@ -77,7 +111,7 @@ output['profiles'].each do |profile|
         end
       when 'failed'
         control_color = color = FAILED
-        control_badge = badge = '×'
+        control_badge = badge = '✗'
       end
 
       result_messages << Paint["    #{badge} #{clean_up_message(result)}", color]
@@ -86,7 +120,9 @@ output['profiles'].each do |profile|
     next if result_messages.empty?
     puts Paint["  #{control_badge} #{control['id']}: #{control['title']}", control_color]
     if control['desc'] && control_color == FAILED
-      puts '    ' + info_text(control['desc'])
+      tabbed_output desc_text(control)
+      tabbed_output summary_text(control)
+      tabbed_output kb_text(control)
     end
     puts result_messages if verbose && control.has_key?('desc')
   end
