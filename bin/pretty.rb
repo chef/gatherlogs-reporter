@@ -32,19 +32,27 @@ rescue
   exit 1
 end
 
+# Make sure that we tab over the output for multiline text so that it lines
+# up with the rest of the output.
 def tabbed_text(text, spaces = 0)
   text = Array(text).join("\n")
 
   text.gsub("\n", "\n#{' ' * (6 + spaces.to_i)}")
 end
 
+# Format the desc text in the control
+# Control snippet:
+#    desc "This is a description from the control!"
 def desc_text(control)
   text = Array(control['desc'])
   return if text.empty?
 
-  labeled_output '⇨ ', tabbed_text(text, 1) + "\n"
+  labeled_output '⇨', tabbed_text(text) + "\n"
 end
 
+# Format output for kb tagged text in the control\
+# Control snippet:
+#    tag kb: "http://test.com"
 def kb_text(control)
   text = Array(control['tags']['kb'])
   return if text.empty?
@@ -52,7 +60,9 @@ def kb_text(control)
   labeled_output 'KB', tabbed_text(text, 2)
 end
 
-
+# Format output for summary tagged text in the control
+# Control snippet:
+#    tag summary: "Some output in the control"
 def summary_text(control)
   text = control['tags']['summary']
   return if text.nil?
@@ -69,11 +79,14 @@ def labeled_output(label, output, override_colors = {})
   ]
 end
 
-def tabbed_output(output)
+# Print out detailed info for each test subsection
+# For example the description, summary or kb info provided in the control
+def subsection(output)
   puts '    ' + output unless output.nil? || output.empty?
 end
 
-def clean_up_message(result)
+# Format the output used for showing the control test results
+def format_result_message(badge, result, color)
   output = case result['status']
            when 'skipped'
              result['skip_message']
@@ -83,7 +96,12 @@ def clean_up_message(result)
              result['code_desc']
            end
 
-  tabbed_text(output)[0..700]
+  Paint["    #{tabbed_text("#{badge} #{output}")[0..700]}", color]
+end
+
+# Format the output for showing the control title
+def control_info(badge, info, color)
+  Paint["  #{badge} #{info}", color]
 end
 
 output['profiles'].each do |profile|
@@ -95,35 +113,36 @@ output['profiles'].each do |profile|
   profile['controls'].each do |control|
     result_messages = []
     control_badge = '✓'
-    control_color = PASSED
+    control_status = PASSED
 
     control['results'].each do |result|
       next if !all_controls && result['status'] != 'failed'
 
       case result['status']
       when 'passed'
-        color = PASSED
-        badge = '✓'
+        test_status = PASSED
+        test_badge = '✓'
       when 'skipped'
-        if control_color != FAILED
-          control_color = color = SKIPPED
-          control_badge = badge = '↺'
+        if control_status != FAILED
+          control_status = test_status = SKIPPED
+          control_badge = test_badge = '↺'
         end
       when 'failed'
-        control_color = color = FAILED
-        control_badge = badge = '✗'
+        control_status = test_status = FAILED
+        control_badge = test_badge = '✗'
       end
 
-      result_messages << Paint["    #{badge} #{clean_up_message(result)}", color]
+      result_messages << format_result_message(test_badge, result, test_status)
     end
 
     next if result_messages.empty?
-    puts Paint["  #{control_badge} #{control['id']}: #{control['title']}", control_color]
-    if control['desc'] && control_color == FAILED
-      tabbed_output desc_text(control)
-      tabbed_output summary_text(control)
-      tabbed_output kb_text(control)
+
+    puts control_info(control_badge, "#{control['id']}: #{control['title']}", control_status)
+    if control_status == FAILED
+      subsection desc_text(control)
+      subsection summary_text(control)
+      subsection kb_text(control)
     end
-    puts result_messages if verbose && control.has_key?('desc')
+    puts result_messages if verbose
   end
 end
