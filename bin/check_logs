@@ -21,7 +21,7 @@ done
 set -- $flags
 
 # parse flags
-while getopts avph opt; do
+while getopts avphd opt; do
   case $opt in
     p)
       declare -a profile_list
@@ -32,6 +32,8 @@ while getopts avph opt; do
         fi
       done
       exit 0 ;;
+    d)
+      args+="-d " ;;
     a)
       args+="-a " ;;
     v)
@@ -43,6 +45,7 @@ Options:
     -p        List available profiles
     -a        Show all controls (only failed controls are shown by default)
     -v        Show verbose control results
+    -d        Show debug output
     -h        Print this message
       "
       exit 1 ;;
