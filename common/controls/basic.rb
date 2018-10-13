@@ -52,14 +52,16 @@ dmesg_contrack = log_analysis('dmesg.txt', 'nf_conntrack: table full, dropping p
 control "gatherlogs.common.dmesg-nf_conntrack-table-full-error" do
   title "Check to see if the kernel is reporting the nf_conntrack table is full"
   desc "
-  #{dmesg_contrack.hits} entries for 'nf_conntrack: table full, dropping packet.' where found in 'dmesg.txt'
+  The nf_conntrack table is full and is causing the kernel to drop packets.
 
-  One possible cause of this can happen when there is a large number of push-job
-  clients checking into the node all at once.
+  If you are using the push-jobs server this can happen if a large number push-clients checking all at once.
+  A workaround for this is to adjust the value for `net.netfliter.nf_conntrac_max` in sysctl
 
-  Check the current value using: `sysctl net.netfilter.nf_conntrack_max`
-  Update setting using: `sysctl -w sysctl -w net.netfilter.nf_conntrack_max=131072`
+  To get the current value: `sysctl net.netfilter.nf_conntrack_max`
+  To update the value: `sysctl -w net.netfilter.nf_conntrack_max=131072`
   "
+
+  tag summary: dmesg_contrack.summary
 
   only_if { dmesg_contrack.log_exists? }
 
