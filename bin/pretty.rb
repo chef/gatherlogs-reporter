@@ -5,13 +5,12 @@ require 'paint'
 require 'word_wrap'
 require 'word_wrap/core_ext'
 
-FAILED = '#FF3333'.freeze
-PASSED = '#32CD32'.freeze
-SKIPPED = '#BEBEBE'.freeze
-INFO = '#FF8C00'.freeze
-
-
 class GatherlogsInspecReporter
+  FAILED = '#FF3333'.freeze
+  PASSED = '#32CD32'.freeze
+  SKIPPED = '#BEBEBE'.freeze
+  INFO = '#FF8C00'.freeze
+
   attr_reader :log_level, :all_controls, :verbose
 
   def initialize
@@ -119,7 +118,7 @@ class GatherlogsInspecReporter
 
       profile['controls'].each do |control|
         debug control
-        
+
         control_badge = '✓'
         control_status = PASSED
         result_messages = []
