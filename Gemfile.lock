@@ -1,15 +1,22 @@
+PATH
+  remote: .
+  specs:
+    gatherlogs (0.1.0)
+      paint
+
 GEM
   remote: https://rubygems.org/
   specs:
     paint (2.0.1)
-    word_wrap (1.0.0)
+    rake (10.5.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  paint
-  word_wrap
+  bundler (~> 1.16)
+  gatherlogs!
+  rake (~> 10.0)
 
 BUNDLED WITH
-   1.16.1
+   1.16.4

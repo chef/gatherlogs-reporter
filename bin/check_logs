@@ -15,7 +15,7 @@ profiles=()
 while [[ $# -gt 0 ]]; do
   case $1 in
     -*) flags+="$1 "; shift ;;
-    *) profiles+="${DIR}/../${1} "; shift ;;
+    *) profiles+="${DIR}/../profiles/${1} "; shift ;;
   esac
 done
 set -- $flags
@@ -25,7 +25,7 @@ while getopts avphd opt; do
   case $opt in
     p)
       declare -a profile_list
-      profile_list=$(ls -d ${DIR}/../*/inspec.yml | awk -F / '{print $(NF-1)}')
+      profile_list=$(ls -d ${DIR}/../profiles/*/inspec.yml | awk -F / '{print $(NF-1)}')
       for p in $profile_list; do
         if [[ $p != "common" && $p != "glresources" ]]; then
           echo $p
@@ -56,4 +56,4 @@ Options:
 done
 
 echo "Running inspec..."
-inspec exec $profiles --reporter json | $DIR/pretty.rb $args
+inspec exec $profiles --reporter json | $DIR/gatherlogs_report.rb $args
