@@ -1,11 +1,12 @@
 #!/usr/bin/env ruby
 
 require_relative '../lib/gatherlogs'
+require_relative '../lib/gatherlogs/cli'
 
 begin
   puts "Generating report..."
-  reporter = Gatherlogs::Reporter.new()
-  reporter.report(JSON.parse(STDIN.read))
+  cli = Gatherlogs::CLI.new(ARGV)
+  cli.report_from_stdin()
 rescue => e
   puts "[ERROR] #{e}"
   puts "Backtrace:"

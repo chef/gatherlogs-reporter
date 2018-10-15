@@ -14,25 +14,10 @@ module Gatherlogs
 
     attr_reader :log_level, :all_controls, :verbose
 
-    def initialize
-      @all_controls = false
-      @verbose = false
-      @log_level = :info
-
-      parse_args
-    end
-
-    def parse_args
-      while flag = ARGV.shift
-        case flag
-        when '-d', '--debug'
-          @log_level = :debug
-        when '-a', '--all'
-          @all_controls = true
-        when '-v', '--verbose'
-          @verbose = true
-        end
-      end
+    def initialize(args)
+      @all_controls = args[:all_controls]
+      @verbose = args[:verbose]
+      @log_level = args[:log_level]
     end
 
     def debug(msg)
