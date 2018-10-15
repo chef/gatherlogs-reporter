@@ -76,7 +76,7 @@ module Gatherlogs
       debug_msg('Executing', "'#{cmd}'")
 
       Dir.chdir(log_path) do
-        inspec = shellout(cmd, { returns: [0,100] })
+        inspec = shellout(cmd, { returns: [0, 100, 101] })
         JSON.parse(inspec.stdout)
       end
     end
