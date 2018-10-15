@@ -12,6 +12,7 @@ module Gatherlogs
     option ['-p', '--profiles'], :flag, 'show available profiles'
     option ['-v', '--verbose'], :flag, 'show inspec test output'
     option ['-a', '--all'], :flag, 'show all tests'
+    option ['--path'], :string, 'Path to the report to run against', default: '.', attribute_name: :log_path
 
     parameter "[PROFILE]", "profile to execute", attribute_name: :profile
 
@@ -59,9 +60,11 @@ module Gatherlogs
 
       status_msg "Running inspec..."
       debug_msg('Executing', "'#{cmd}'")
-      inspec = shellout(cmd, { returns: [0,100] })
 
-      JSON.parse(inspec.stdout)
+      Dir.chdir(log_path) do
+        inspec = shellout(cmd, { returns: [0,100] })
+        JSON.parse(inspec.stdout)
+      end
     end
 
     def status_msg(*msg)
