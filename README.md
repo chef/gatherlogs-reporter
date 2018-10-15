@@ -50,12 +50,19 @@ check_log automate
 Available options
 
 ```
-Usage: check_logs [OPTIONS] PROFILENAME
+Usage:
+    check_logs [OPTIONS] [PROFILE]
+
+Parameters:
+    [PROFILE]                     profile to execute
+
 Options:
- Options:
-     -a        Show all controls (only failed controls are shown by default)
-     -v        Show verbose control results
-     -h        Print this message
+    --path PATH                   Path to the gatherlogs for inspection (default: ".")
+    -d, --debug                   enable debug output
+    -p, --profiles                show available profiles
+    -v, --verbose                 show inspec test output
+    -a, --all                     show all tests
+    -h, --help                    print help
 ```
 
 ## Example output
