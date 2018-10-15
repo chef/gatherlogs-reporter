@@ -38,7 +38,7 @@ module Gatherlogs
       text = Array(control['desc'])
       return if text.empty?
 
-      labeled_output '⇨', tabbed_text(text) + "\n"
+      labeled_output 'ⓘ', tabbed_text(text) + "\n"
     end
 
     # Format output for kb tagged text in the control\
@@ -47,8 +47,8 @@ module Gatherlogs
     def kb_text(control)
       text = Array(control['tags']['kb'])
       return if text.empty?
-
-      labeled_output 'KB', tabbed_text(text, 2)
+      # ㎅
+      labeled_output '✩', tabbed_text(text)
     end
 
     # Format output for summary tagged text in the control
@@ -58,7 +58,7 @@ module Gatherlogs
       text = control['tags']['summary']
       return if text.nil?
 
-      labeled_output '🛈', tabbed_text(text) + "\n"
+      labeled_output '⇨', tabbed_text(text) + "\n"
     end
 
     def labeled_output(label, output, override_colors = {})
