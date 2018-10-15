@@ -49,11 +49,12 @@ Parameters:
     [PROFILE]                     profile to execute
 
 Options:
-    --path PATH                   Path to the gatherlogs for inspection (default: ".")
-    -d, --debug                   enable debug output
-    -p, --profiles                show available profiles
-    -v, --verbose                 show inspec test output
-    -a, --all                     show all tests
+    -p, --path PATH               Path to the gatherlogs for inspection (default: ".")
+    -d, --debug                   Enable debug output
+    --profiles                    Show available profiles
+    -v, --verbose                 Show inspec test output
+    -a, --all                     Show all tests, default is to only show failed tests
+    --version                     Show current version
     -h, --help                    print help
 ```
 
