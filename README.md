@@ -31,21 +31,13 @@ Get InSpec from: http://inspec.io
 
 You will need to be in the directory with the expanded gather-logs tar file to run this tool and should be in the same directory where you find the `installed-packages.txt` or `platform_version.txt` files.
 
+The `check_logs` tool will attempt to detect the product used to generate the gather-logs bundle if one hasn't been specified, if it's unable to for some reason you need to give it the profile name.
+
 Currently available profiles
   * `chef-server`
   * `automate`
   * `automate2`
   * `chef-backend`
-
-Run `check_log` like this to validate the gather-log files in the current directory.
-
-```
-# to check gather-logs from chef-server use
-check_log chef-server
-# to check gather-logs from automate use
-check_log automate
-# etc.....
-```
 
 Available options
 
@@ -68,7 +60,7 @@ Options:
 ## Example output
 
 ```
-$ check_log chef-server -f -q
+$ check_log
 
 InSpec profile for Chef-Server generated gather-logs
   × gatherlogs.chef-server.package: check that chef-server is installed
