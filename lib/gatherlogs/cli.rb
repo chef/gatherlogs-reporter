@@ -9,11 +9,11 @@ Clamp.allow_options_after_parameters = true
 
 module Gatherlogs
   class CLI < Clamp::Command
-    option ['--path'], 'PATH', 'Path to the gatherlogs for inspection', default: '.', attribute_name: :log_path
-    option ['-d', '--debug'], :flag, 'enable debug output'
-    option ['-p', '--profiles'], :flag, 'show available profiles'
-    option ['-v', '--verbose'], :flag, 'show inspec test output'
-    option ['-a', '--all'], :flag, 'show all tests'
+    option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection', default: '.', attribute_name: :log_path
+    option ['-d', '--debug'], :flag, 'Enable debug output'
+    option ['--profiles'], :flag, 'Show available profiles'
+    option ['-v', '--verbose'], :flag, 'Show inspec test output'
+    option ['-a', '--all'], :flag, 'Show all tests, default is to only show failed tests'
     option ['--version'], :flag, 'Show current version'
 
     parameter "[PROFILE]", "profile to execute", attribute_name: :inspec_profile
