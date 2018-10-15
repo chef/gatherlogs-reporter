@@ -14,11 +14,17 @@ module Gatherlogs
     option ['-p', '--profiles'], :flag, 'show available profiles'
     option ['-v', '--verbose'], :flag, 'show inspec test output'
     option ['-a', '--all'], :flag, 'show all tests'
+    option ['--version'], :flag, 'Show current version'
 
     parameter "[PROFILE]", "profile to execute", attribute_name: :inspec_profile
 
     def execute()
       parse_args
+
+      if version?
+        puts "#{File.basename($0)}: #{Gatherlogs::VERSION}"
+        exit
+      end
 
       if profiles?
         possible_profiles = Dir.glob(File.join(PROFILES_PATH, '*/inspec.yml'))
