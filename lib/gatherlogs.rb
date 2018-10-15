@@ -28,7 +28,7 @@ module Gatherlogs
     # Make sure that we tab over the output for multiline text so that it lines
     # up with the rest of the output.
     def tabbed_text(text, spaces = 0)
-      Array(text).join("\n").gsub("\n", "\n#{' ' * (4 + spaces.to_i)}")
+      Array(text).join("\n").gsub("\n", "\n#{' ' * (5 + spaces.to_i)}")
     end
 
     # Format the desc text in the control
@@ -64,7 +64,7 @@ module Gatherlogs
     def labeled_output(label, output, override_colors = {})
       colors = { label: INFO, output: :nothing }.merge(override_colors)
       Paint%[
-        "%{label_output} #{output}",
+        "%{label_output}  #{output}",
         colors[:output],
         label_output: [label, colors[:label]]
       ]
@@ -73,7 +73,7 @@ module Gatherlogs
     # Print out detailed info for each test subsection
     # For example the description, summary or kb info provided in the control
     def subsection(output)
-      '    ' + output unless output.nil? || output.empty?
+      '  ' + output unless output.nil? || output.empty?
     end
 
     # Format the output used for showing the control test results
