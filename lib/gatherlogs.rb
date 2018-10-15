@@ -28,7 +28,7 @@ module Gatherlogs
     # Make sure that we tab over the output for multiline text so that it lines
     # up with the rest of the output.
     def tabbed_text(text, spaces = 0)
-      Array(text).join("\n").gsub("\n", "\n#{' ' * (6 + spaces.to_i)}")
+      Array(text).join("\n").gsub("\n", "\n#{' ' * (4 + spaces.to_i)}")
     end
 
     # Format the desc text in the control
@@ -73,7 +73,7 @@ module Gatherlogs
     # Print out detailed info for each test subsection
     # For example the description, summary or kb info provided in the control
     def subsection(output)
-      puts '    ' + output unless output.nil? || output.empty?
+      '    ' + output unless output.nil? || output.empty?
     end
 
     # Format the output used for showing the control test results
@@ -82,7 +82,7 @@ module Gatherlogs
                when 'skipped'
                  result['skip_message']
                when 'failed'
-                 "#{result['code_desc']}\n#{result['message'].chomp}\n"
+                 "#{result['code_desc']}\n#{result['message'].chomp}"
                else
                  result['code_desc']
                end
@@ -92,52 +92,65 @@ module Gatherlogs
 
     # Format the output for showing the control title
     def control_info(badge, info, color)
-      Paint["  #{badge} #{info}", color]
+      Paint["#{badge} #{info}", color]
+    end
+
+    def process_profile(profile)
+      output = []
+
+      profile['controls'].each do |control|
+        control_badge = '✓'
+        control_status = PASSED
+        result_messages = []
+
+        control['results'].each do |result|
+          case result['status']
+          when 'passed'
+            test_status = PASSED
+            test_badge = '✓'
+          when 'skipped'
+            if control_status != FAILED
+              control_status = test_status = SKIPPED
+              control_badge = test_badge = '↺'
+            end
+          when 'failed'
+            control_status = test_status = FAILED
+            control_badge = test_badge = '✗'
+          end
+
+          # gather up result messages for the verbose output later
+          result_messages << format_result_message(test_badge, result, test_status)
+        end
+        next if !all_controls && control_status != FAILED
+
+        output << control_info(control_badge, "#{control['id']}: #{control['title']}", control_status)
+        if verbose
+          output += result_messages
+          output << "" # add blank line after messages
+        end
+
+        # generate useful output
+        if control_status == FAILED
+          output << subsection(desc_text(control))
+          output << subsection(summary_text(control))
+          output << subsection(kb_text(control))
+        end
+      end
+
+      #get rid of the nil items and return to caller
+      output.compact
     end
 
     def report(json)
-      json['profiles'].each do |profile|
+      output = []
+
+      json['profiles'].each { |profile|
         # don't show profiles that have no controls
         next if profile['controls'].empty?
+        output += process_profile(profile)
+      }
 
-        puts "\n" + profile['title']
-
-        profile['controls'].each do |control|
-          debug control
-
-          control_badge = '✓'
-          control_status = PASSED
-          result_messages = []
-
-          control['results'].each do |result|
-            case result['status']
-            when 'passed'
-              test_status = PASSED
-              test_badge = '✓'
-            when 'skipped'
-              if control_status != FAILED
-                control_status = test_status = SKIPPED
-                control_badge = test_badge = '↺'
-              end
-            when 'failed'
-              control_status = test_status = FAILED
-              control_badge = test_badge = '✗'
-            end
-
-            result_messages << format_result_message(test_badge, result, test_status) if verbose
-          end
-
-          next if !all_controls && control_status == PASSED
-
-          puts control_info(control_badge, "#{control['id']}: #{control['title']}", control_status)
-          if control_status == FAILED
-            subsection desc_text(control)
-            subsection summary_text(control)
-            subsection kb_text(control)
-          end
-          puts result_messages if verbose
-        end
-      end
+      output.join("\n")
     end
   end
 end

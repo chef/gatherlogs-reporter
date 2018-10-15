@@ -1,59 +1,13 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-args=""
+require_relative '../lib/gatherlogs'
+require_relative '../lib/gatherlogs/cli'
 
-if [ $# -lt 1 ]; then
-  $DIR/gatherlogs_report.rb -h
+begin
+  Gatherlogs::CLI.run
+rescue => e
+  puts "[ERROR] #{e}"
+  puts "Backtrace:"
+  puts e.backtrace
   exit 1
-fi
-
-# find flags and profilenames
-flags=()
-profiles=()
-
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    -*) flags+="$1 "; shift ;;
-    *) profiles+="${DIR}/../profiles/${1} "; shift ;;
-  esac
-done
-set -- $flags
-
-# parse flags
-while getopts avphd opt; do
-  case $opt in
-    p)
-      declare -a profile_list
-      profile_list=$(ls -d ${DIR}/../profiles/*/inspec.yml | awk -F / '{print $(NF-1)}')
-      for p in $profile_list; do
-        if [[ $p != "common" && $p != "glresources" ]]; then
-          echo $p
-        fi
-      done
-      exit 0 ;;
-    d)
-      args+="-d " ;;
-    a)
-      args+="-a " ;;
-    v)
-      args+="-v " ;;
-    h)
-      args+="-h "
-      echo "Usage: check_logs [OPTIONS] PROFILENAME
-Options:
-    -p        List available profiles
-    -a        Show all controls (only failed controls are shown by default)
-    -v        Show verbose control results
-    -d        Show debug output
-    -h        Print this message
-      "
-      exit 1 ;;
-    \?)
-      echo "Invalid argument $OPTARG"
-      exit 1 ;;
-  esac
-done
-
-echo "Running inspec..."
-inspec exec $profiles --reporter json | $DIR/gatherlogs_report.rb $args
+end
