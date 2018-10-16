@@ -15,7 +15,9 @@ control 'gatherlogs.chef-server.413-request-entity-too-large' do
   tag kb: 'https://getchef.zendesk.com/hc/en-us/articles/115002333646-Known-Issues'
 
   common_logs.nginx.each do |logfile|
-    describe log_analysis(::File.join('var/log/opscode/nginx', logfile), 'HTTP/1\.\d" 413') do
+    nginx_413 = log_analysis(::File.join('var/log/opscode/nginx', logfile), 'HTTP/1\.\d" 413')
+    tag summary: nginx_413.summary unless nginx_413.empty?
+    describe nginx_413 do
       its('last_entry') { should be_empty }
     end
   end
@@ -31,10 +33,10 @@ control 'gatherlogs.chef-server.depsolver-timeouts' do
   '
 
   tag kb: 'https://getchef.zendesk.com/hc/en-us/articles/204381030-Troubleshoot-Cookbook-Dependency-Issues'
-  
+
   common_logs.erchef do |logfile|
     depsolver = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", "Supervisor pooler_chef_depsolver_member_sup had child chef_depsolver_worker started with {chef_depsolver_worker,start_link,undefined} at .* exit with reason killed in context child_terminated")
-
+    tag summary: depsolver.summary unless depsolver.empty?
     describe depsolver do
       its('last_entry') { should be_empty }
     end
@@ -59,6 +61,7 @@ control "gatherlogs.chef-server.erchef-depsolver-startup-failure" do
 
   common_logs.erchef do |logfile|
     erchef_depsolver = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", '{{error,{shutdown,{failed_to_start_child,pooler_chef_depsolver_pool_sup,{shutdown,{failed_to_start_child,pooler,{{timeout,"unable to start members"}')
+    tag summary: erchef_depsolver.summary unless erchef_depsolver.empty?
     describe erchef_depsolver do
       its('last_entry') { should be_empty }
     end
@@ -92,6 +95,7 @@ control "gatherlogs.chef-server.rabbitmq-connection-failure" do
 
   common_logs.erchef do |logfile|
     erchef_rabbitmq = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", 'Could not connect, scheduling reconnect.", error: {{error,{badmatch,{error,{auth_failure_likely,{socket_closed_unexpectedly.*5672')
+    tag summary: erchef_rabbitmq.summary unless erchef_rabbitmq.empty?
     describe erchef_rabbitmq do
       its('last_entry') { should be_empty }
     end
@@ -115,7 +119,9 @@ control "gatherlogs.chef-server.erchef-bad_actor-permission-errors" do
   "
 
   common_logs.erchef do |logfile|
-    describe log_analysis("var/log/opscode/opscode-erchef/#{logfile}", 'status=400.*bad_actor') do
+    bad_actor = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", 'status=400.*bad_actor')
+    tag summary: bad_actor.summary unless bad_actor.empty?
+    describe bad_actor do
       its('last_entry') { should be_empty }
     end
   end
@@ -135,7 +141,9 @@ control "gatherlogs.chef-server.nginx-upstream-host-error" do
   "
 
   common_logs.nginx do |logfile|
-    describe log_analysis("var/log/opscode/nginx/#{logfile}", 'host not found in upstream') do
+    nginx = log_analysis("var/log/opscode/nginx/#{logfile}", 'host not found in upstream')
+    tag summary: nginx.summary unless nginx.empty?
+    describe nginx do
       its('last_entry') { should be_empty }
     end
   end
@@ -154,7 +162,9 @@ is smaller.
   "
 
   common_logs.solr4 do |logfile|
-    describe log_analysis("var/log/opscode/opscode-solr4/#{logfile}", 'Cannot allocate memory') do
+    solr = log_analysis("var/log/opscode/opscode-solr4/#{logfile}", 'Cannot allocate memory')
+    tag summary: solr.summary unless solr.empty?
+    describe solr do
       its('last_entry') { should be_empty }
     end
   end
