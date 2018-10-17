@@ -19,6 +19,7 @@ module Gatherlogs
     option ['--profiles'], :flag, 'Show available profiles'
     option ['-v', '--verbose'], :flag, 'Show inspec test output'
     option ['-a', '--all'], :flag, 'Show all tests, default is to only show failed tests'
+    option ['-q', '--quiet'], :flag, 'Only show the report output'
     option ['--version'], :flag, 'Show current version'
 
     parameter "[PROFILE]", "profile to execute", attribute_name: :inspec_profile
@@ -79,10 +80,11 @@ module Gatherlogs
       status_msg "Generating report..."
       puts @reporter.report(report_json)
     ensure
-      FileUtils.remove_entry remote_cache_dir
+      FileUtils.remove_entry remote_cache_dir if remote_cache_dir && File.exists?(remote_cache_dir)
     end
 
     def fetch_remote_tar(url)
+      status_msg "Fetching remote gatherlogs bundle"
       @remote_cache_dir = Dir.mktmpdir('gatherlogs')
 
       extension = remote_url.split('.').last
@@ -125,7 +127,7 @@ module Gatherlogs
     end
 
     def status_msg(*msg)
-      STDERR.puts(msg.join(' '))
+      STDERR.puts(msg.join(' ')) unless quiet?
     end
 
     def debug_msg(*msg)
