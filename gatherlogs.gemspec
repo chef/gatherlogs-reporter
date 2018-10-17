@@ -1,17 +1,17 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "gatherlogs/version"
-require 'rake/version_task'
+
+require 'gatherlogs/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "gatherlogs"
   spec.version       = Gatherlogs::VERSION
   spec.authors       = ["Will Fisher"]
   spec.email         = ["wfisher@chef.io"]
-
-  spec.summary       = %q{Inspec profiles for detecting issues from gatherlog output}
-  spec.description   = %q{Inspec profiles for detecting issues from gatherlog output}
+  spec.license       = "Apache-2.0"
+  spec.summary       = %q{Tools for detecting issues from Chef products gather-log output}
+  spec.description   = %q{Inspec profiles for detecting issues from gather-log output}
   spec.homepage      = "https://github.com/teknofire/gatherlogs-inspec-profiles"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -25,23 +25,18 @@ Gem::Specification.new do |spec|
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(habitat|results|test|spec|features)/}) }
-  end
+  spec.files         = %w{ README.md Rakefile LICENSE gatherlogs.gemspec
+    Gemfile} + Dir.glob(
+    '{bin,lib,etc,profiles}/**/*', File::FNM_DOTMATCH
+  ).reject { |f| File.directory?(f) }
   spec.bindir        = "bin"
   spec.executables   = %w{ check_logs }
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "version"
-  spec.add_dependency "paint"
-  spec.add_dependency "mixlib-shellout"
-  spec.add_dependency "clamp"
-
-  Rake::VersionTask.new do |task|
-    task.with_gemspec = spec
-  end
+  spec.add_development_dependency "version", '~> 1.1'
+  spec.add_dependency "paint", '~> 2.0'
+  spec.add_dependency "mixlib-shellout", '~> 2.4'
+  spec.add_dependency "clamp", '~> 1.3'
 end
-
-

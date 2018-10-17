@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gatherlogs (0.1.5)
+    gatherlogs (0.1.7)
       clamp
       mixlib-shellout
       paint
