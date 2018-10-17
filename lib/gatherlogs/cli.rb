@@ -84,7 +84,7 @@ module Gatherlogs
 
     def fetch_remote_tar(url)
       @remote_cache_dir = Dir.mktmpdir('gatherlogs')
-      
+
       extension = remote_url.split('.').last
       local_filename = File.join(remote_cache_dir, "gatherlogs.#{extension}")
 
@@ -93,7 +93,7 @@ module Gatherlogs
 
       debug_msg "Remote cache dir: #{remote_cache_dir}"
 
-      cmd = ['tar', 'xvfz', local_filename, '-C', remote_cache_dir, '--strip-components', '2']
+      cmd = ['tar', 'xvf', local_filename, '-C', remote_cache_dir, '--strip-components', '2']
       shellout!(cmd)
 
       remote_cache_dir
