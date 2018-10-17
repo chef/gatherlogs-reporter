@@ -1,7 +1,11 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/gatherlogs'
-require_relative '../lib/gatherlogs/cli'
+libdir = File.realpath(File.join(File.dirname(__FILE__), '../lib'))
+$LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
+
+require 'rubygems'
+require 'gatherlogs'
+require 'gatherlogs/cli'
 
 begin
   Gatherlogs::CLI.run
