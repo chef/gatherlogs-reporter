@@ -1,7 +1,6 @@
 require 'json'
 require 'mixlib/shellout'
 require 'clamp'
-require "gatherlogs/version"
 require "gatherlogs/product"
 
 PROFILES_PATH = File.realpath(File.join(File.dirname(__FILE__), '../../profiles')).freeze
