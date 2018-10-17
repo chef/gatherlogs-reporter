@@ -25,10 +25,10 @@ Gem::Specification.new do |spec|
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  spec.files         = %w{ README.md Rakefile LICENSE gatherlogs.gemspec
-    Gemfile} + Dir.glob(
+  spec.files         = %w{ VERSION README.md Rakefile LICENSE gatherlogs.gemspec
+    Gemfile Gemfile.lock} + Dir.glob(
     '{bin,lib,etc,profiles}/**/*', File::FNM_DOTMATCH
-  ).reject { |f| File.directory?(f) }
+  ).reject { |f| File.directory?(f) || f.match?('inspec.lock') }
   spec.bindir        = "bin"
   spec.executables   = %w{ check_logs }
   spec.require_paths = ["lib"]

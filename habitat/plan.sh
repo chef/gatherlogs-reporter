@@ -21,12 +21,14 @@ do_before() {
 }
 
 do_setup_environment() {
-  export GEM_LIB_PATH="$pkg_prefix/lib"
+  update_pkg_version
+  export GEM_HOME="$pkg_prefix/lib"
+  export GEM_PATH="$GEM_HOME"
 
-  set_runtime_env GEM_HOME "$GEM_LIB_PATH"
-  set_buildtime_env GEM_HOME "$GEM_LIB_PATH"
-  set_runtime_env GEM_PATH "$GEM_LIB_PATH"
-  set_buildtime_env GEM_PATH "$GEM_LIB_PATH"
+  set_runtime_env GEM_HOME "$GEM_HOME"
+  set_buildtime_env GEM_HOME "$GEM_HOME"
+  push_runtime_env GEM_PATH "$GEM_PATH"
+  push_buildtime_env GEM_PATH "$GEM_PATH"
 }
 
 do_unpack() {
@@ -36,7 +38,8 @@ do_unpack() {
 
 do_build() {
   pushd "$HAB_CACHE_SRC_PATH/$pkg_dirname/"
-    build_line "gem build gatherlogs.gemspec"
+    build_line "gem build gatherlogs.gemspec ${GEM_HOME}"
+
     gem build gatherlogs.gemspec
   popd
 }
@@ -53,7 +56,7 @@ do_install() {
 # Need to wrap the gatherlogs binary to ensure GEM_HOME/GEM_PATH is correct
 wrap_gatherlogs_bin() {
   local bin="$pkg_prefix/bin/check_logs"
-  local real_bin="$GEM_LIB_PATH/gems/gatherlogs-${pkg_version}/bin/check_logs"
+  local real_bin="$GEM_PATH/gems/gatherlogs-${pkg_version}/bin/check_logs"
 
   build_line "Adding wrapper $bin to $real_bin"
   cat <<EOF > "$bin"
@@ -61,6 +64,9 @@ wrap_gatherlogs_bin() {
 set -e
 
 source $pkg_prefix/RUNTIME_ENVIRONMENT
+export GEM_PATH
+export GEM_HOME
+export PATH
 
 exec $(pkg_path_for core/ruby)/bin/ruby $real_bin \$@
 EOF
