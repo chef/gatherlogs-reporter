@@ -8,3 +8,4 @@
 /tmp/
 inspec.lock
 results/
+pkg/
