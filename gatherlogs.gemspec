@@ -1,47 +1,47 @@
+# -*- encoding: utf-8 -*-
+# stub: gatherlogs 0.1.6 ruby lib
 
-lib = File.expand_path("../lib", __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "gatherlogs/version"
-require 'rake/version_task'
+Gem::Specification.new do |s|
+  s.name = "gatherlogs".freeze
+  s.version = "0.1.6"
 
-Gem::Specification.new do |spec|
-  spec.name          = "gatherlogs"
-  spec.version       = Gatherlogs::VERSION
-  spec.authors       = ["Will Fisher"]
-  spec.email         = ["wfisher@chef.io"]
+  s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
+  s.metadata = { "allowed_push_host" => "TODO: Set to 'http://mygemserver.com'" } if s.respond_to? :metadata=
+  s.require_paths = ["lib".freeze]
+  s.authors = ["Will Fisher".freeze]
+  s.date = "2018-10-17"
+  s.description = "Inspec profiles for detecting issues from gatherlog output".freeze
+  s.email = ["wfisher@chef.io".freeze]
+  s.executables = ["check_logs".freeze]
+  s.files = [".gitignore".freeze, "Gemfile".freeze, "Gemfile.lock".freeze, "LICENSE".freeze, "README.md".freeze, "Rakefile".freeze, "VERSION".freeze, "bin/check_logs".freeze, "bin/console".freeze, "bin/setup".freeze, "completions/check_logs.zsh".freeze, "gatherlogs.gemspec".freeze, "lib/gatherlogs.rb".freeze, "lib/gatherlogs/cli.rb".freeze, "lib/gatherlogs/product.rb".freeze, "profiles/automate/README.md".freeze, "profiles/automate/controls/basic.rb".freeze, "profiles/automate/controls/issues.rb".freeze, "profiles/automate/inspec.yml".freeze, "profiles/automate2/README.md".freeze, "profiles/automate2/controls/basic.rb".freeze, "profiles/automate2/controls/issues.rb".freeze, "profiles/automate2/inspec.yml".freeze, "profiles/automate2/libraries/.gitkeep".freeze, "profiles/chef-backend/README.md".freeze, "profiles/chef-backend/controls/basic.rb".freeze, "profiles/chef-backend/inspec.yml".freeze, "profiles/chef-server/README.md".freeze, "profiles/chef-server/controls/basic.rb".freeze, "profiles/chef-server/controls/drbd.rb".freeze, "profiles/chef-server/controls/issues.rb".freeze, "profiles/chef-server/controls/push_jobs_issues.rb".freeze, "profiles/chef-server/controls/reporting_issues.rb".freeze, "profiles/chef-server/inspec.yml".freeze, "profiles/common/README.md".freeze, "profiles/common/controls/basic.rb".freeze, "profiles/common/inspec.yml".freeze, "profiles/glresources/README.md".freeze, "profiles/glresources/inspec.yml".freeze, "profiles/glresources/libraries/.gitkeep".freeze, "profiles/glresources/libraries/common_logs.rb".freeze, "profiles/glresources/libraries/disk_usage.rb".freeze, "profiles/glresources/libraries/installed_packages.rb".freeze, "profiles/glresources/libraries/log_analysis.rb".freeze, "profiles/glresources/libraries/platform_version.rb".freeze, "profiles/glresources/libraries/service_status.rb".freeze, "profiles/glresources/libraries/sysctl_a.rb".freeze]
+  s.homepage = "https://github.com/teknofire/gatherlogs-inspec-profiles".freeze
+  s.rubygems_version = "2.7.6".freeze
+  s.summary = "Inspec profiles for detecting issues from gatherlog output".freeze
 
-  spec.summary       = %q{Inspec profiles for detecting issues from gatherlog output}
-  spec.description   = %q{Inspec profiles for detecting issues from gatherlog output}
-  spec.homepage      = "https://github.com/teknofire/gatherlogs-inspec-profiles"
+  if s.respond_to? :specification_version then
+    s.specification_version = 4
 
-  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
-  # to allow pushing to a single host or delete this section to allow pushing to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_development_dependency(%q<bundler>.freeze, ["~> 1.16"])
+      s.add_development_dependency(%q<rake>.freeze, ["~> 10.0"])
+      s.add_development_dependency(%q<version>.freeze, [">= 0"])
+      s.add_runtime_dependency(%q<paint>.freeze, [">= 0"])
+      s.add_runtime_dependency(%q<mixlib-shellout>.freeze, [">= 0"])
+      s.add_runtime_dependency(%q<clamp>.freeze, [">= 0"])
+    else
+      s.add_dependency(%q<bundler>.freeze, ["~> 1.16"])
+      s.add_dependency(%q<rake>.freeze, ["~> 10.0"])
+      s.add_dependency(%q<version>.freeze, [">= 0"])
+      s.add_dependency(%q<paint>.freeze, [">= 0"])
+      s.add_dependency(%q<mixlib-shellout>.freeze, [">= 0"])
+      s.add_dependency(%q<clamp>.freeze, [">= 0"])
+    end
   else
-    raise "RubyGems 2.0 or newer is required to protect against " \
-      "public gem pushes."
-  end
-
-  # Specify which files should be added to the gem when it is released.
-  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  spec.files         = Dir.chdir(File.expand_path('..', __FILE__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(habitat|results|test|spec|features)/}) }
-  end
-  spec.bindir        = "bin"
-  spec.executables   = %w{ check_logs }
-  spec.require_paths = ["lib"]
-
-  spec.add_development_dependency "bundler", "~> 1.16"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "version"
-  spec.add_dependency "paint"
-  spec.add_dependency "mixlib-shellout"
-  spec.add_dependency "clamp"
-
-  Rake::VersionTask.new do |task|
-    task.with_gemspec = spec
+    s.add_dependency(%q<bundler>.freeze, ["~> 1.16"])
+    s.add_dependency(%q<rake>.freeze, ["~> 10.0"])
+    s.add_dependency(%q<version>.freeze, [">= 0"])
+    s.add_dependency(%q<paint>.freeze, [">= 0"])
+    s.add_dependency(%q<mixlib-shellout>.freeze, [">= 0"])
+    s.add_dependency(%q<clamp>.freeze, [">= 0"])
   end
 end
-
-
