@@ -3,9 +3,11 @@ $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
 require 'json'
 require 'paint'
-require "gatherlogs/version"
+require 'version'
 
 module Gatherlogs
+  is_versioned
+
   class Reporter
     FAILED = '#FF3333'.freeze
     PASSED = '#32CD32'.freeze
