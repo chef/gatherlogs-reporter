@@ -3,11 +3,11 @@ pkg_origin=will
 pkg_maintainer="Will Fisher <will@chef.io>"
 pkg_license=('Apache-2.0')
 pkg_deps=(
+  core/busybox-static
   core/ruby
+  chef/inspec
 )
 pkg_build_deps=(
-  core/readline
-  core/sed
 )
 pkg_bin_dirs=(bin)
 
@@ -20,11 +20,13 @@ do_before() {
   update_pkg_version
 }
 
-do_prepare() {
-  export GEM_HOME="$pkg_prefix/lib"
-  build_line "Setting GEM_HOME=$GEM_HOME"
-  export GEM_PATH="$GEM_HOME"
-  build_line "Setting GEM_PATH=$GEM_PATH"
+do_setup_environment() {
+  export GEM_LIB_PATH="$pkg_prefix/lib"
+
+  set_runtime_env GEM_HOME "$GEM_LIB_PATH"
+  set_buildtime_env GEM_HOME "$GEM_LIB_PATH"
+  set_runtime_env GEM_PATH "$GEM_LIB_PATH"
+  set_buildtime_env GEM_PATH "$GEM_LIB_PATH"
 }
 
 do_unpack() {
@@ -51,13 +53,15 @@ do_install() {
 # Need to wrap the gatherlogs binary to ensure GEM_HOME/GEM_PATH is correct
 wrap_gatherlogs_bin() {
   local bin="$pkg_prefix/bin/check_logs"
-  local real_bin="$GEM_HOME/gems/gatherlogs-${pkg_version}/bin/check_logs"
+  local real_bin="$GEM_LIB_PATH/gems/gatherlogs-${pkg_version}/bin/check_logs"
+
   build_line "Adding wrapper $bin to $real_bin"
   cat <<EOF > "$bin"
 #!$(pkg_path_for busybox-static)/bin/sh
 set -e
-export GEM_HOME="$GEM_HOME"
-export GEM_PATH="$GEM_PATH"
+
+source $pkg_prefix/RUNTIME_ENVIRONMENT
+
 exec $(pkg_path_for core/ruby)/bin/ruby $real_bin \$@
 EOF
   chmod -v 755 "$bin"
