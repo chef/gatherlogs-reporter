@@ -1,0 +1,27 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'sinatra'
+require 'json'
+require 'mixlib/shellout'
+require "string/utf8"
+
+def shellout(cmd, options={})
+  shell = Mixlib::ShellOut.new(cmd, options)
+  shell.run_command
+  shell
+end
+post '/' do
+
+  params = JSON.parse request.body.read
+  if remote_url = params['remote_url']
+    cmd = ['check_logs', '--remote', remote_url]
+    puts cmd.join(' ')
+    checklog = shellout(cmd)
+    puts checklog.stdout
+    { results: checklog.stdout.utf8!, error: checklog.stderr.utf8!, status: checklog.exitstatus }.to_json
+  end
+end
+
+get '/' do
+  "Hello, World!"
+end
