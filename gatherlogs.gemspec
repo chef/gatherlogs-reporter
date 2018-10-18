@@ -42,4 +42,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "sinatra", '~> 2.0'
   spec.add_dependency "string_utf8", '~> 0.1'
   spec.add_dependency "zendesk_api"
+  spec.add_dependency "puma"
 end

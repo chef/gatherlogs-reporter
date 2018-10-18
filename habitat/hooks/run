@@ -3,4 +3,9 @@
 # redirect stderr
 exec 2>&1
 
+export ZENDESK_URL={{cfg.server.zendesk_url}}
+export ZENDESK_USER={{cfg.server.zendesk_user}}
+export ZENDESK_TOKEN={{cfg.server.zendesk_token}}
+export AUTH_TOKEN={{cfg.server.auth_token}}
+
 exec server -e production
