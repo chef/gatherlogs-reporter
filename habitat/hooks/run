@@ -3,6 +3,4 @@
 # redirect stderr
 exec 2>&1
 
-while true; do
-  sleep 1000
-done
+exec server -e production

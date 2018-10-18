@@ -10,8 +10,8 @@ pkg_deps=(
   core/ruby
   chef/inspec
 )
-pkg_build_deps=(
-)
+# pkg_build_deps=(
+# )
 pkg_bin_dirs=(bin)
 
 pkg_version() {
@@ -30,6 +30,7 @@ do_setup_environment() {
 
   set_runtime_env GEM_HOME "$GEM_HOME"
   set_buildtime_env GEM_HOME "$GEM_HOME"
+  set_runtime_env HOME "$pkg_svc_data_path"
   push_runtime_env GEM_PATH "$GEM_PATH"
   push_buildtime_env GEM_PATH "$GEM_PATH"
 }
@@ -53,13 +54,14 @@ do_install() {
     gem install gatherlogs-*.gem --no-document
   popd
 
-  wrap_gatherlogs_bin
+  wrap_bin 'check_logs'
+  wrap_bin 'server'
 }
 
 # Need to wrap the gatherlogs binary to ensure GEM_HOME/GEM_PATH is correct
-wrap_gatherlogs_bin() {
-  local bin="$pkg_prefix/bin/check_logs"
-  local real_bin="$GEM_PATH/gems/gatherlogs-${pkg_version}/bin/check_logs"
+wrap_bin() {
+  local bin="$pkg_prefix/bin/$1"
+  local real_bin="$GEM_PATH/gems/gatherlogs-${pkg_version}/bin/$1"
 
   build_line "Adding wrapper $bin to $real_bin"
   cat <<EOF > "$bin"
@@ -70,6 +72,7 @@ source $pkg_prefix/RUNTIME_ENVIRONMENT
 export GEM_PATH
 export GEM_HOME
 export PATH
+export HOME
 
 exec $(pkg_path_for core/ruby)/bin/ruby $real_bin \$@
 EOF
