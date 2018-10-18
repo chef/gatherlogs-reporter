@@ -11,6 +11,11 @@ pkg_deps=(
   chef/inspec
 )
 
+pkg_build_deps=(
+  core/gcc
+  core/make
+)
+
 pkg_bin_dirs=(bin)
 
 pkg_version() {
