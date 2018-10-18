@@ -41,4 +41,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "clamp", '~> 1.3'
   spec.add_dependency "sinatra", '~> 2.0'
   spec.add_dependency "string_utf8", '~> 0.1'
+  spec.add_dependency "zendesk_api"
 end

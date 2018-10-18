@@ -9,3 +9,4 @@
 inspec.lock
 results/
 pkg/
+.env

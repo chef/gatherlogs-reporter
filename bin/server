@@ -1,24 +1,58 @@
 #!/usr/bin/env ruby
-require 'rubygems'
-require 'sinatra'
+
+libdir = File.realpath(File.join(File.dirname(__FILE__), '../lib'))
+$LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
+
 require 'json'
-require 'mixlib/shellout'
-require "string/utf8"
+require 'sinatra'
+require 'gatherlogs/webhook_server'
 
-def shellout(cmd, options={})
-  shell = Mixlib::ShellOut.new(cmd, options)
-  shell.run_command
-  shell
+server = Gatherlogs::WebhookServer.new({
+  url: ENV['ZENDESK_URL'],
+  user: ENV['ZENDESK_USER'],
+  token: ENV['ZENDESK_TOKEN']
+})
+
+def authenticate!(token)
+  if token != ENV['AUTH_TOKEN']
+    status 401
+    halt "Access denied\n"
+  end
 end
-post '/' do
 
+before '/zendesk/:token' do
+  authenticate!(params['token'])
+end
+before '/:token' do
+  authenticate!(params['token'])
+end
+
+post '/:token' do
   params = JSON.parse request.body.read
-  if remote_url = params['remote_url']
-    cmd = ['check_logs', '--remote', remote_url]
-    puts cmd.join(' ')
-    checklog = shellout(cmd)
-    puts checklog.stdout
-    { results: checklog.stdout.utf8!, error: checklog.stderr.utf8!, status: checklog.exitstatus }.to_json
+  if remote_url = params['url']
+    server.check_logs(remote_url).to_json
+  else
+    # Invalid request no remote_url param
+    status 400
+  end
+end
+
+get '/zendesk/:token' do
+  if info = params['info']
+    ticket_info = JSON.parse(info)
+    attachments = ticket_info['attachments'].split('|')
+
+    attachments.each do |attachment|
+      filename = attachment.split('=').last
+
+      results = server.check_logs(attachment)
+      server.update_zendesk(ticket_info['ticket_id'].to_i, filename, results)
+
+      status 204
+    end
+  else
+    # Invalid request no info param
+    status 400
   end
 end
 

@@ -10,8 +10,7 @@ pkg_deps=(
   core/ruby
   chef/inspec
 )
-# pkg_build_deps=(
-# )
+
 pkg_bin_dirs=(bin)
 
 pkg_version() {
