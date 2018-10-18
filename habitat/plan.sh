@@ -68,10 +68,7 @@ wrap_bin() {
 set -e
 
 source $pkg_prefix/RUNTIME_ENVIRONMENT
-export GEM_PATH
-export GEM_HOME
-export PATH
-export HOME
+export GEM_PATH GEM_HOME PATH HOME
 
 exec $(pkg_path_for core/ruby)/bin/ruby $real_bin \$@
 EOF

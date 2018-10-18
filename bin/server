@@ -4,6 +4,7 @@ libdir = File.realpath(File.join(File.dirname(__FILE__), '../lib'))
 $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
 require 'json'
+require 'puma'
 require 'sinatra'
 require 'gatherlogs/webhook_server'
 

@@ -1,0 +1,5 @@
+[server]
+zendesk_url="https://getchef.zendesk.com/api/v2"
+zendesk_user=""
+zendesk_token=""
+auth_token="131c276b9b15dca25eaea37d1ec83f66"
