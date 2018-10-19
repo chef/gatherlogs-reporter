@@ -7,9 +7,14 @@ module Gatherlogs
   class WebhookServer
     attr_accessor :zdconfig
 
-    def initialize(config)
+    def initialize(config, debug = false)
+      @debug = debug
       @zdconfig = config
       zdclient
+    end
+
+    def debug?
+      @debug
     end
 
     def zdclient
@@ -51,15 +56,19 @@ module Gatherlogs
 
     def update_zendesk(id, filename, results)
       if results[:status] != 1
-        response = zendesk_comment_text(filename, results[:results])
+        response = zendesk_comment_text(filename, results[:results].chomp)
+
+        puts "Updating zendesk ticket #{id} with\n#{response}" if debug?
+
         ZendeskAPI::Ticket.update!(zdclient, {
           id: id,
           comment: { value: response, public: false }
-        })
+        }) unless debug?
       end
     end
 
     def zendesk_comment_text(filename, output)
+      output = "No issues were found in the gather-log bundle" if output.empty?
 <<-EOC
 CheckLog results from: #{filename}
 
