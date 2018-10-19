@@ -48,6 +48,7 @@ get '/zendesk/:token' do
 
       results = server.check_logs(attachment)
       server.update_zendesk(ticket_info['ticket_id'].to_i, filename, results)
+      puts results.to_json
 
       status 204
     end
