@@ -3,7 +3,6 @@ pkg_origin=will
 pkg_maintainer="Will Fisher <will@chef.io>"
 pkg_license=('Apache-2.0')
 pkg_deps=(
-  core/busybox-static
   core/tar
   core/bzip2
   core/wget
