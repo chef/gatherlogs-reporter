@@ -63,12 +63,17 @@ EOS
     return [] unless File.exists?(logfile)
 
     if @options[:a2service]
-      cmd << "grep '#{@options[:a2service]}' #{logfile}"
-      cmd << "egrep '#{grep_expr}'"
+      cmd << "grep '#{@options[:a2service]}' #{logfile} | grep -E '#{grep_expr}'"
     else
-      cmd << "egrep '#{grep_expr}' #{logfile}"
+      cmd << "grep -E '#{grep_expr}' #{logfile}"
     end
 
-    inspec.command(cmd.join(' | ')).stdout.split("\n")
+    command = inspec.command(cmd.join(' | '))
+
+    if command.exit_status > 1
+      raise "#{cmd.join(' | ')} exited #{command.exit_status}\nERROR MSG: #{command.stderr}"
+    end
+
+    command.stdout.split("\n")
   end
 end
