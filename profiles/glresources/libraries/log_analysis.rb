@@ -60,6 +60,8 @@ EOS
   def read_content
     cmd = []
 
+    return [] unless File.exists?(logfile)
+
     if @options[:a2service]
       cmd << "grep '#{@options[:a2service]}' #{logfile}"
       cmd << "egrep '#{grep_expr}'"
