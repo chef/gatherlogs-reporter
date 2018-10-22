@@ -8,6 +8,7 @@ pkg_deps=(
   core/wget
   core/ruby
   core/grep
+  core/bash
   chef/inspec
 )
 
@@ -69,7 +70,7 @@ wrap_bin() {
 
   build_line "Adding wrapper $bin to $real_bin"
   cat <<EOF > "$bin"
-#!$(pkg_path_for busybox-static)/bin/sh
+#!$(pkg_path_for core/bash)/bin/sh
 set -e
 
 source $pkg_prefix/RUNTIME_ENVIRONMENT
