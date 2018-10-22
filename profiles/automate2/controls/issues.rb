@@ -95,3 +95,35 @@ vm.max_map_count=262144
     its('last_entry') { should be_empty }
   end
 end
+
+lb_workers = log_analysis('journalctl_chef-automate.txt', 'worker_connections are not enough', a2service: 'automate-load-balancer.default')
+control "gatherlogs.automate2.loadbalancer_worker_connections" do
+  impact 1.0
+  title 'Check to see if Automate is reporting a error with not enough workers for the load balancer'
+  desc "
+This is an issue with older version of Automate 2 without persistant connections.  Please upgrade to the latest Automate version.
+  "
+
+  tag summary: lb_workers.summary
+
+  describe lb_workers do
+    its('last_entry') { should be_empty }
+  end
+end
+
+#Butterfly error: Error reading or writing to DatFile
+butterfly_error = log_analysis('journalctl_chef-automate.txt', 'Butterfly error: Error reading or writing to DatFile', a2service: 'hab-sup')
+control "gatherlogs.automate2.butterfly_dat_error" do
+  impact 1.0
+  title 'Check to see if Automate is reporting an error reading or write to a DatFile'
+  desc '
+The Habitat supervisor is having problems reading or writing to an internal DatFile.
+
+It will need to be deleted and Automate v2 services restarted.'
+
+  tag summary: butterfly_error.summary
+
+  describe butterfly_error do
+    its('last_entry') { should be_empty }
+  end
+end
