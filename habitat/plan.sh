@@ -8,6 +8,7 @@ pkg_deps=(
   core/bzip2
   core/wget
   core/ruby
+  core/grep
   chef/inspec
 )
 

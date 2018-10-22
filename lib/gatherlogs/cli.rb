@@ -115,6 +115,8 @@ module Gatherlogs
     end
 
     def inspec_exec(profile, log_path)
+      status_msg "Using inspec version: #{shellout!('inspec --version').stdout}"
+
       cmd = ['inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json']
 
       status_msg "Running inspec..."
@@ -135,7 +137,7 @@ module Gatherlogs
     end
 
     def shellout!(cmd, options={})
-      puts cmd.join(' ') if debug?
+      puts Array(cmd).join(' ') if debug?
       shell = Mixlib::ShellOut.new(cmd, options)
       shell.run_command
       shell.error!
