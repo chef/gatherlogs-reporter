@@ -2,6 +2,7 @@ require 'mixlib/shellout'
 require "string/utf8"
 require 'zendesk_api'
 require 'paint'
+require 'cgi'
 
 module Gatherlogs
   class WebhookServer
@@ -28,13 +29,22 @@ module Gatherlogs
       end
     end
 
-    def validate_url(url)
+    def validate_zendesk_url(url)
       uri = URI.parse(url)
-      uri.kind_of?(URI::HTTP) || uri.kind_of?(URI::HTTPS)
+      if uri.kind_of?(URI::HTTP) || uri.kind_of?(URI::HTTPS)
+        return url.hostname == 'getchef.zendesk.com'
+      end
+    end
+
+    def decode_url(url)
+      uri = URI.parse(url)
+      params = CGI::parse(uri.query)
+
+      { hostname: uri.hostname, name: }
     end
 
     def check_logs(remote_url)
-      return { error: 'Invalid URL', status: 1 } unless validate_url(remote_url)
+      return { error: 'Invalid URL', status: 1 } unless validate_zendesk_url(remote_url)
 
       cmd = ['check_logs', '--remote', remote_url]
 
