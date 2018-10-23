@@ -12,7 +12,7 @@ server = Gatherlogs::WebhookServer.new({
   url: ENV['ZENDESK_URL'],
   user: ENV['ZENDESK_USER'],
   token: ENV['ZENDESK_TOKEN']
-})
+}, development?)
 
 def authenticate!(token)
   if token != ENV['AUTH_TOKEN']
