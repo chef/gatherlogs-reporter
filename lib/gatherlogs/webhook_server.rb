@@ -2,6 +2,7 @@ require 'mixlib/shellout'
 require "string/utf8"
 require 'zendesk_api'
 require 'paint'
+require 'cgi'
 
 module Gatherlogs
   class WebhookServer
@@ -11,6 +12,7 @@ module Gatherlogs
       @debug = debug
       @zdconfig = config
       zdclient
+      puts "Debug enabled" if @debug
     end
 
     def debug?
@@ -19,22 +21,39 @@ module Gatherlogs
 
     def zdclient
       puts "Initializing Zendesk Client"
+      logger = Logger.new(STDOUT)
+      logger.level = Logger::ERROR
+      
       @instance ||= ZendeskAPI::Client.new do |config|
         config.url = zdconfig[:url]
         config.username = zdconfig[:user]
         config.token = zdconfig[:token]
         config.retry = true
-        config.logger = Logger.new(STDOUT)
+        config.logger = logger
       end
     end
 
-    def validate_url(url)
+    def valid_zendesk_request(url)
       uri = URI.parse(url)
+      is_http_request?(uri) && uri.hostname == 'getchef.zendesk.com'
+    end
+
+    def valid_gatherlog_bundle(url)
+      uri = URI.parse(url)
+      params = CGI::parse(uri.query)
+      extension = params['name'].first.split('.').last
+
+      invalid_extensions = %w{ log png jpg }
+      !invalid_extensions.include?(extension)
+    end
+
+    def is_http_request?(uri)
       uri.kind_of?(URI::HTTP) || uri.kind_of?(URI::HTTPS)
     end
 
     def check_logs(remote_url)
-      return { error: 'Invalid URL', status: 1 } unless validate_url(remote_url)
+      return { error: 'Invalid URL', status: 1 } unless valid_zendesk_request(remote_url)
+      return { error: 'Invalid gather-log bundle', status: 1 } unless valid_gatherlog_bundle(remote_url)
 
       cmd = ['check_logs', '--remote', remote_url]
 
