@@ -111,19 +111,19 @@ This is an issue with older version of Automate 2 without persistant connections
   end
 end
 
-#Butterfly error: Error reading or writing to DatFile
 butterfly_error = log_analysis('journalctl_chef-automate.txt', 'Butterfly error: Error reading or writing to DatFile', a2service: 'hab-sup')
 control "gatherlogs.automate2.butterfly_dat_error" do
   impact 1.0
   title 'Check to see if Automate is reporting an error reading or write to a DatFile'
   desc '
-The Habitat supervisor is having problems reading or writing to an internal DatFile.
+  The Habitat supervisor is having problems reading or writing to an internal DatFile.
 
-It will need to be deleted and Automate v2 services restarted.'
+  To fix this you will need to remove the failed DatFile and restart the Automate 2 services.
+  '
 
   tag summary: butterfly_error.summary
 
   describe butterfly_error do
-    its('last_entry') { should be_empty }
+   its('last_entry') { should be_empty }
   end
 end
