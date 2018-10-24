@@ -12,6 +12,8 @@ control 'gatherlogs.chef-server.413-request-entity-too-large' do
     * Ohai Session plugin on systems with stale logins
     * Clients using the Audit cookbook to submit compliance data.
   '
+  
+  tag kb: 'https://docs.chef.io/config_rb_server.html#large-node-sizes'
   tag kb: 'https://getchef.zendesk.com/hc/en-us/articles/115002333646-Known-Issues'
 
   common_logs.nginx.each do |logfile|
