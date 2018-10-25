@@ -16,6 +16,7 @@ module Gatherlogs
     option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection', default: '.', attribute_name: :log_path
     option ['-r', '--remote'], 'REMOTE_URL', 'URL to the remote tar bal for inspection', attribute_name: :remote_url
     option ['-d', '--debug'], :flag, 'Enable debug output'
+    option ['-s', '--system-only'], :flag, 'Only show system report', attribute_name: :summary_only
     option ['--profiles'], :flag, 'Show available profiles'
     option ['-v', '--verbose'], :flag, 'Show inspec test output'
     option ['-a', '--all'], :flag, 'Show all tests, default is to only show failed tests'
@@ -34,8 +35,6 @@ module Gatherlogs
     def execute()
       parse_args
 
-      current_log_path = log_path.dup
-
       if version?
         puts "#{File.basename($0)}: #{Gatherlogs::VERSION}"
         exit
@@ -51,22 +50,6 @@ module Gatherlogs
         exit 0
       end
 
-      current_log_path = fetch_remote_tar(remote_url) unless remote_url.nil?
-
-      debug_msg("Using log_path: #{current_log_path}")
-
-      profile = nil
-      if inspec_profile
-        profile = inspec_profile.dup
-      else
-        status_msg "Attempting to detect gatherlogs product..."
-        profile = Gatherlogs::Product.detect(current_log_path)
-        status_msg "Detected '#{profile}' files" unless profile.nil?
-      end
-
-      if profile.nil?
-        signal_usage_error 'Could not determine product profile to use, please specify a profile'
-      end
 
       @reporter = Gatherlogs::Reporter.new({
         all_controls: all?,
@@ -74,11 +57,44 @@ module Gatherlogs
         log_level: @log_level
       })
 
-      profile_path = find_profile_path(profile)
-      report_json = inspec_exec(profile_path, current_log_path)
+      product = inspec_profile.dup
 
-      status_msg "Generating report..."
-      puts @reporter.report(report_json)
+      output = log_working_dir do |log_path|
+        if product.nil?
+          status_msg "Attempting to detect gatherlogs product..."
+          product = Gatherlogs::Product.detect(log_path)
+          status_msg "Detected '#{product}' files" unless product.nil?
+        end
+
+        if product.nil?
+          signal_usage_error 'Could not determine the product from gatherlog bundle, please specify a profile to use'
+        end
+
+        @reporter.report(inspec_exec(product))
+      end
+
+      print_report('System report', output[:system_info])
+      if output[:system_info].nil? && summary_only?
+        puts "No system summary generated, #{product} not yet supported?"
+      end
+      print_report('Inspec report', output[:report]) unless summary_only?
+    end
+
+    def print_report(title, report)
+      puts
+      puts title
+      puts '-'*title.length
+      puts report.join("\n")
+    end
+
+    def log_working_dir(&block)
+      current_log_path = remote_url.nil? ? log_path.dup : fetch_remote_tar(remote_url)
+
+      debug_msg("Using log_path: #{current_log_path}")
+
+      Dir.chdir(current_log_path) do
+        return yield '.'
+      end
     ensure
       FileUtils.remove_entry remote_cache_dir if remote_cache_dir && File.exists?(remote_cache_dir)
     end
@@ -114,18 +130,24 @@ module Gatherlogs
       @log_level = :debug if debug?
     end
 
-    def inspec_exec(profile, log_path)
-      status_msg "Using inspec version: #{shellout!('inspec --version').stdout}"
+    def system_report(product)
+      status_msg "Generating system summary for #{product}..."
+      system = Gatherlogs::Summary::System.new(product)
+      system.report
+    end
+
+    def inspec_exec(product)
+      status_msg "Using inspec version: #{shellout!('inspec --version').stdout.split("\n").first}"
+
+      profile = find_profile_path(product)
 
       cmd = ['inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json']
 
       status_msg "Running inspec..."
       debug_msg('Executing', "'#{cmd}'")
 
-      Dir.chdir(log_path) do
-        inspec = shellout!(cmd, { returns: [0, 100, 101] })
-        JSON.parse(inspec.stdout)
-      end
+      inspec = shellout!(cmd, { returns: [0, 100, 101] })
+      JSON.parse(inspec.stdout)
     end
 
     def status_msg(*msg)

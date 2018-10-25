@@ -17,9 +17,8 @@ class PlatformVersion < Inspec.resource(1)
     @content = read_content
   end
 
-
-
   def platform_match?(platform)
+    return false if content.nil?
     content.match?(PLATFORM_MATCH[platform.to_sym])
   end
 

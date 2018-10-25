@@ -91,12 +91,18 @@ module Gatherlogs
     end
 
     def process_profile(profile)
-      output = []
+      output = { system_info: [], report: [] }
+      keys = profile['controls'].map.with_index { |c,index| [index,c['id']] }
+      keys.sort { |a,b| a.last <=> b.last }.each do |index, id|
+        control = profile['controls'][index]
 
-      profile['controls'].each do |control|
         control_badge = '✓'
         control_status = PASSED
         result_messages = []
+
+        if control['tags'].include?('system')
+          output[:system_info] += Array(control['tags']['system'])
+        end
 
         control['results'].each do |result|
           case result['status']
@@ -118,34 +124,41 @@ module Gatherlogs
         end
         next if !all_controls && control_status != FAILED
 
-        output << control_info(control_badge, "#{control['id']}: #{control['title']}", control_status)
+        output[:report] << control_info(control_badge, "#{control['id']}: #{control['title']}", control_status)
         if verbose
-          output += result_messages
-          output << "" # add blank line after messages
+          output[:report] += result_messages
+          output[:report] << "" # add blank line after messages
         end
 
         # generate useful output
         if control_status == FAILED
-          output << subsection(desc_text(control))
-          output << subsection(summary_text(control))
-          output << subsection(kb_text(control))
+          output[:report] << subsection(desc_text(control))
+          output[:report] << subsection(summary_text(control))
+          output[:report] << subsection(kb_text(control))
         end
+
       end
 
-      #get rid of the nil items and return to caller
-      output.compact
+      # get rid of the nil items
+      output[:report].compact!
+
+      output
     end
 
     def report(json)
-      output = []
+      output = { system_info: [], report: [] }
 
-      json['profiles'].each { |profile|
+      json['profiles'].each do |profile|
         # don't show profiles that have no controls
         next if profile['controls'].empty?
-        output += process_profile(profile)
-      }
+        result = process_profile(profile)
+        # Need to merge all the profiles together
 
-      output.join("\n")
+        output[:report] += result[:report]
+        output[:system_info] += result[:system_info]
+      end
+      output[:system_info].uniq!
+      output
     end
   end
 end
