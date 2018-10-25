@@ -81,10 +81,21 @@ module Gatherlogs
     end
 
     def print_report(title, report)
-      puts
+      # this puts intentionally left blank
+      puts ""
       puts title
-      puts '-'*title.length
-      puts report.join("\n")
+      if report.is_a?(Hash)
+        max_label_length = report.keys.map(&:length).max
+        max_value_length = report.values.map(&:length).max
+        puts '-' * (max_label_length+max_value_length+1)
+        report.each do |k,v|
+          puts "%#{max_label_length}s: %s" % [k,v.to_s.strip.chomp]
+        end
+        puts '-' * (max_label_length+max_value_length+1)
+      else
+        puts '-' * 80
+        puts report.join("\n")
+      end
     end
 
     def log_working_dir(&block)
