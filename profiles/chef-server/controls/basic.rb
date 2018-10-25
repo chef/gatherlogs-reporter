@@ -4,12 +4,6 @@ include_controls 'common'
 
 chef_server = installed_packages('chef-server-core')
 
-system_info = [
-  "Product: Chef-Server #{chef_server.version}",
-  "Uptime: #{file('uptime.txt').content.chomp}",
-  "Memory: #{file('meminfo.txt').content.to_s.split("\n").first.split(/\s+/)[1..-1].join('')}"
-]
-
 control "000.gatherlogs.chef-server.package" do
   title "check that chef-server is installed"
   desc "
@@ -19,12 +13,37 @@ control "000.gatherlogs.chef-server.package" do
 
   impact 1.0
 
-  tag system: system_info
+  tag system: {
+    "Product" => "Chef-Server #{chef_server.version}",
+    "Uptime" => file('uptime.txt').content.chomp
+  }
 
   only_if { chef_server.exists? }
   describe chef_server do
     it { should exist }
     its('version') { should cmp >= '12.17.0'}
+  end
+end
+
+control "010.gatherlogs.chef-server.required_memory" do
+  title "Check that the system has the required amount of memory"
+
+  desc "
+Chef recommends that the Automate2 system has at least 16GB of memory.
+Please make sure the system means the minimum hardware requirements
+"
+
+  tag kb: "https://automate.chef.io/docs/system-requirements/"
+  tag verbose: true
+  tag system: {
+    "Total Memory" => "#{memory.total_mem} MB",
+    "Free Memory" => "#{memory.free_mem} MB"
+  }
+
+  describe memory do
+    # rough calculation for 8gb because of reasons
+    its('total_mem') { should cmp >= 7168 }
+    its('free_swap') { should cmp > 0 }
   end
 end
 
