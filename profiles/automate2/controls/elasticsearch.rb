@@ -1,5 +1,5 @@
-control 'gatherlogs.automate2.elasticsearch_heap_size' do
-  title 'Check that ElasticSearch is not configured with the default 1gig heap'
+control 'gatherlogs.automate2.elasticsearch_1gb_heap_size' do
+  title 'Check that ElasticSearch is not configured with the default 1GB heap'
 
   desc "
 ElasticSearch has been configured to use the default 1GB heap size and needs to
