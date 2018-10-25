@@ -12,10 +12,10 @@ control "030.gatherlogs.chef-server.reporting-with-2018-partition-tables" do
 
   tag kb: 'https://getchef.zendesk.com/hc/en-us/articles/360001425252-Fixing-missing-2018-Reporting-partition-tables'
 
-  tag system: [
-    "Reporting: #{reporting.exists? ? reporting.version : 'Not Installed' }",
-    "Manage: #{manage.exists? ? manage.version : 'Not Installed' }"
-  ]
+  tag system: {
+    "Reporting" => reporting.exists? ? reporting.version : 'Not Installed',
+    "Manage" => manage.exists? ? manage.version : 'Not Installed'
+  }
 
   only_if { reporting.exists? }
 

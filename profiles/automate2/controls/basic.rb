@@ -20,11 +20,10 @@ include_controls 'common'
 # end
 
 control "000.gatherlogs.automate2.system_info" do
-  sys_info = [ 'Product: Automate v2' ]
-  sys_info << "Habitat: #{file('hab_version.txt').content.lines.last.chomp}" if file('hab_version.txt').exist?
+  sys_info = { "Product" => 'Automate v2' }
+  sys_info["Habitat"] = file('hab_version.txt').content.lines.last.chomp if file('hab_version.txt').exist?
   tag system: sys_info
 end
-
 
 services = service_status(:automate2)
 
@@ -63,6 +62,28 @@ control "gatherlogs.automate2.critical_disk_usage" do
       its('used_percent') { should cmp < 100 }
       its('available') { should cmp > disk_usage.to_filesize('250M') }
     end
+  end
+end
+
+control "gatherlogs.automate2.required_memory" do
+  title "Check that the system has the required amount of memory"
+
+  desc "
+Chef recommends that the Automate2 system has at least 16GB of memory.
+Please make sure the system means the minimum hardware requirements
+"
+
+  tag kb: "https://automate.chef.io/docs/system-requirements/"
+  tag verbose: true
+  tag system: {
+    "Total Memory" => "#{memory.total_mem} MB",
+    "Free Memory" => "#{memory.free_mem} MB"
+  }
+
+  describe memory do
+    # rough calculation for 15gb because of reasons
+    its('total_mem') { should cmp >= 15360 }
+    its('free_swap') { should cmp > 0 }
   end
 end
 

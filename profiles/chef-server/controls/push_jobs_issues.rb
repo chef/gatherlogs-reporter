@@ -10,10 +10,7 @@ control "031.gatherlogs.chef-server.push-jobs-server-hostname-misconfigured" do
   configs.
   "
 
-  tag system: "Push-Jobs Server: #{pushjobs.exists? ? pushjobs.version : 'Not Installed' }"
-  # tag system "foo"
-
-  # only_if { pushjobs.exists? }
+  tag system: { "Push-Jobs Server" => pushjobs.exists? ? pushjobs.version : 'Not Installed' }
 
   %w{ access.log current error.log jobs.log }.each do |logfile|
     pushjobs_hostname = log_analysis("var/log/opscode/nginx/#{logfile}", 'host not found in upstream .* in /var/opt/opscode/nginx/etc/addon.d/10-push_jobs_upstreams.conf')
