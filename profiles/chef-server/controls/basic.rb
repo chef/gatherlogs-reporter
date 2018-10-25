@@ -11,8 +11,6 @@ control "000.gatherlogs.chef-server.package" do
   Installed version: #{chef_server.version}
   "
 
-  impact 1.0
-
   tag system: {
     "Product" => "Chef-Server #{chef_server.version}",
     "Uptime" => file('uptime.txt').content.chomp
@@ -29,11 +27,11 @@ control "010.gatherlogs.chef-server.required_memory" do
   title "Check that the system has the required amount of memory"
 
   desc "
-Chef recommends that the Automate2 system has at least 16GB of memory.
+Chef recommends that the Chef-Server system has at least 8GB of memory.
 Please make sure the system means the minimum hardware requirements
 "
 
-  tag kb: "https://automate.chef.io/docs/system-requirements/"
+  tag kb: "https://docs.chef.io/chef_system_requirements.html#chef-server-on-premises-or-in-cloud-environment"
   tag verbose: true
   tag system: {
     "Total Memory" => "#{memory.total_mem} MB",
@@ -44,6 +42,27 @@ Please make sure the system means the minimum hardware requirements
     # rough calculation for 8gb because of reasons
     its('total_mem') { should cmp >= 7168 }
     its('free_swap') { should cmp > 0 }
+  end
+end
+
+control "010.gatherlogs.chef-backend.required_cpu_cores" do
+  title "Check that the system has the required number of cpu cores"
+
+  desc "
+Chef recommends that the Chef-Server and Frontend systems have at least 4 cpu cores.
+Please make sure the system means the minimum hardware requirements
+"
+
+  tag kb: "https://docs.chef.io/chef_system_requirements.html#chef-server-on-premises-or-in-cloud-environment"
+  tag verbose: true
+  tag system: {
+    "CPU Cores" => cpu_info.total,
+    "CPU Model" => cpu_info.model_name
+  } if cpu_info.exists?
+
+  describe cpu_info do
+    # rough calculation for 8gb because of reasons
+    its('total') { should cmp >= 4 }
   end
 end
 

@@ -4,14 +4,14 @@ include_controls 'common'
 
 automate = installed_packages('automate')
 
-control "gatherlogs.automate.package" do
+control "000.gatherlogs.automate.package" do
   title "check that automate is installed"
   desc "
   Automate was not found or is running an older version, please upgraded
   to a newer version of Automate: https://downloads.chef.io/automate
   "
 
-  impact 1.0
+  tag system: { "Product": "Automate #{automate.version}" }
 
   describe automate do
     it { should exist }
@@ -19,6 +19,27 @@ control "gatherlogs.automate.package" do
   end
 end
 
+control "gatherlogs.automate2.required_memory" do
+  title "Check that the system has the required amount of memory"
+
+  desc "
+Chef recommends that the Automate2 system has at least 16GB of memory.
+Please make sure the system means the minimum hardware requirements
+"
+
+  tag kb: "https://automate.chef.io/docs/system-requirements/"
+  tag verbose: true
+  tag system: {
+    "Total Memory" => "#{memory.total_mem} MB",
+    "Free Memory" => "#{memory.free_mem} MB"
+  }
+
+  describe memory do
+    # rough calculation for 15gb because of reasons
+    its('total_mem') { should cmp >= 15360 }
+    its('free_swap') { should cmp > 0 }
+  end
+end
 
 services = service_status(:automate)
 

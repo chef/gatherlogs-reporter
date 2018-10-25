@@ -31,9 +31,9 @@ control "gatherlogs.chef-server.push-jobs-server-bad-timestamp" do
   only_if { pushjobs.exists? }
 
   %w{ access.log current error.log jobs.log }.each do |logfile|
-    tag summary: pushjobs_timestamp.summary
-
     pushjobs_timestamp = log_analysis("var/log/opscode/opscode-pushy-server/#{logfile}", 'Bad timestamp in message')
+    tag summary: pushjobs_timestamp.summary
+    
     describe pushjobs_timestamp do
       it { should_not exist }
     end
