@@ -45,7 +45,7 @@ Please make sure the system means the minimum hardware requirements
   end
 end
 
-control "010.gatherlogs.chef-backend.required_cpu_cores" do
+control "010.gatherlogs.chef-server.required_cpu_cores" do
   title "Check that the system has the required number of cpu cores"
 
   desc "
