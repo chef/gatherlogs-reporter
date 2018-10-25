@@ -91,7 +91,7 @@ module Gatherlogs
     end
 
     def process_profile(profile)
-      output = { system_info: [], report: [] }
+      output = { system_info: {}, report: [] }
       keys = profile['controls'].map.with_index { |c,index| [index,c['id']] }
       keys.sort { |a,b| a.last <=> b.last }.each do |index, id|
         control = profile['controls'][index]
@@ -101,7 +101,7 @@ module Gatherlogs
         result_messages = []
 
         if control['tags'].include?('system')
-          output[:system_info] += Array(control['tags']['system'])
+          output[:system_info].merge!(control['tags']['system'])
         end
 
         verbose_tag = control['tags'].include?('verbose') ? control['tags']['verbose'] : false
@@ -157,7 +157,7 @@ module Gatherlogs
     end
 
     def report(json)
-      output = { system_info: [], report: [] }
+      output = { system_info: {}, report: [] }
 
       json['profiles'].each do |profile|
         # don't show profiles that have no controls
@@ -166,9 +166,9 @@ module Gatherlogs
         # Need to merge all the profiles together
 
         output[:report] += result[:report]
-        output[:system_info] += result[:system_info]
+        output[:system_info].merge!(result[:system_info])
       end
-      output[:system_info].uniq!
+
       output
     end
   end

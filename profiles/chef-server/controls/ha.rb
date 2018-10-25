@@ -2,11 +2,11 @@ drbd = file('private-chef-ctl_ha-status.txt')
 topology = log_analysis('etc/opscode/chef-server.rb', 'topology')
 fe_node = log_analysis('etc/opscode/chef-server.rb', 'use_chef_backend true')
 
-system_info = ["DRBD Enabled: #{drbd.exist? ? 'Yes' : 'No'}"]
-system_info << "Chef-HA Front-End: Yes" if fe_node.exists?
-system_info << "Topology: #{topology.last.split(/\s+/).last }" if topology.exists?
+system_info = { "DRBD Enabled" => drbd.exist? ? 'Yes' : 'No' }
+system_info['Chef-HA Front-End'] = 'Yes' if fe_node.exists?
+system_info['Topology'] = topology.last.split(/\s+/).last if topology.exists?
 
-control '020.gatherlogs.chef-server.check_for_drbd' do
+control '030.gatherlogs.chef-server.check_for_drbd' do
   impact 0.5
   title 'Check to see if the system is using legacy DRDB HA configuration'
   desc '
