@@ -26,6 +26,10 @@ class PlatformVersion < Inspec.resource(1)
     puts SimpleConfig.new(content).inspect
   end
 
+  def exists?
+    platform_file.exist?
+  end
+
   def rhel_version
     result = content.match(/Red Hat Enterprise Linux Server release (\d\.\d)/)
 
@@ -44,10 +48,13 @@ class PlatformVersion < Inspec.resource(1)
 
   private
 
+  def platform_file
+    inspec.file('platform_version.txt')
+  end
+
   def read_content
-    f = inspec.file('platform_version.txt')
-    if f.file?
-      f.content
+    if platform_file.file?
+      platform_file.content
     else
       raise Inspec::Exceptions::ResourceSkipped, "Can't read platform_version.txt"
     end
