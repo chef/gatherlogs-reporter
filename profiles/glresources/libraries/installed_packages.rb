@@ -68,7 +68,7 @@ class InstalledPackagesTxt
     return unless exist?
     case os.to_sym
     when :rhel, :centos
-      result = content.match(/#{@package_name}-(\d+\.\d+\.\d+)-\d+.\w.\w/)
+      result = content.match(/#{@package_name}-(\d+\.\d+\.\d+(~\w+\.\d+)*)-\d+.\w.\w/)
       result[1] unless result.nil?
     when :ubuntu
       result = content.match(/#{@package_name}\s+(\d+\.\d+\.\d+)/)

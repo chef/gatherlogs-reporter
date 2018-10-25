@@ -3,15 +3,17 @@ module Gatherlogs
     def self.detect(log_path)
       return unless File.directory?(log_path)
 
-      Dir.chdir(log_path) do
-        return 'automate' if File.exists?('delivery-ctl-status.txt')
-        # Disable for now, just treat as a chef-server
-        # return 'chef-legacy-ha' if File.exists?('private-chef-ctl_ha-status.txt')
-        return 'chef-server' if File.exists?('private-chef-ctl_status.txt')
-        return 'automate2' if File.exists?('chef-automate_status.txt')
-        return 'chef-backend' if File.exists?('chef-backend-ctl-status.txt')
+      products = {
+        'automate' => 'delivery-ctl-status.txt',
+        'chef-server' => 'private-chef-ctl_status.txt',
+        'automate2' => 'chef-automate_status.txt',
+        'chef-backend' => 'chef-backend-ctl-status.txt'
+      }
+      products.each do |product,filename|
+        full_path = File.join(log_path, filename)
+        return product if File.exists?(full_path)
       end
-      
+
       return nil
     end
   end

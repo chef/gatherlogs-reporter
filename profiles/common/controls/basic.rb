@@ -1,12 +1,13 @@
 title "Checks for common gatherlog files"
 
-control "gatherlogs.common.platform" do
+control "010.gatherlogs.common.platform" do
   title "check platform is valid"
   desc "
     Gather-logs was run on an unknown platform. This usually happens when
     running on Amazon Linux
   "
   impact 1.0
+  tag system: "Platform: #{platform_version.content.chomp}"
 
   describe platform_version do
     its('content') { should_not match(/Platform and version are unknown/) }
