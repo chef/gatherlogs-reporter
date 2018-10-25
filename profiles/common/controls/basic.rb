@@ -1,5 +1,12 @@
 title "Checks for common gatherlog files"
 
+control "020.gatherlogs.common.system_info" do
+  tag system: {
+    "CPU Cores" => cpu_info.total,
+    "CPU Model" => cpu_info.model_name
+  } if cpu_info.exists?
+end
+
 control "020.gatherlogs.common.platform" do
   title "check platform is valid"
   desc "
