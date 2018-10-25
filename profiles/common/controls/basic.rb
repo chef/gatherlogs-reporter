@@ -7,7 +7,9 @@ control "010.gatherlogs.common.platform" do
     running on Amazon Linux
   "
   impact 1.0
-  tag system: "Platform: #{platform_version.content.chomp}"
+  tag system: "Platform: #{platform_version.content.to_s.chomp}"
+  tag verbose: true
+  only_if { platform_version.exists? }
 
   describe platform_version do
     its('content') { should_not match(/Platform and version are unknown/) }
@@ -21,6 +23,7 @@ control "gatherlogs.common.umask" do
     accessible to the services
   "
   only_if { file('umask.txt').exist? }
+  tag verbose: true
 
   describe file('umask.txt') do
     its('content') { should match /0022/ }

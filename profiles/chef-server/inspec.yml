@@ -5,7 +5,7 @@ copyright: Will Fisher
 copyright_email: will@chef.io
 license: Apache-2.0
 summary: InSpec profile for Chef-Server generated gather-logs
-version: 0.2.0
+version: 0.2.1
 
 depends:
   - name: common

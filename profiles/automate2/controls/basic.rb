@@ -19,17 +19,26 @@ include_controls 'common'
 #   end
 # end
 
+control "000.gatherlogs.automate2.system_info" do
+  sys_info = [ 'Product: Automate v2' ]
+  sys_info << "Habitat: #{file('hab_version.txt').content.lines.last.chomp}" if file('hab_version.txt').exist?
+  tag system: sys_info
+end
+
 
 services = service_status(:automate2)
 
-services.internal do |service|
-  control "gatherlogs.automate2.internal_service_status.#{service.name}" do
-    title "check that #{service.name} service is running"
-    desc "There was a problem with the #{service.name} service.  Please check that it's
-running, doesn't have a short run time, or the health checks are reporting an issue."
+control "000.gatherlogs.automate2.internal_service_status" do
+  title "check that Automate services are running"
+  desc "
+There was a problem with one or more services in Automate.
+Please check that it's running, doesn't have a short run time, or the
+health checks are reporting an issue.
+"
 
-    tag summary: service.summary
+  tag verbose: true
 
+  services.internal do |service|
     describe service do
       its('status') { should eq 'running' }
       its('health') { should eq 'ok' }
@@ -40,16 +49,16 @@ end
 
 df = disk_usage()
 
-%w(/ /hab /var /var/log).each do |mount|
-  control "gatherlogs.automate2.critical_disk_usage.#{mount}" do
-    title "check that the automate has plenty of free space"
-    desc "
-      There are several key directories that we need to make sure have enough
-      free space for automate to operate succesfully
-    "
+control "gatherlogs.automate2.critical_disk_usage" do
+  title "check that the automate has plenty of free space"
+  desc "
+    There are several key directories that we need to make sure have enough
+    free space for automate to operate succesfully
+  "
+  tag verbose: true
 
-    only_if { df.exists?(mount) }
-
+  %w(/ /hab /var /var/log).each do |mount|
+    next unless df.exists?(mount)
     describe df.mount(mount) do
       its('used_percent') { should cmp < 100 }
       its('available') { should cmp > disk_usage.to_filesize('250M') }
