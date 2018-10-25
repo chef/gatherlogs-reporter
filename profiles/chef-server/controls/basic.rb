@@ -4,7 +4,13 @@ include_controls 'common'
 
 chef_server = installed_packages('chef-server-core')
 
-control "gatherlogs.chef-server.package" do
+system_info = [
+  "Product: Chef-Server #{chef_server.version}",
+  "Uptime: #{file('uptime.txt').content.chomp}",
+  "Memory: #{file('meminfo.txt').content.to_s.split("\n").first.split(/\s+/)[1..-1].join('')}"
+]
+
+control "000.gatherlogs.chef-server.package" do
   title "check that chef-server is installed"
   desc "
   The installed version of Chef-Server is old and should be upgraded
@@ -12,6 +18,8 @@ control "gatherlogs.chef-server.package" do
   "
 
   impact 1.0
+
+  tag system: system_info
 
   only_if { chef_server.exists? }
   describe chef_server do
