@@ -12,8 +12,7 @@ control "000.gatherlogs.chef-server.package" do
   "
 
   tag system: {
-    "Product" => "Chef-Server #{chef_server.version}",
-    "Uptime" => file('uptime.txt').content.chomp
+    "Product" => "Chef-Server #{chef_server.version}"
   }
 
   only_if { chef_server.exists? }
