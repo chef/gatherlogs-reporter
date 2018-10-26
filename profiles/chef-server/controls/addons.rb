@@ -1,5 +1,5 @@
 reporting = installed_packages('opscode-reporting')
-manage = installed_packages('opscode-manage')
+manage = installed_packages('chef-manage')
 
 control "030.gatherlogs.chef-server.reporting-with-2018-partition-tables" do
   title "make sure installed reporting version has 2018 parititon tables fix"
