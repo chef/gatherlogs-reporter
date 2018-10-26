@@ -11,8 +11,7 @@ control "000.gatherlogs.chef-backend.package" do
   Installed version: #{chef_backend.version}
   "
   tag system: {
-    "Product" => "Chef-Backend #{chef_backend.version}",
-    "Uptime" => file('uptime.txt').content.chomp
+    "Product" => "Chef-Backend #{chef_backend.version}"
   }
 
   only_if { chef_backend.exists? }

@@ -2,27 +2,25 @@ title 'Basic checks for the automate2 configuration'
 
 include_controls 'common'
 
-# automate = installed_packages('automate2')
-#
-# control "gatherlogs.automate2.package" do
-#   title "check that Automate 2 is installed"
-#   desc "
-#   Automate was not found or is running an older version, please upgraded
-#   to a newer version of Automate 2
-#   "
-#
-#   impact 1.0
-#
-#   describe automate do
-#     it { should exist }
-#     its('version') { should cmp >= '0'}
-#   end
-# end
+automate = installed_packages('automate2')
+
+control "000.gatherlogs.automate2.package" do
+  title "check that Automate 2 is installed"
+  desc "
+  Automate was not found or is running an older version, please upgraded
+  to a newer version of Automate 2
+  "
+
+  tag system: { "Product": "Automate v2 #{automate.version}" }
+  describe automate do
+    it { should exist }
+  end
+end
 
 control "000.gatherlogs.automate2.system_info" do
-  sys_info = { "Product" => 'Automate v2' }
-  sys_info["Habitat"] = file('hab_version.txt').content.lines.last.chomp if file('hab_version.txt').exist?
-  tag system: sys_info
+  tag system: {
+    "Habitat" => file('hab_version.txt').content.lines.last.chomp
+  }
 end
 
 services = service_status(:automate2)

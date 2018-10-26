@@ -1,10 +1,15 @@
 title "Checks for common gatherlog files"
 
 control "020.gatherlogs.common.system_info" do
-  tag system: {
+  sysinfo = {
+    "Uptime" => file('uptime.txt').content.lines.last.chomp
+  }
+  sysinfo.merge!({
     "CPU Cores" => cpu_info.total,
     "CPU Model" => cpu_info.model_name
-  } if cpu_info.exists?
+  }) if cpu_info.exists?
+
+  tag system: sysinfo
 end
 
 control "020.gatherlogs.common.platform" do
@@ -14,7 +19,7 @@ control "020.gatherlogs.common.platform" do
     running on Amazon Linux
   "
 
-  tag system: { "Platform" => platform_version.content.to_s.chomp } if platform_version.exists?
+  tag system: { "Platform" => platform_version.full_info } if platform_version.exists?
   tag verbose: true
 
   only_if { platform_version.exists? }
