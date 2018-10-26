@@ -6,47 +6,74 @@ class Memory < Inspec.resource(1)
 
   def initialize
     @content = read_content
+    @mem = {}
+    @swap = {}
   end
 
   def total_mem
-    mem_line[0].to_i
+    mem['total']
   end
 
   def free_mem
-    # calculate it like this so it takes into account cached and buffered mem
-    total_mem - used_mem + buffers_mem + cached_mem
+    available_mem
+  end
+
+  def available_mem
+    if mem.has_key?('available')
+      mem['available']
+    else
+      total_mem.to_i - used_mem.to_i + buffers_mem.to_i + cached_mem.to_i
+    end
   end
 
   def cached_mem
-    mem_line[5].to_i
+    mem['cached']
   end
 
   def buffers_mem
-    mem_line[4].to_i
+    mem['buffers']
   end
 
   def used_mem
-    mem_line[1].to_i
+    mem['used']
   end
 
   def total_swap
-    mem_line[0].to_i
+    swap['total']
   end
 
   def free_swap
-    mem_line[2].to_i
+    swap['free']
   end
 
-  def mem_line
-    m = content.match(/^Mem:\s+(.*)$/)
-    return [] if m.nil?
-    m[1].split(/\s+/)
+  def mem
+    if m = content.match(/^Mem:\s+(.*)$/)
+      values = m[1].split(/\s+/).map(&:to_i)
+
+      if h = content.match(/^\s+(total\s+.*)$/)
+        headers = h[1].split(/\s+/)
+
+        @mem = headers.zip(values).to_h
+        if @mem.has_key?('buff/cache')
+          @mem['cached'] = @mem['buff/cache']
+          @mem['buffers'] = 0
+        end
+      end
+    end
+
+    @mem
   end
 
-  def swap_line
-    m = content.match(/^Swap:\s+(.*)$/)
-    return [] if m.nil?
-    m[1].split(/\s+/)
+  def swap
+    if m = content.match(/^Swap:\s+(.*)$/)
+      values = m[1].split(/\s+/).map(&:to_i)
+      if h = content.match?(/^\s+(total\s+.*)$/)
+        headers = h[1].split(/\s+/)
+        @swap ||= headers.zip(m[1].split(/\s+/)).to_h
+      end
+    end
+
+    @swap
   end
 
   def mem_file
