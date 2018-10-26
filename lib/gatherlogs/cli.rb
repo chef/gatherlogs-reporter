@@ -81,6 +81,8 @@ module Gatherlogs
     end
 
     def print_report(title, report)
+      return if report.empty?
+
       # this puts intentionally left blank
       puts ""
       puts title
