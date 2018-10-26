@@ -67,9 +67,9 @@ class Memory < Inspec.resource(1)
   def swap
     if m = content.match(/^Swap:\s+(.*)$/)
       values = m[1].split(/\s+/).map(&:to_i)
-      if h = content.match?(/^\s+(total\s+.*)$/)
+      if h = content.match(/^\s+(total\s+.*)$/)
         headers = h[1].split(/\s+/)
-        @swap ||= headers.zip(m[1].split(/\s+/)).to_h
+        @swap ||= headers.zip(values).to_h
       end
     end
 
