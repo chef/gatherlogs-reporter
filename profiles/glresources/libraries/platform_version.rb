@@ -36,6 +36,16 @@ class PlatformVersion < Inspec.resource(1)
     result[1] unless result.nil?
   end
 
+  def full_info
+    if m = content.match(/DISTRIB_DESCRIPTION="(.*)"/)
+      m[1]
+    elsif m = content.match(/PRETTY_NAME="(.*)"/)
+      m[1]
+    else
+      content.lines.map(&:chomp).join(' ')
+    end
+  end
+
   def os
     PLATFORM_MATCH.keys.each do |platform|
       return platform.to_sym if platform_match?(platform)
@@ -49,7 +59,15 @@ class PlatformVersion < Inspec.resource(1)
   private
 
   def platform_file
-    inspec.file('platform_version.txt')
+    if inspec.file('platform_version.txt').exist?
+      inspec.file('platform_version.txt')
+    elsif inspec.file('etc/lsb-release').exist?
+      inspec.file('etc/lsb-release')
+    elsif inspec.file('etc/os-release').exist?
+      inspec.file('etc/os-release')
+    else
+      inspec.file('invalid')
+    end
   end
 
   def read_content

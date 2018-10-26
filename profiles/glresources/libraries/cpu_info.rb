@@ -25,7 +25,13 @@ class CpuInfo < Inspec.resource(1)
   end
 
   def cpu_file
-    inspec.file('cpuinfo.txt')
+    if inspec.file('cpuinfo.txt').exist?
+      inspec.file('cpuinfo.txt')
+    elsif inspec.file('proc/cpuinfo').exist?
+      inspec.file('proc/cpuinfo')
+    else
+      inspec.file('invalid')
+    end
   end
 
   def read_content
