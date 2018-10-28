@@ -8,41 +8,6 @@ RSpec.describe Gatherlogs::Reporter do
     Gatherlogs::Reporter.new({})
   end
 
-  let(:success_result) do
-    {
-      'status' => 'success',
-      'code_desc' => 'CODE_DESC',
-      'message' => 'Something failed',
-      'skip_message' => 'We skipped it'
-    }
-  end
-
-  let(:failed_result) do
-    {
-      'status' => 'failed',
-      'code_desc' => 'CODE_DESC',
-      'message' => 'Something failed',
-      'skip_message' => 'We skipped it'
-    }
-  end
-
-  let(:skipped_result) do
-    {
-      'status' => 'skipped',
-      'code_desc' => 'CODE_DESC',
-      'message' => 'Something failed',
-      'skip_message' => 'We skipped it'
-    }
-  end
-
-  it "should return nil if no text" do
-    expect(reporter.desc_text({})).to eq nil
-    expect(reporter.desc_text({ 'desc' => '' })).to eq nil
-
-    expect(reporter.kb_text({ 'tags' => {} })).to eq nil
-    expect(reporter.summary_text({ 'tags' => {} })).to eq nil
-  end
-
   it 'should process profiles' do
     allow(reporter).to receive(:process_profile).with({ 'controls' => ['something'] }) {
       { report: ['a report'], system_info: {} }
@@ -68,49 +33,27 @@ RSpec.describe Gatherlogs::Reporter do
     ).to match({ report: [], system_info: {} })
   end
 
-  context 'plain text' do
-    before do
-      reporter.disable_colors
-    end
-
-    it 'should return desc text' do
-      simple = { 'desc' => 'Description text' }
-      expect(reporter.desc_text(simple)).to eq "#{Gatherlogs::Output::DESC_ICON} Description text\n"
-    end
-
-    it 'should return summary text' do
-      simple = { 'tags' => { 'summary' => 'Summary text' } }
-      expect(reporter.summary_text(simple)).to eq "#{Gatherlogs::Output::SUMMARY_ICON} Summary text\n"
-    end
-
-    it 'should return kb link text' do
-      single = { 'tags' => { 'kb' => 'https://test.com' }}
-      array = { 'tags' => { 'kb' => ['https://test.com', 'http://google.com'] }}
-      expect(reporter.kb_text(single)).to eq "#{Gatherlogs::Output::KB_ICON} https://test.com\n"
-      expect(reporter.kb_text(array)).to eq "#{Gatherlogs::Output::KB_ICON} https://test.com\n    http://google.com\n"
-    end    
-
-    it "should return control info with label" do
-      expect(reporter.control_info('>', 'testing', 'green')).to eq "> testing"
-    end
-
-    it "should return correct result message for success" do
-      expect(reporter.format_result_message(success_result)).to eq "✓ CODE_DESC"
-    end
-
-    it "should return correct result message for skipped" do
-      expect(reporter.format_result_message(skipped_result)).to eq "↺ We skipped it"
-    end
-
-    it "should return correct result message for failed" do
-      expect(reporter.format_result_message(failed_result)).to eq "✗ CODE_DESC\n    Something failed"
-    end
-  end
-
   it "should set args" do
     reporter = Gatherlogs::Reporter.new({ show_all_controls: true, show_all_tests: true })
 
     expect(reporter.show_all_controls).to eq true
     expect(reporter.show_all_tests).to eq true
+  end
+
+  it "should generate a blank report if there are no controls" do
+    expect(Gatherlogs::ControlReport).to receive(:new).with([], nil, nil) { double('results', system_info: {}, report: []) }
+    expect(reporter.process_profile({ 'controls' => [] })).to eq({ system_info: {}, report: [] })
+  end
+
+  it "should pass the show_all_controls to the control report" do
+    reporter = Gatherlogs::Reporter.new({ show_all_controls: true })
+    expect(Gatherlogs::ControlReport).to receive(:new).with([], true, nil) { double('results', system_info: {}, report: []) }
+    expect(reporter.process_profile({ 'controls' => [] })).to eq({ system_info: {}, report: [] })
+  end
+
+  it "should pass the show_all_tests to the control report" do
+    reporter = Gatherlogs::Reporter.new({ show_all_tests: true })
+    expect(Gatherlogs::ControlReport).to receive(:new).with([], nil, true) { double('results', system_info: {}, report: []) }
+    expect(reporter.process_profile({ 'controls' => [] })).to eq({ system_info: {}, report: [] })
   end
 end

@@ -1,6 +1,7 @@
 require 'gatherlogs/version'
 require 'gatherlogs/product'
 require 'gatherlogs/reporter'
+require 'logger'
 
 module Gatherlogs
   def self.logger
