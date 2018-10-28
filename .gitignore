@@ -10,3 +10,5 @@ inspec.lock
 results/
 pkg/
 .env
+.rspec_status
+coverage
