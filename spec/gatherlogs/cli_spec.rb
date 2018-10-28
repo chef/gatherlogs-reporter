@@ -52,10 +52,6 @@ RSpec.describe Gatherlogs::CLI do
     expect(cli.detect_product('foo')).to eq 'chef-server'
   end
 
-  it "should return nil if no report to print" do
-    expect(cli.print_report('test', '')).to eq nil
-  end
-
   context 'setup log level' do
     it 'should set log level to debug' do
       expect(cli).to receive(:debug?) { true }
@@ -89,5 +85,23 @@ RSpec.describe Gatherlogs::CLI do
     expect(cli).to receive(:shellout!).with(['inspec', 'exec', 'chef-server-profile', '--reporter', 'json'], { returns: [0, 100, 101] }) { double('shellout', stdout: '{ "test": "bar" }') }
 
     expect(cli.inspec_exec('chef-server')).to eq({ 'test' => 'bar' })
+  end
+
+
+  context 'printing reports' do
+    let(:test_report) do
+      "
+testing
+--------------------------------------------------------------------------------
+test
+"
+    end
+    it "should return nil if no report to print" do
+      expect(cli.print_report('test', '')).to eq nil
+    end
+
+    it 'should print a report' do
+      expect{ cli.print_report('testing', ['test'])}.to output(test_report).to_stdout
+    end
   end
 end
