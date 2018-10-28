@@ -3,7 +3,9 @@ require 'gatherlogs/output'
 module Gatherlogs
   class ControlReport
     include Gatherlogs::Output
+
     attr_accessor :controls, :system_info, :report, :verbose
+    attr_accessor :show_all_tests
 
     def initialize(controls, show_all_controls, show_all_tests)
       @system_info = {}
@@ -109,7 +111,8 @@ module Gatherlogs
     end
 
     def source_error?(result)
-      result['code_desc'].match?(/Control Source Code Error/)
+      result['status'] == 'failed' &&
+        result['code_desc'].match?(/Control Source Code Error/)
     end
 
     # Format the output used for showing the control test results

@@ -65,6 +65,15 @@ RSpec.describe Gatherlogs::ControlReport do
     }
   end
 
+  let(:source_error_result) do
+    {
+      'status' => 'failed',
+      'code_desc' => 'Control Source Code Error',
+      'message' => 'Something failed',
+      'skip_message' => 'We skipped it'
+    }
+  end
+
   it 'should return nil if no text' do
     expect(reporter.desc_text({})).to eq nil
     expect(reporter.desc_text('desc' => '')).to eq nil
@@ -102,10 +111,23 @@ RSpec.describe Gatherlogs::ControlReport do
     expect(reporter.format_result_message(failed_result)).to eq "✗ CODE_DESC\n    Something failed"
   end
 
-  let(:controls) do
+  it 'should not return nil if show_all_tests is true' do
+    reporter.show_all_tests = true
+    expect(reporter.format_result(success_result)).to_not be_nil
+  end
+
+  it 'should not return nil if verbose is true and failed' do
+    reporter.verbose = true
+    expect(reporter.format_result(failed_result)).to_not be_nil
+  end
+
+  it 'should not return nil if source_code error is true' do
+    expect(reporter.format_result(source_error_result)).to_not be_nil
   end
 
   it 'should return an ordered set of control ids' do
-    expect(reporter.ordered_control_ids).to eq [[1, '000.a.b.c'], [2, '010.a.b.c'], [0, '010.d.e.f']]
+    expect(reporter.ordered_control_ids).to eq [
+      [1, '000.a.b.c'], [2, '010.a.b.c'], [0, '010.d.e.f']
+    ]
   end
 end
