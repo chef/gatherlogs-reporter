@@ -21,6 +21,24 @@ RSpec.describe Gatherlogs::CLI do
     cli.execute
   end
 
+  it "should call show_profiles if cli flag is set" do
+    expect(cli).to receive(:list_profiles?) { true }
+    expect(cli).to receive(:show_profiles)
+
+    cli.execute
+  end
+
+  it "should call generate_report if no flag are set" do
+    expect(cli).to receive(:generate_report)
+
+    cli.execute
+  end
+
+  it "should setup a new reporter" do
+    expect(Gatherlogs::Reporter).to receive(:new).with({ show_all_controls: nil, show_all_tests: nil })
+    cli.reporter
+  end
+
   it "should print the profile list alphabetically" do
     cli.profiles = ['beta', 'alpha', 'gamma']
     allow(cli).to receive(:exit)
@@ -36,5 +54,40 @@ RSpec.describe Gatherlogs::CLI do
 
   it "should return nil if no report to print" do
     expect(cli.print_report('test', '')).to eq nil
+  end
+
+  context 'setup log level' do
+    it 'should set log level to debug' do
+      expect(cli).to receive(:debug?) { true }
+
+      cli.parse_args
+      expect(Gatherlogs.logger.level).to eq Logger::DEBUG
+    end
+
+    it 'should set log level to error' do
+      expect(cli).to receive(:quiet?) { true }
+
+      cli.parse_args
+      expect(Gatherlogs.logger.level).to eq Logger::ERROR
+    end
+
+    it 'should set log level to info' do
+      cli.parse_args
+      expect(Gatherlogs.logger.level).to eq Logger::INFO
+    end
+  end
+
+  it 'should call disable_colors if monochrome is set' do
+    expect(cli).to receive(:monochrome?) { true }
+
+    expect(cli).to receive(:disable_colors)
+    cli.parse_args
+  end
+
+  it 'should run inspec' do
+    expect(cli).to receive(:find_profile_path).with('chef-server') { 'chef-server-profile' }
+    expect(cli).to receive(:shellout!).with(['inspec', 'exec', 'chef-server-profile', '--reporter', 'json'], { returns: [0, 100, 101] }) { double('shellout', stdout: '{ "test": "bar" }') }
+
+    expect(cli.inspec_exec('chef-server')).to eq({ 'test' => 'bar' })
   end
 end

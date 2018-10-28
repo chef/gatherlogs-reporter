@@ -55,7 +55,10 @@ module Gatherlogs
 
       return show_versions if version?
       return show_profiles if list_profiles?
+      generate_report
+    end
 
+    def generate_report
       product = inspec_profile.dup
 
       output = log_working_dir do |log_path|
@@ -162,21 +165,19 @@ module Gatherlogs
         Gatherlogs.logger.level = ::Logger::ERROR
       else
         Gatherlogs.logger.level = ::Logger::INFO
+        Gatherlogs.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
       end
 
       if monochrome?
         disable_colors
       end
 
-      Gatherlogs.logger.formatter = proc { |severity, datetime, progname, msg|
-        "#{msg}\n"
-      } if Gatherlogs.logger.level == Logger::INFO
     end
 
     def inspec_exec(product)
       profile = find_profile_path(product)
 
-      cmd = ['inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json']
+      cmd = ['inspec', 'exec', profile, '--reporter', 'json']
 
       info "Running inspec profile for #{product}..."
 
