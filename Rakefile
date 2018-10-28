@@ -12,4 +12,4 @@ require 'rubocop/rake_task'
 
 RuboCop::RakeTask.new
 
-task :test => [:spec, :rubocop]
+task test: %i[spec rubocop]

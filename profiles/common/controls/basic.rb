@@ -1,7 +1,7 @@
 title 'Checks for common gatherlog files'
 
 control '020.gatherlogs.common.system_info' do
-  sysinfo = { }
+  sysinfo = {}
 
   if file('uptime.txt').exist?
     sysinfo['Uptime'] = file('uptime.txt').content.lines.last.chomp

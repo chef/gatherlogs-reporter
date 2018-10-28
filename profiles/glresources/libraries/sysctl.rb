@@ -11,7 +11,7 @@ class Sysctl < Inspec.resource(1)
   end
 
   def respond_to_missing?(name)
-    @content.has_key?(name.to_sym)
+    @content.key?(name.to_sym)
   end
 
   def exists?
