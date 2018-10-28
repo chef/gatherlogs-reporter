@@ -17,9 +17,7 @@ class InstalledPackages < Inspec.resource(1)
       @package = VersionManifestJson.new(name, read_content(filename))
     when 'automate2'
       filename = 'chef-automate_current_manifest.txt'
-      c = read_content(filename).lines
-      c.shift
-      @package = A2ManifestJson.new(name, c.join("\n"))
+      @package = A2ManifestJson.new(name, read_content(filename))
     else
       filename = 'installed-packages.txt'
       @package = InstalledPackagesTxt.new(name, read_content(filename), platform_version.os)
@@ -103,9 +101,16 @@ class A2ManifestJson
   attr_accessor :content, :version
 
   def initialize(name, packages_content)
-    @content = JSON.parse(packages_content)
-    @package_name = name
-    @version = package_version
+    # strip the first line from content
+    unless packages_content.nil?
+      lines = packages_content.lines
+      lines.shift
+      packages_content = lines.join("\n")
+
+      @content = JSON.parse(packages_content)
+      @package_name = name
+      @version = package_version
+    end
   end
 
   def exist?

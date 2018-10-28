@@ -1,13 +1,17 @@
-class SysctlA < Inspec.resource(1)
-  name 'sysctl_a'
-  desc 'Parse the sysctl_a config'
+class Sysctl < Inspec.resource(1)
+  name 'sysctl'
+  desc 'Parse the sysctl config'
 
-  def initialize(filename = 'sysctl_a.txt')
+  def initialize(filename = 'sysctl.txt')
     @content = parse_sysctl(read_content(filename))
   end
 
   def method_missing(name)
     @content[name.to_sym]
+  end
+
+  def respond_to_missing?(name)
+    @content.has_key?(name.to_sym)
   end
 
   def exists?

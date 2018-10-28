@@ -92,8 +92,8 @@ control 'gatherlogs.automate2.sysctl-settings' do
     Recommended sysctl settings are not correct, recommend that these get updated
     to ensure the best performance possible for Automate 2.
   "
-  only_if { sysctl_a.exists? }
-  describe sysctl_a do
+  only_if { sysctl.exists? }
+  describe sysctl do
     its('vm_swappiness') { should cmp >= 1 }
     its('vm_swappiness') { should cmp <= 20 }
     its('fs_file-max') { should cmp >= 64_000 }

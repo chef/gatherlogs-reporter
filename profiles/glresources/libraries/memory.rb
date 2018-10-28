@@ -69,7 +69,7 @@ class Memory < Inspec.resource(1)
       values = m[1].split(/\s+/).map(&:to_i)
       if h = content.match(/^\s+(total\s+.*)$/)
         headers = h[1].split(/\s+/)
-        @swap ||= headers.zip(values).to_h
+        @swap = headers.zip(values).to_h
       end
     end
 

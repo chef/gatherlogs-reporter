@@ -83,7 +83,7 @@ class DiskUsage < Inspec.resource(1)
 end
 
 class DiskUsageItem
-  def initialize(name, args)
+  def initialize(name, args = {})
     @name = name
     @content = args
   end

@@ -117,7 +117,6 @@ module Gatherlogs
                  color = PASSED
                  result['code_desc']
                end
-
       message = tabbed_text "#{badge} #{output}"
       colorize message.to_s, color
     end
@@ -134,7 +133,7 @@ module Gatherlogs
         @badge = FAILED_ICON
       end
 
-      if @show_all_tests || source_error?(result) || (verbose && result['status'] = 'failed')
+      if @show_all_tests || source_error?(result) || (verbose && result['status'] == 'failed')
         subsection(format_result_message(result))
       end
     end

@@ -1,9 +1,12 @@
 title 'Checks for common gatherlog files'
 
 control '020.gatherlogs.common.system_info' do
-  sysinfo = {
-    'Uptime' => file('uptime.txt').content.lines.last.chomp
-  }
+  sysinfo = { }
+
+  if file('uptime.txt').exist?
+    sysinfo['Uptime'] = file('uptime.txt').content.lines.last.chomp
+  end
+
   if cpu_info.exists?
     sysinfo['CPU Cores'] = cpu_info.total
     sysinfo['CPU Model'] = cpu_info.model_name

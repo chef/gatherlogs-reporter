@@ -180,6 +180,7 @@ module Gatherlogs
       info "Running inspec profile for #{product}..."
 
       inspec = shellout!(cmd, returns: [0, 100, 101])
+      debug inspec.stderr unless inspec.stderr.empty?
       JSON.parse(inspec.stdout)
     end
   end

@@ -31,7 +31,9 @@ Please make sure the system means the minimum hardware requirements
   tag verbose: true
   tag system: {
     'Total Memory' => "#{memory.total_mem} MB",
-    'Free Memory' => "#{memory.free_mem} MB"
+    'Free Memory' => "#{memory.free_mem} MB",
+    'Total Swap' => "#{memory.total_swap} MB",
+    'Free Swap' => "#{memory.free_swap} MB"
   }
 
   describe memory do
@@ -98,8 +100,8 @@ control 'gatherlogs.automate.sysctl-settings' do
     Recommended sysctl settings are not correct, recommend that these get updated
     to ensure the best performance possible for Automate.
   "
-  only_if { sysctl_a.exists? }
-  describe sysctl_a do
+  only_if { sysctl.exists? }
+  describe sysctl do
     its('vm_swappiness') { should cmp >= 1 }
     its('vm_swappiness') { should cmp <= 20 }
     its('fs_file-max') { should cmp >= 64_000 }

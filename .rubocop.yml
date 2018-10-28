@@ -1,0 +1,7 @@
+Metrics/LineLength:
+  Exclude: 
+    - profiles/**/*.rb
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*.rb
