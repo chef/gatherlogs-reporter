@@ -3,10 +3,10 @@ class PlatformVersion < Inspec.resource(1)
   desc 'Attempt to detect the current platform from the gatherlogs'
 
   PLATFORM_MATCH = {
-    :centos => 'CentOS',
-    :rhel => 'Red Hat Enterprise Linux Server',
-    :ubuntu => 'Ubuntu'
-  }
+    centos: 'CentOS',
+    rhel: 'Red Hat Enterprise Linux Server',
+    ubuntu: 'Ubuntu'
+  }.freeze
 
   PLATFORM_MATCH.keys.each do |k|
     define_method("#{k}?".to_sym) { |plat| platform_match(plat) }
@@ -19,6 +19,7 @@ class PlatformVersion < Inspec.resource(1)
 
   def platform_match?(platform)
     return false if content.nil?
+
     content.match?(PLATFORM_MATCH[platform.to_sym])
   end
 

@@ -5,7 +5,7 @@ copyright: Will Fisher
 copyright_email: will@chef.io
 license: Apache-2.0
 summary: This contains common checks for inspec for chef-product gatherlogs
-version: 0.3.1
+version: 0.3.2
 
 depends:
   - name: glresources

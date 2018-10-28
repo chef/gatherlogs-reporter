@@ -19,7 +19,7 @@ class Memory < Inspec.resource(1)
   end
 
   def available_mem
-    if mem.has_key?('available')
+    if mem.key?('available')
       mem['available']
     else
       total_mem.to_i - used_mem.to_i + buffers_mem.to_i + cached_mem.to_i
@@ -54,7 +54,7 @@ class Memory < Inspec.resource(1)
         headers = h[1].split(/\s+/)
 
         @mem = headers.zip(values).to_h
-        if @mem.has_key?('buff/cache')
+        if @mem.key?('buff/cache')
           @mem['cached'] = @mem['buff/cache']
           @mem['buffers'] = 0
         end
@@ -92,6 +92,7 @@ class Memory < Inspec.resource(1)
 
   def read_content
     return nil unless mem_file.exist?
+
     mem_file.content
   end
 end

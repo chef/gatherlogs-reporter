@@ -5,7 +5,6 @@ class DiskUsage < Inspec.resource(1)
   attr_accessor :content
   def initialize
     @content = parse_mounts(read_content)
-
   end
 
   def mount(name)
@@ -13,10 +12,10 @@ class DiskUsage < Inspec.resource(1)
   end
 
   def exists?(name)
-    @content.has_key?(name)
+    @content.key?(name)
   end
 
-  def each(&block)
+  def each
     @content.keys.each do |mount|
       yield @content[mount]
     end
@@ -27,7 +26,7 @@ class DiskUsage < Inspec.resource(1)
     # size = '0' if size.nil?
 
     units = {
-      'B'  => 1 / (1024 * 1024),
+      'B' => 1 / (1024 * 1024),
       'K' => 1 / 1024,
       'M' => 1,
       'G' => 1024,
@@ -35,7 +34,7 @@ class DiskUsage < Inspec.resource(1)
     }
 
     unit = size[-1]
-    unit = 'B' if !units.keys.include?(unit)
+    unit = 'B' unless units.key?(unit)
 
     "#{size[0..-1].to_f * units[unit]}M"
   end
@@ -47,11 +46,11 @@ class DiskUsage < Inspec.resource(1)
     lines = input.split("\n")
     lines.delete_at(0)
     lines.each do |line|
-      next if line.length == 0
+      next if line.empty?
       next if line =~ /^df -h$/
 
-      line.gsub!(/\s+/, " ")
-      diskusage << line.split(" ")
+      line.gsub!(/\s+/, ' ')
+      diskusage << line.split(' ')
     end
 
     normalize_output(diskusage)
@@ -62,11 +61,11 @@ class DiskUsage < Inspec.resource(1)
   def normalize_output(data)
     output = {}
 
-    while !data.empty?
+    until data.empty?
       row = data.shift
-      normalized_row = row.size == 1 ? row + data.shift : row;
+      normalized_row = row.size == 1 ? row + data.shift : row
       device, size, used, available, used_percent, mount = normalized_row
-      output[mount] = DiskUsageItem.new(mount, {:device=>device, :size=>to_filesize(size), :used=>to_filesize(used), :available=>to_filesize(available), :used_percent=>used_percent.to_i, :mount=>mount})
+      output[mount] = DiskUsageItem.new(mount, device: device, size: to_filesize(size), used: to_filesize(used), available: to_filesize(available), used_percent: used_percent.to_i, mount: mount)
     end
 
     output
@@ -90,7 +89,7 @@ class DiskUsageItem
   end
 
   def method_missing(item)
-    @content[item.to_sym] if @content.has_key?(item.to_sym)
+    @content[item.to_sym] if @content.key?(item.to_sym)
   end
 
   def to_s

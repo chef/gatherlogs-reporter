@@ -29,7 +29,7 @@ class InstalledPackages < Inspec.resource(1)
   def exist?
     @package.exist?
   end
-  alias_method :exists?, :exist?
+  alias exists? exist?
 
   def version
     @package.version
@@ -39,11 +39,7 @@ class InstalledPackages < Inspec.resource(1)
 
   def read_content(filename)
     f = inspec.file(filename)
-    if f.file?
-      f.content
-    else
-      nil
-    end
+    f.content if f.file?
   end
 
   # This is an ugly hack to get around a bug where other custom resources
@@ -71,6 +67,7 @@ class InstalledPackagesTxt
   def package_version(os)
     return if os.nil?
     return unless exist?
+
     case os.to_sym
     when :rhel, :centos
       result = content.match(/#{@package_name}-(\d+\.\d+\.\d+(~\w+\.\d+)*)-\d+.\w.\w/)
@@ -78,8 +75,6 @@ class InstalledPackagesTxt
     when :ubuntu
       result = content.match(/#{@package_name}\s+(\d+\.\d+\.\d+)/)
       result[1] unless result.nil?
-    else
-      nil
     end
   end
 end

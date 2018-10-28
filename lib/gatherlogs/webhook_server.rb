@@ -1,5 +1,5 @@
 require 'mixlib/shellout'
-require "string/utf8"
+require 'string/utf8'
 require 'zendesk_api'
 require 'paint'
 require 'cgi'
@@ -12,7 +12,7 @@ module Gatherlogs
       @debug = debug
       @zdconfig = config
       zdclient
-      puts "Debug enabled" if @debug
+      puts 'Debug enabled' if @debug
     end
 
     def debug?
@@ -20,10 +20,10 @@ module Gatherlogs
     end
 
     def zdclient
-      puts "Initializing Zendesk Client"
+      puts 'Initializing Zendesk Client'
       logger = Logger.new(STDOUT)
       logger.level = Logger::ERROR
-      
+
       @instance ||= ZendeskAPI::Client.new do |config|
         config.url = zdconfig[:url]
         config.username = zdconfig[:user]
@@ -40,15 +40,15 @@ module Gatherlogs
 
     def valid_gatherlog_bundle(url)
       uri = URI.parse(url)
-      params = CGI::parse(uri.query)
+      params = CGI.parse(uri.query)
       extension = params['name'].first.split('.').last
 
-      invalid_extensions = %w{ log png jpg }
+      invalid_extensions = %w[log png jpg]
       !invalid_extensions.include?(extension)
     end
 
     def is_http_request?(uri)
-      uri.kind_of?(URI::HTTP) || uri.kind_of?(URI::HTTPS)
+      uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
     end
 
     def check_logs(remote_url)
@@ -63,7 +63,7 @@ module Gatherlogs
       { results: checklog.stdout.utf8!, error: checklog.stderr.utf8!, status: checklog.exitstatus }
     end
 
-    def shellout(cmd, options={})
+    def shellout(cmd, options = {})
       shell = Mixlib::ShellOut.new(cmd, options)
       shell.run_command
       shell
@@ -79,22 +79,23 @@ module Gatherlogs
 
         puts "Updating zendesk ticket #{id} with\n#{response}" if debug?
 
-        ZendeskAPI::Ticket.update!(zdclient, {
-          id: id,
-          comment: { value: response, public: false }
-        }) unless debug?
+        unless debug?
+          ZendeskAPI::Ticket.update!(zdclient,
+                                     id: id,
+                                     comment: { value: response, public: false })
+        end
       end
     end
 
     def zendesk_comment_text(filename, output)
-      output = "No issues were found in the gather-log bundle" if output.empty?
-<<-EOC
+      output = 'No issues were found in the gather-log bundle' if output.empty?
+      <<-EOC
 Inspec gather-log results for: #{filename}
 
 ```
 #{Paint.unpaint(output).utf8!}
 ```
-EOC
+      EOC
     end
   end
 end

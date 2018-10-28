@@ -4,8 +4,8 @@ include_controls 'common'
 
 automate = installed_packages('automate')
 
-control "000.gatherlogs.automate.package" do
-  title "check that automate is installed"
+control '000.gatherlogs.automate.package' do
+  title 'check that automate is installed'
   desc "
   Automate was not found or is running an older version, please upgraded
   to a newer version of Automate: https://downloads.chef.io/automate
@@ -15,28 +15,28 @@ control "000.gatherlogs.automate.package" do
 
   describe automate do
     it { should exist }
-    its('version') { should cmp >= '1.8.38'}
+    its('version') { should cmp >= '1.8.38' }
   end
 end
 
-control "gatherlogs.automate2.required_memory" do
-  title "Check that the system has the required amount of memory"
+control 'gatherlogs.automate2.required_memory' do
+  title 'Check that the system has the required amount of memory'
 
   desc "
 Chef recommends that the Automate2 system has at least 16GB of memory.
 Please make sure the system means the minimum hardware requirements
 "
 
-  tag kb: "https://automate.chef.io/docs/system-requirements/"
+  tag kb: 'https://automate.chef.io/docs/system-requirements/'
   tag verbose: true
   tag system: {
-    "Total Memory" => "#{memory.total_mem} MB",
-    "Free Memory" => "#{memory.free_mem} MB"
+    'Total Memory' => "#{memory.total_mem} MB",
+    'Free Memory' => "#{memory.free_mem} MB"
   }
 
   describe memory do
     # rough calculation for 15gb because of reasons
-    its('total_mem') { should cmp >= 15360 }
+    its('total_mem') { should cmp >= 15_360 }
     its('free_swap') { should cmp > 0 }
   end
 end
@@ -73,11 +73,11 @@ services.external do |service|
   end
 end
 
-df = disk_usage()
+df = disk_usage
 
-%w(/ /var /var/opt /var/opt/delivery /var/log).each do |mount|
+%w[/ /var /var/opt /var/opt/delivery /var/log].each do |mount|
   control "gatherlogs.automate.critical_disk_usage.#{mount}" do
-    title "check that the automate has plenty of free space"
+    title 'check that the automate has plenty of free space'
     desc "
       There are several key directories that we need to make sure have enough
       free space for automate to operate succesfully
@@ -92,8 +92,8 @@ df = disk_usage()
   end
 end
 
-control "gatherlogs.automate.sysctl-settings" do
-  title "check that the sysctl settings make sense"
+control 'gatherlogs.automate.sysctl-settings' do
+  title 'check that the sysctl settings make sense'
   desc "
     Recommended sysctl settings are not correct, recommend that these get updated
     to ensure the best performance possible for Automate.
@@ -102,13 +102,13 @@ control "gatherlogs.automate.sysctl-settings" do
   describe sysctl_a do
     its('vm_swappiness') { should cmp >= 1 }
     its('vm_swappiness') { should cmp <= 20 }
-    its('fs_file-max') { should cmp >= 64000 }
-    its('vm_max_map_count') { should cmp >= 256000 }
+    its('fs_file-max') { should cmp >= 64_000 }
+    its('vm_max_map_count') { should cmp >= 256_000 }
     its('vm_dirty_ratio') { should cmp >= 5 }
     its('vm_dirty_ratio') { should cmp <= 30 }
     its('vm_dirty_background_ratio') { should cmp >= 10 }
     its('vm_dirty_background_ratio') { should cmp <= 60 }
-    its('vm_dirty_expire_centisecs') { should cmp >= 10000 }
-    its('vm_dirty_expire_centisecs') { should cmp <= 30000 }
+    its('vm_dirty_expire_centisecs') { should cmp >= 10_000 }
+    its('vm_dirty_expire_centisecs') { should cmp <= 30_000 }
   end
 end

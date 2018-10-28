@@ -3,7 +3,7 @@ RSpec.describe Gatherlogs::CLI do
     Gatherlogs::CLI.new({})
   end
 
-  it "should gather the tool versions" do
+  it 'should gather the tool versions' do
     allow(cli).to receive(:info)
 
     # expect(Gatherlogs).to receive(:VERSION)
@@ -14,39 +14,39 @@ RSpec.describe Gatherlogs::CLI do
     cli.show_versions
   end
 
-  it "should call show_versions if cli flag is set" do
+  it 'should call show_versions if cli flag is set' do
     expect(cli).to receive(:version?) { true }
     expect(cli).to receive(:show_versions)
 
     cli.execute
   end
 
-  it "should call show_profiles if cli flag is set" do
+  it 'should call show_profiles if cli flag is set' do
     expect(cli).to receive(:list_profiles?) { true }
     expect(cli).to receive(:show_profiles)
 
     cli.execute
   end
 
-  it "should call generate_report if no flag are set" do
+  it 'should call generate_report if no flag are set' do
     expect(cli).to receive(:generate_report)
 
     cli.execute
   end
 
-  it "should setup a new reporter" do
-    expect(Gatherlogs::Reporter).to receive(:new).with({ show_all_controls: nil, show_all_tests: nil })
+  it 'should setup a new reporter' do
+    expect(Gatherlogs::Reporter).to receive(:new).with(show_all_controls: nil, show_all_tests: nil)
     cli.reporter
   end
 
-  it "should print the profile list alphabetically" do
-    cli.profiles = ['beta', 'alpha', 'gamma']
+  it 'should print the profile list alphabetically' do
+    cli.profiles = %w[beta alpha gamma]
     allow(cli).to receive(:exit)
 
-    expect{ cli.show_profiles }.to output("alpha\nbeta\ngamma\n").to_stdout
+    expect { cli.show_profiles }.to output("alpha\nbeta\ngamma\n").to_stdout
   end
 
-  it "should call out to product.detect with the log path" do
+  it 'should call out to product.detect with the log path' do
     allow(Gatherlogs::Product).to receive(:detect).with('foo') { 'chef-server' }
 
     expect(cli.detect_product('foo')).to eq 'chef-server'
@@ -82,11 +82,10 @@ RSpec.describe Gatherlogs::CLI do
 
   it 'should run inspec' do
     expect(cli).to receive(:find_profile_path).with('chef-server') { 'chef-server-profile' }
-    expect(cli).to receive(:shellout!).with(['inspec', 'exec', 'chef-server-profile', '--reporter', 'json'], { returns: [0, 100, 101] }) { double('shellout', stdout: '{ "test": "bar" }') }
+    expect(cli).to receive(:shellout!).with(['inspec', 'exec', 'chef-server-profile', '--reporter', 'json'], returns: [0, 100, 101]) { double('shellout', stdout: '{ "test": "bar" }') }
 
-    expect(cli.inspec_exec('chef-server')).to eq({ 'test' => 'bar' })
+    expect(cli.inspec_exec('chef-server')).to eq('test' => 'bar')
   end
-
 
   context 'printing reports' do
     let(:test_array_report) do
@@ -107,20 +106,20 @@ green: no
 "
     end
 
-    it "should return nil if there is no report to print" do
+    it 'should return nil if there is no report to print' do
       expect(cli.print_report('test', '')).to eq nil
     end
 
     it 'should print a report from an array' do
-      expect{
+      expect do
         cli.print_report('testing', ['test'])
-      }.to output(test_array_report).to_stdout
+      end.to output(test_array_report).to_stdout
     end
 
     it 'should print a report from a hash' do
-      expect{
-        cli.print_report('hash', { 'bag': 'box', 'green': 'no' })
-      }.to output(test_hash_report).to_stdout
+      expect do
+        cli.print_report('hash', 'bag': 'box', 'green': 'no')
+      end.to output(test_hash_report).to_stdout
     end
   end
 end

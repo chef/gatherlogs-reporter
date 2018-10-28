@@ -3,8 +3,8 @@ require 'clamp'
 require 'fileutils'
 require 'logger'
 
-require "gatherlogs"
-require "gatherlogs/shellout"
+require 'gatherlogs'
+require 'gatherlogs/shellout'
 
 PROFILES_PATH = File.realpath(File.join(File.dirname(__FILE__), '../../profiles')).freeze
 Clamp.allow_options_after_parameters = true
@@ -28,7 +28,7 @@ module Gatherlogs
     option ['-m', '--monochrome'], :flag, "Don't use terminal colors for output"
     option ['--version'], :flag, 'Show current version'
 
-    parameter "[PROFILE]", "profile to execute", attribute_name: :inspec_profile
+    parameter '[PROFILE]', 'profile to execute', attribute_name: :inspec_profile
 
     def initialize(*args)
       super
@@ -44,17 +44,18 @@ module Gatherlogs
     end
 
     def reporter
-      @reporter ||= Gatherlogs::Reporter.new({
+      @reporter ||= Gatherlogs::Reporter.new(
         show_all_controls: all?,
         show_all_tests: verbose?
-      })
+      )
     end
 
-    def execute()
+    def execute
       parse_args
 
       return show_versions if version?
       return show_profiles if list_profiles?
+
       generate_report
     end
 
@@ -79,7 +80,7 @@ module Gatherlogs
     end
 
     def detect_product(log_path)
-      debug "Attempting to detect gatherlogs product..."
+      debug 'Attempting to detect gatherlogs product...'
       product = Gatherlogs::Product.detect(log_path)
       debug product.nil? ? 'Could not detect product' : "Detected '#{product}' files"
 
@@ -104,23 +105,23 @@ module Gatherlogs
       return if report.empty?
 
       # this puts intentionally left blank
-      puts ""
+      puts ''
       puts title
       if report.is_a?(Hash)
         max_label_length = report.keys.map(&:length).max
-        max_value_length = report.values.map{|v| v.to_s.length }.max
-        puts '-' * (max_label_length+max_value_length+2)
-        report.each do |k,v|
-          puts "%#{max_label_length}s: %s" % [k,v.to_s.strip.chomp]
+        max_value_length = report.values.map { |v| v.to_s.length }.max
+        puts '-' * (max_label_length + max_value_length + 2)
+        report.each do |k, v|
+          puts format("%#{max_label_length}s: %s", k, v.to_s.strip.chomp)
         end
-        puts '-' * (max_label_length+max_value_length+2)
+        puts '-' * (max_label_length + max_value_length + 2)
       else
         puts '-' * 80
         puts report.join("\n")
       end
     end
 
-    def log_working_dir(&block)
+    def log_working_dir
       current_log_path = remote_url.nil? ? log_path.dup : fetch_remote_tar(remote_url)
 
       debug("Using log_path: #{current_log_path}")
@@ -129,11 +130,11 @@ module Gatherlogs
         return yield '.'
       end
     ensure
-      FileUtils.remove_entry remote_cache_dir if remote_cache_dir && File.exists?(remote_cache_dir)
+      FileUtils.remove_entry remote_cache_dir if remote_cache_dir && File.exist?(remote_cache_dir)
     end
 
-    def fetch_remote_tar(url)
-      info "Fetching remote gatherlogs bundle"
+    def fetch_remote_tar(_url)
+      info 'Fetching remote gatherlogs bundle'
       @remote_cache_dir = Dir.mktmpdir('gatherlogs')
       debug "Remote cache dir: #{@remote_cache_dir}"
 
@@ -151,7 +152,7 @@ module Gatherlogs
 
     def find_profile_path(profile)
       path = File.join(::PROFILES_PATH, profile)
-      if File.exists?(path)
+      if File.exist?(path)
         return path
       else
         raise "Couldn't find '#{profile}' profile, tried in '#{path}'"
@@ -165,13 +166,10 @@ module Gatherlogs
         Gatherlogs.logger.level = ::Logger::ERROR
       else
         Gatherlogs.logger.level = ::Logger::INFO
-        Gatherlogs.logger.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
+        Gatherlogs.logger.formatter = proc { |_severity, _datetime, _progname, msg| "#{msg}\n" }
       end
 
-      if monochrome?
-        disable_colors
-      end
-
+      disable_colors if monochrome?
     end
 
     def inspec_exec(product)
@@ -181,7 +179,7 @@ module Gatherlogs
 
       info "Running inspec profile for #{product}..."
 
-      inspec = shellout!(cmd, { returns: [0, 100, 101] })
+      inspec = shellout!(cmd, returns: [0, 100, 101])
       JSON.parse(inspec.stdout)
     end
   end

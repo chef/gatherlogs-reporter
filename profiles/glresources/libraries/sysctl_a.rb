@@ -21,11 +21,12 @@ class SysctlA < Inspec.resource(1)
     content.each_line do |line|
       matched = line.match /^\s*([^=]*?)\s*=\s*(.*?)\s*$/
       next if matched.nil?
-      full, name, value = *matched #[1], matched[0]
+
+      full, name, value = *matched # [1], matched[0]
 
       # change . to _ because rspec `its('vm.foo')`` will try to call method
       # foo on object vm
-      data[name.gsub('.', '_').to_sym] = value
+      data[name.tr('.', '_').to_sym] = value
     end
 
     data

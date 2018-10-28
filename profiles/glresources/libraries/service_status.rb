@@ -6,31 +6,31 @@ class ServiceStatus < Inspec.resource(1)
     @product = product
     status_content = read_content(status_file)
     @content = case @product.to_sym
-    when :automate, :chef_server
-      parse_services(status_content)
-    when :automate2
-      parse_a2_services(status_content)
-    when :chef_backend
-      parse_backend_services(status_content)
+               when :automate, :chef_server
+                 parse_services(status_content)
+               when :automate2
+                 parse_a2_services(status_content)
+               when :chef_backend
+                 parse_backend_services(status_content)
     end
   end
 
   def method_missing(service)
-    @content[service.to_sym] if @content.has_key?(service.to_sym)
+    @content[service.to_sym] if @content.key?(service.to_sym)
   end
 
   def exists?
     inspec.file(status_file).exists?
   end
 
-  def internal(&block)
-    @content[:internal].each do |service,service_object|
+  def internal
+    @content[:internal].each do |_service, service_object|
       yield service_object
     end
   end
 
-  def external(&block)
-    @content[:external].each do |service,service_object|
+  def external
+    @content[:external].each do |_service, service_object|
       yield service_object
     end
   end
@@ -69,7 +69,7 @@ class ServiceStatus < Inspec.resource(1)
     services = { internal: {}, external: {} }
 
     content.each_line do |line|
-      #skip header
+      # skip header
       match = line.match(/^(\w+)\s+(\w+) \(pid (\w+)\)\s+(\dd \dh \d\dm \d\ds)\s+(.*)$/)
       next if match.nil?
 
@@ -90,6 +90,7 @@ class ServiceStatus < Inspec.resource(1)
       next if line[0] == '-'
       next if line =~ /^\s*$/ # blank lines
       next if line =~ /Internal Services/
+
       if line =~ /External Services/
         internal = false
         next
@@ -104,7 +105,6 @@ class ServiceStatus < Inspec.resource(1)
         status, service, dummy, constatus, dummy, host = service_line.split(/\s+/)
         services[:external][service] = ServiceObject.new(name: service, status: status, internal: internal, connection_status: constatus, host: host)
       end
-
     end
 
     services
@@ -130,14 +130,15 @@ class ServiceObject
   end
 
   def method_missing(field)
-    @args[field.to_sym] if @args.has_key?(field.to_sym)
+    @args[field.to_sym] if @args.key?(field.to_sym)
   end
 
   def summary
-    %w{ name status runtime health }.map { |key|
+    %w[name status runtime health].map do |key|
       next unless @args.include?(key.to_sym)
+
       "#{key.capitalize}: #{@args[key.to_sym]}"
-    }.join(', ')
+    end.join(', ')
   end
 
   def to_s

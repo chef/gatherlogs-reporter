@@ -17,7 +17,7 @@ module Gatherlogs
       control_report = Gatherlogs::ControlReport.new(profile['controls'], show_all_controls, show_all_tests)
       {
         system_info: control_report.system_info,
-        report: control_report.report 
+        report: control_report.report
       }
     end
 
@@ -27,6 +27,7 @@ module Gatherlogs
       json['profiles'].each do |profile|
         # don't show profiles that have no controls
         next if profile['controls'].empty?
+
         result = process_profile(profile)
         # Need to merge all the profiles together
 

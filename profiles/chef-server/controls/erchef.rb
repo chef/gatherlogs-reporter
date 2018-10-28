@@ -1,6 +1,6 @@
-#Checking presence of checksum: <<"aec79664a83e5086e738ab8659c81399">> for org <<"654cafca20690e27f34035e3e0a558ef">> from bucket "bookshelf" has taken longer than 5000 ms
+# Checking presence of checksum: <<"aec79664a83e5086e738ab8659c81399">> for org <<"654cafca20690e27f34035e3e0a558ef">> from bucket "bookshelf" has taken longer than 5000 ms
 
-control "gatherlogs.chef-server.erchef_bookshelf_errors" do
+control 'gatherlogs.chef-server.erchef_bookshelf_errors' do
   impact 1.0
   title 'Checking presence of checksum timeout for bookshelf'
   desc "
@@ -18,7 +18,7 @@ Please contact support to get this problem resolved
   end
 end
 
-control "gatherlogs.chef-server.erchef-bad_actor-permission-errors" do
+control 'gatherlogs.chef-server.erchef-bad_actor-permission-errors' do
   impact 1.0
   title 'Check erchef for permission errors related to bad_actor'
   desc "
@@ -43,8 +43,7 @@ control "gatherlogs.chef-server.erchef-bad_actor-permission-errors" do
   end
 end
 
-
-control "gatherlogs.chef-server.erchef-depsolver-startup-failure" do
+control 'gatherlogs.chef-server.erchef-depsolver-startup-failure' do
   impact 1.0
   title 'Check for erchef startup errors for depsolver'
   desc "
@@ -69,7 +68,7 @@ control "gatherlogs.chef-server.erchef-depsolver-startup-failure" do
 end
 
 # moved to a separate check as it's not a good indication of the depsolver problem.
-control "gatherlogs.chef-server.erchef-depsolver-listening" do
+control 'gatherlogs.chef-server.erchef-depsolver-listening' do
   impact 1.0
   title 'Check for erchef process is listening on port 8000'
   desc "

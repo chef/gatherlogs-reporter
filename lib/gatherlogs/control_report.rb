@@ -16,17 +16,19 @@ module Gatherlogs
     end
 
     def ordered_control_ids
-      keys = controls.map.with_index { |c,index| [index,c['id']] }
-      keys.sort { |a,b| a.last <=> b.last }
+      keys = controls.map.with_index { |c, index| [index, c['id']] }
+      keys.sort_by(&:last)
     end
 
     def update_system_info(tags)
       return unless tags.include?('system')
+
       system_info.merge!(tags['system'])
     end
 
     def set_verbose(tags)
       return unless tags.include?('verbose')
+
       @verbose = tags['verbose']
     end
 
@@ -34,7 +36,7 @@ module Gatherlogs
     # Control snippet:
     #    desc "This is a description from the control!"
     def desc_text(control)
-      return unless control.has_key?('desc')
+      return unless control.key?('desc')
 
       text = control['desc']
       return if text.nil? || text.empty?
@@ -63,7 +65,7 @@ module Gatherlogs
     end
 
     def process
-      ordered_control_ids.each do |index,id|
+      ordered_control_ids.each do |index, _id|
         @status = PASSED
         @badge = PASSED_ICON
         @verbose = false
@@ -73,7 +75,7 @@ module Gatherlogs
         update_system_info(control['tags'])
         set_verbose(control['tags'])
 
-        result_messages = control['results'].map{ |r| process_result(r) }.compact
+        result_messages = control['results'].map { |r| process_result(r) }.compact
         next unless @show_all_controls || @status == FAILED
 
         @report << control_title(control)
@@ -85,7 +87,7 @@ module Gatherlogs
 
         unless result_messages.empty?
           @report += result_messages
-          @report << "" # add blank line after messages
+          @report << '' # add blank line after messages
         end
       end
       @report.compact!
@@ -117,7 +119,7 @@ module Gatherlogs
                end
 
       message = tabbed_text "#{badge} #{output}"
-      colorize "#{message}", color
+      colorize message.to_s, color
     end
 
     def process_result(result)

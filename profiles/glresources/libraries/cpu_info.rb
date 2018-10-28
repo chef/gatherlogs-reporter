@@ -14,12 +14,14 @@ class CpuInfo < Inspec.resource(1)
 
   def total
     return 0 if content.nil?
+
     cpus = content.lines.select { |l| l.match?(/model name/) }
     cpus.length
   end
 
   def model_name
     return 'Unknown' if content.nil?
+
     cpus = content.lines.select { |l| l.match?(/model name/) }
     cpus.first.split(/\s+:\s+/).last
   end

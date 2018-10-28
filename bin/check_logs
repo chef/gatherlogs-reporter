@@ -9,9 +9,9 @@ require 'gatherlogs/cli'
 
 begin
   Gatherlogs::CLI.run
-rescue => e
+rescue StandardError => e
   puts "[ERROR] #{e}"
-  puts "Backtrace:"
+  puts 'Backtrace:'
   puts e.backtrace
   exit 1
 end

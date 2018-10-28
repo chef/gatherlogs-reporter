@@ -2,7 +2,7 @@ require 'mixlib/shellout'
 
 module Gatherlogs
   module Shellout
-    def shellout!(cmd, options={})
+    def shellout!(cmd, options = {})
       Gatherlogs.logger.debug "Executing '#{Array(cmd).join(' ')}'"
       shell = Mixlib::ShellOut.new(cmd, options)
       shell.run_command
