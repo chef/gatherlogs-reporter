@@ -89,19 +89,38 @@ RSpec.describe Gatherlogs::CLI do
 
 
   context 'printing reports' do
-    let(:test_report) do
+    let(:test_array_report) do
       "
 testing
 --------------------------------------------------------------------------------
 test
 "
     end
-    it "should return nil if no report to print" do
+
+    let(:test_hash_report) do
+      "
+hash
+----------
+  bag: box
+green: no
+----------
+"
+    end
+
+    it "should return nil if there is no report to print" do
       expect(cli.print_report('test', '')).to eq nil
     end
 
-    it 'should print a report' do
-      expect{ cli.print_report('testing', ['test'])}.to output(test_report).to_stdout
+    it 'should print a report from an array' do
+      expect{
+        cli.print_report('testing', ['test'])
+      }.to output(test_array_report).to_stdout
+    end
+
+    it 'should print a report from a hash' do
+      expect{
+        cli.print_report('hash', { 'bag': 'box', 'green': 'no' })
+      }.to output(test_hash_report).to_stdout
     end
   end
 end

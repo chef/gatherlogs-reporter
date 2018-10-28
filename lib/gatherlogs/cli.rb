@@ -109,11 +109,11 @@ module Gatherlogs
       if report.is_a?(Hash)
         max_label_length = report.keys.map(&:length).max
         max_value_length = report.values.map{|v| v.to_s.length }.max
-        puts '-' * (max_label_length+max_value_length+1)
+        puts '-' * (max_label_length+max_value_length+2)
         report.each do |k,v|
           puts "%#{max_label_length}s: %s" % [k,v.to_s.strip.chomp]
         end
-        puts '-' * (max_label_length+max_value_length+1)
+        puts '-' * (max_label_length+max_value_length+2)
       else
         puts '-' * 80
         puts report.join("\n")
