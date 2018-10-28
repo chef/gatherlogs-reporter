@@ -1,12 +1,9 @@
-
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-require 'gatherlogs/version'
-
 Gem::Specification.new do |spec|
   spec.name          = "gatherlogs"
-  spec.version       = Gatherlogs::VERSION
+  spec.version       = File.read('VERSION')
   spec.authors       = ["Will Fisher"]
   spec.email         = ["wfisher@chef.io"]
   spec.license       = "Apache-2.0"
@@ -36,6 +33,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "bundler", "~> 1.16"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "version", '~> 1.1'
+  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "simplecov"
   spec.add_dependency "paint", '~> 2.0'
   spec.add_dependency "mixlib-shellout", '~> 2.4'
   spec.add_dependency "clamp", '~> 1.3'
