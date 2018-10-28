@@ -50,11 +50,13 @@ end
 class InstalledPackagesTxt
   attr_accessor :content, :version
 
+  # rubocop:disable Naming/UncommunicativeMethodParamName
   def initialize(name, packages_content, os)
     @package_name = name
     @content = packages_content
     @version = package_version(os)
   end
+  # rubocop:enable Naming/UncommunicativeMethodParamName
 
   def exist?
     content && content.match?(@package_name)
@@ -62,19 +64,21 @@ class InstalledPackagesTxt
 
   private
 
+  # rubocop:disable Naming/UncommunicativeMethodParamName
   def package_version(os)
     return if os.nil?
     return unless exist?
 
-    case os.to_sym
-    when :rhel, :centos
-      result = content.match(/#{@package_name}-(\d+\.\d+\.\d+(~\w+\.\d+)*)-\d+.\w.\w/)
-      result[1] unless result.nil?
-    when :ubuntu
-      result = content.match(/#{@package_name}\s+(\d+\.\d+\.\d+)/)
-      result[1] unless result.nil?
-    end
+    result = case os.to_sym
+             when :rhel, :centos
+               content.match(/#{@package_name}-(\d+\.\d+\.\d+(~\w+\.\d+)*)-\d+.\w.\w/)
+             when :ubuntu
+               content.match(/#{@package_name}\s+(\d+\.\d+\.\d+)/)
+             end
+
+    result[1] unless result.nil?
   end
+  # rubocop:enable Naming/UncommunicativeMethodParamName
 end
 
 class VersionManifestJson
@@ -101,16 +105,18 @@ class A2ManifestJson
   attr_accessor :content, :version
 
   def initialize(name, packages_content)
-    # strip the first line from content
-    unless packages_content.nil?
-      lines = packages_content.lines
-      lines.shift
-      packages_content = lines.join("\n")
+    @package_name = name
+    parse_content(packages_content) unless packages_content.nil?
+  end
 
-      @content = JSON.parse(packages_content)
-      @package_name = name
-      @version = package_version
-    end
+  def parse_content(content)
+    # strip the first line from content
+    lines = content.lines
+    lines.shift
+    packages_content = lines.join("\n")
+
+    @content = JSON.parse(packages_content)
+    @version = package_version
   end
 
   def exist?

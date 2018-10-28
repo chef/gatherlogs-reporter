@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-libdir = File.realpath(File.join(File.dirname(__FILE__), '../lib'))
+libdir = File.expand_path('../lib', __dir__)
 $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
 require 'json'
@@ -9,10 +9,10 @@ require 'sinatra'
 require 'gatherlogs/webhook_server'
 
 server = Gatherlogs::WebhookServer.new({
-                                         url: ENV['ZENDESK_URL'],
-                                         user: ENV['ZENDESK_USER'],
-                                         token: ENV['ZENDESK_TOKEN']
-                                       }, development?)
+  url: ENV['ZENDESK_URL'],
+  user: ENV['ZENDESK_USER'],
+  token: ENV['ZENDESK_TOKEN']
+}, development?)
 
 def authenticate!(token)
   if token != ENV['AUTH_TOKEN']

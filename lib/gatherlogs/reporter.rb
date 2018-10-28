@@ -19,7 +19,7 @@ module Gatherlogs
         show_all_controls,
         show_all_tests
       )
-      
+
       {
         system_info: control_report.system_info,
         report: control_report.report

@@ -23,7 +23,6 @@ class ServiceStatus < Inspec.resource(1)
     @content.key?(service.to_sym) || super
   end
 
-
   def exists?
     inspec.file(status_file).exists?
   end

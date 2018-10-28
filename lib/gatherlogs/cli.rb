@@ -6,7 +6,7 @@ require 'logger'
 require 'gatherlogs'
 require 'gatherlogs/shellout'
 
-PROFILES_PATH = File.realpath(File.join(File.dirname(__FILE__), '../../profiles')).freeze
+PROFILES_PATH = File.expand_path('../../profiles', __dir__).freeze
 Clamp.allow_options_after_parameters = true
 
 module Gatherlogs
@@ -17,13 +17,18 @@ module Gatherlogs
     attr_accessor :current_log_path, :remote_cache_dir
     attr_writer :profiles
 
-    option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection', default: '.', attribute_name: :log_path
-    option ['-r', '--remote'], 'REMOTE_URL', 'URL to the remote tar bal for inspection', attribute_name: :remote_url
+    option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection',
+           default: '.', attribute_name: :log_path
+    option ['-r', '--remote'], 'REMOTE_URL',
+           'URL to the remote tar bal for inspection', attribute_name: :remote_url
     option ['-d', '--debug'], :flag, 'Enable debug output'
-    option ['-s', '--system-only'], :flag, 'Only show system report', attribute_name: :summary_only
-    option ['--profiles'], :flag, 'Show available profiles', attribute_name: :list_profiles
+    option ['-s', '--system-only'], :flag, 'Only show system report',
+           attribute_name: :summary_only
+    option ['--profiles'], :flag, 'Show available profiles',
+           attribute_name: :list_profiles
     option ['-v', '--verbose'], :flag, 'Show inspec test output'
-    option ['-a', '--all'], :flag, 'Show all tests, default is to only show failed tests'
+    option ['-a', '--all'], :flag,
+           'Show all tests, default is to only show failed tests'
     option ['-q', '--quiet'], :flag, 'Only show the report output'
     option ['-m', '--monochrome'], :flag, "Don't use terminal colors for output"
     option ['--version'], :flag, 'Show current version'
@@ -64,11 +69,6 @@ module Gatherlogs
 
       output = log_working_dir do |log_path|
         product ||= detect_product(log_path)
-
-        if product.nil?
-          signal_usage_error 'Could not determine the product from gatherlog bundle, please specify a profile to use'
-        end
-
         reporter.report(inspec_exec(product))
       end
 
@@ -82,7 +82,12 @@ module Gatherlogs
     def detect_product(log_path)
       debug 'Attempting to detect gatherlogs product...'
       product = Gatherlogs::Product.detect(log_path)
-      debug product.nil? ? 'Could not detect product' : "Detected '#{product}' files"
+      msg = if product.nil?
+              'Could not detect product'
+            else
+              "Detected '#{product}' files"
+            end
+      debug msg
 
       product
     end
@@ -108,21 +113,33 @@ module Gatherlogs
       puts ''
       puts title
       if report.is_a?(Hash)
-        max_label_length = report.keys.map(&:length).max
-        max_value_length = report.values.map { |v| v.to_s.length }.max
-        puts '-' * (max_label_length + max_value_length + 2)
-        report.each do |k, v|
-          puts format("%#{max_label_length}s: %s", k, v.to_s.strip.chomp)
-        end
-        puts '-' * (max_label_length + max_value_length + 2)
+        print_hash_report(report)
       else
-        puts '-' * 80
-        puts report.join("\n")
+        print_array_report(report)
       end
     end
 
+    def print_hash_report(report)
+      max_label_length = report.keys.map(&:length).max
+      max_value_length = report.values.map { |v| v.to_s.length }.max
+      puts '-' * (max_label_length + max_value_length + 2)
+      report.each do |k, v|
+        puts format("%#{max_label_length}s: %s", k, v.to_s.strip.chomp)
+      end
+      puts '-' * (max_label_length + max_value_length + 2)
+    end
+
+    def print_array_report(report)
+      puts '-' * 80
+      puts report.join("\n")
+    end
+
     def log_working_dir
-      current_log_path = remote_url.nil? ? log_path.dup : fetch_remote_tar(remote_url)
+      current_log_path = if remote_url.nil?
+                           log_path.dup
+                         else
+                           fetch_remote_tar(remote_url)
+                         end
 
       debug("Using log_path: #{current_log_path}")
 
@@ -135,18 +152,23 @@ module Gatherlogs
       end
     end
 
-    def fetch_remote_tar(_url)
+    def fetch_remote_tar(url)
+      return if url.nil?
+
       info 'Fetching remote gatherlogs bundle'
       @remote_cache_dir = Dir.mktmpdir('gatherlogs')
       debug "Remote cache dir: #{@remote_cache_dir}"
 
-      extension = remote_url.split('.').last
+      extension = url.split('.').last
       local_filename = File.join(remote_cache_dir, "gatherlogs.#{extension}")
 
-      cmd = ['wget', remote_url, '-O', local_filename]
+      cmd = ['wget', url, '-O', local_filename]
       shellout!(cmd)
 
-      cmd = ['tar', 'xvf', local_filename, '-C', remote_cache_dir, '--strip-components', '2']
+      cmd = [
+        'tar', 'xvf', local_filename, '-C', remote_cache_dir,
+        '--strip-components', '2'
+      ]
       shellout!(cmd)
 
       remote_cache_dir
@@ -166,13 +188,17 @@ module Gatherlogs
         Gatherlogs.logger.level = ::Logger::ERROR
       else
         Gatherlogs.logger.level = ::Logger::INFO
-        Gatherlogs.logger.formatter = proc { |_severity, _datetime, _progname, msg| "#{msg}\n" }
+        Gatherlogs.logger.formatter = proc { |_sev, _datetime, _name, msg|
+          "#{msg}\n"
+        }
       end
 
       disable_colors if monochrome?
     end
 
     def inspec_exec(product)
+      signal_usage_error 'Please specify a profile to use' if product.nil?
+
       profile = find_profile_path(product)
 
       cmd = ['inspec', 'exec', profile, '--reporter', 'json']
