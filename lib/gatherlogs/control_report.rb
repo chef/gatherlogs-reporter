@@ -109,7 +109,6 @@ module Gatherlogs
                when 'failed'
                  badge = FAILED_ICON
                  color = FAILED
-                 puts result
                  truncate "#{result['code_desc']}\n#{result['message']}".chomp
                else
                  badge = PASSED_ICON
