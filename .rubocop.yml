@@ -1,7 +1,24 @@
 Metrics/LineLength:
-  Exclude: 
+  Exclude:
     - profiles/**/*.rb
 
 Metrics/BlockLength:
   Exclude:
+    - spec/**/*.rb
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 20 
+
+Metrics/AbcSize:
+  Max: 30
+
+Metrics/BlockLength:
+  Max: 35
+  Exclude: 
     - spec/**/*.rb

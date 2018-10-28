@@ -12,12 +12,17 @@ class ServiceStatus < Inspec.resource(1)
                  parse_a2_services(status_content)
                when :chef_backend
                  parse_backend_services(status_content)
-    end
+               end
   end
 
   def method_missing(service)
-    @content[service.to_sym] if @content.key?(service.to_sym)
+    @content[service.to_sym] || super
   end
+
+  def respond_to_missing?(service, include_private = false)
+    @content.key?(service.to_sym) || super
+  end
+
 
   def exists?
     inspec.file(status_file).exists?
@@ -73,7 +78,7 @@ class ServiceStatus < Inspec.resource(1)
       match = line.match(/^(\w+)\s+(\w+) \(pid (\w+)\)\s+(\dd \dh \d\dm \d\ds)\s+(.*)$/)
       next if match.nil?
 
-      dummy, service, status, pid, runtime, health = *match.to_a
+      _dummy, service, status, pid, runtime, health = *match.to_a
       days, hours, minutes, seconds = *runtime.split(/\s/).map(&:to_i)
       runtime = days * (24 * 3600) + hours * 3600 + minutes * 60 + seconds
 
@@ -96,13 +101,13 @@ class ServiceStatus < Inspec.resource(1)
         next
       end
 
-      service_line, log_line = line.gsub(/[:\(\)]/, '').split(';')
+      service_line, _log_line = line.gsub(/[:\(\)]/, '').split(';')
 
       if internal
-        status, service, dummy, pid, runtime = service_line.split(/\s+/)
+        status, service, _dummy, pid, runtime = service_line.split(/\s+/)
         services[:internal][service] = ServiceObject.new(name: service, status: status, pid: pid, runtime: runtime.to_i, internal: internal)
       else
-        status, service, dummy, constatus, dummy, host = service_line.split(/\s+/)
+        status, service, _dummy, constatus, _dummy, host = service_line.split(/\s+/)
         services[:external][service] = ServiceObject.new(name: service, status: status, internal: internal, connection_status: constatus, host: host)
       end
     end
@@ -130,7 +135,11 @@ class ServiceObject
   end
 
   def method_missing(field)
-    @args[field.to_sym] if @args.key?(field.to_sym)
+    @args[field.to_sym] || super
+  end
+
+  def respond_to_missing?(field, include_private = false)
+    @args.key?(field.to_sym) || super
   end
 
   def summary

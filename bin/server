@@ -30,7 +30,7 @@ end
 
 post '/:token' do
   params = JSON.parse request.body.read
-  if remote_url = params['url']
+  if (remote_url = params['url'])
     server.check_logs(remote_url).to_json
   else
     # Invalid request no remote_url param
@@ -39,7 +39,7 @@ post '/:token' do
 end
 
 get '/zendesk/:token' do
-  if info = params['info']
+  if (info = params['info'])
     ticket_info = JSON.parse(info)
     attachments = ticket_info['attachments'].split('|')
 

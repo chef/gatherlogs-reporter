@@ -17,9 +17,9 @@ control 'gatherlogs.chef-server.413-request-entity-too-large' do
   tag kb: 'https://getchef.zendesk.com/hc/en-us/articles/115002333646-Known-Issues'
 
   common_logs.nginx.each do |logfile|
-    nginx_413 = log_analysis(::File.join('var/log/opscode/nginx', logfile), 'HTTP/1\.\d" 413')
-    tag summary: nginx_413.summary unless nginx_413.empty?
-    describe nginx_413 do
+    nginx413 = log_analysis(::File.join('var/log/opscode/nginx', logfile), 'HTTP/1\.\d" 413')
+    tag summary: nginx413.summary unless nginx413.empty?
+    describe nginx413 do
       its('last_entry') { should be_empty }
     end
   end

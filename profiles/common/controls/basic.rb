@@ -42,7 +42,7 @@ control 'gatherlogs.common.umask' do
   tag verbose: true
 
   describe file('umask.txt') do
-    its('content') { should match /0022/ }
+    its('content') { should match(/0022/) }
   end
 end
 

@@ -7,11 +7,11 @@ class Sysctl < Inspec.resource(1)
   end
 
   def method_missing(name)
-    @content[name.to_sym]
+    @content[name.to_sym] || super
   end
 
-  def respond_to_missing?(name)
-    @content.key?(name.to_sym)
+  def respond_to_missing?(name, include_private = false)
+    @content.key?(name.to_sym) || super
   end
 
   def exists?
@@ -23,10 +23,10 @@ class Sysctl < Inspec.resource(1)
   def parse_sysctl(content)
     data = {}
     content.each_line do |line|
-      matched = line.match /^\s*([^=]*?)\s*=\s*(.*?)\s*$/
+      matched = line.match(/^\s*([^=]*?)\s*=\s*(.*?)\s*$/)
       next if matched.nil?
 
-      full, name, value = *matched # [1], matched[0]
+      _full, name, value = *matched # [1], matched[0]
 
       # change . to _ because rspec `its('vm.foo')`` will try to call method
       # foo on object vm

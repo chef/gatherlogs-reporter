@@ -15,7 +15,7 @@ module Gatherlogs
     include Gatherlogs::Shellout
 
     attr_accessor :current_log_path, :remote_cache_dir
-    attr_accessor :profiles
+    attr_writer :profiles
 
     option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection', default: '.', attribute_name: :log_path
     option ['-r', '--remote'], 'REMOTE_URL', 'URL to the remote tar bal for inspection', attribute_name: :remote_url
@@ -96,8 +96,8 @@ module Gatherlogs
       if @profiles.nil?
         possible_profiles = Dir.glob(File.join(PROFILES_PATH, '*/inspec.yml'))
         @profiles = possible_profiles.map { |p| File.basename(File.dirname(p)) }
-        @profiles.reject! { |p| p == 'common' || p == 'glresources' }
       end
+      @profiles.reject! { |p| %w[common glresources].include?(p) }
       @profiles
     end
 
@@ -130,7 +130,9 @@ module Gatherlogs
         return yield '.'
       end
     ensure
-      FileUtils.remove_entry remote_cache_dir if remote_cache_dir && File.exist?(remote_cache_dir)
+      if remote_cache_dir && File.exist?(remote_cache_dir)
+        FileUtils.remove_entry(remote_cache_dir)
+      end
     end
 
     def fetch_remote_tar(_url)
@@ -152,11 +154,9 @@ module Gatherlogs
 
     def find_profile_path(profile)
       path = File.join(::PROFILES_PATH, profile)
-      if File.exist?(path)
-        return path
-      else
-        raise "Couldn't find '#{profile}' profile, tried in '#{path}'"
-      end
+      return path if File.exist?(path)
+
+      raise "Couldn't find '#{profile}' profile, tried in '#{path}'"
     end
 
     def parse_args

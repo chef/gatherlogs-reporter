@@ -89,7 +89,11 @@ class DiskUsageItem
   end
 
   def method_missing(item)
-    @content[item.to_sym] if @content.key?(item.to_sym)
+    @content[item.to_sym] || super
+  end
+
+  def respond_to_missing?(item, include_private = false)
+    @content.key?(item.to_sym) || super
   end
 
   def to_s

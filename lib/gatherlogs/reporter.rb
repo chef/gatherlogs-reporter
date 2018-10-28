@@ -14,7 +14,12 @@ module Gatherlogs
     end
 
     def process_profile(profile)
-      control_report = Gatherlogs::ControlReport.new(profile['controls'], show_all_controls, show_all_tests)
+      control_report = Gatherlogs::ControlReport.new(
+        profile['controls'],
+        show_all_controls,
+        show_all_tests
+      )
+      
       {
         system_info: control_report.system_info,
         report: control_report.report

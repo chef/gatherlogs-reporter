@@ -47,10 +47,10 @@ class Memory < Inspec.resource(1)
   end
 
   def mem
-    if m = content.match(/^Mem:\s+(.*)$/)
+    if (m = content.match(/^Mem:\s+(.*)$/))
       values = m[1].split(/\s+/).map(&:to_i)
 
-      if h = content.match(/^\s+(total\s+.*)$/)
+      if (h = content.match(/^\s+(total\s+.*)$/))
         headers = h[1].split(/\s+/)
 
         @mem = headers.zip(values).to_h
@@ -65,9 +65,9 @@ class Memory < Inspec.resource(1)
   end
 
   def swap
-    if m = content.match(/^Swap:\s+(.*)$/)
+    if (m = content.match(/^Swap:\s+(.*)$/))
       values = m[1].split(/\s+/).map(&:to_i)
-      if h = content.match(/^\s+(total\s+.*)$/)
+      if (h = content.match(/^\s+(total\s+.*)$/))
         headers = h[1].split(/\s+/)
         @swap = headers.zip(values).to_h
       end
@@ -82,12 +82,12 @@ class Memory < Inspec.resource(1)
     elsif inspec.file('free-m.txt').exist?
       inspec.file('free-m.txt')
     else
-      false
+      inspec.file('bogusfile.notfound')
     end
   end
 
   def exists?
-    !!mem_file
+    mem_file.exist?
   end
 
   def read_content

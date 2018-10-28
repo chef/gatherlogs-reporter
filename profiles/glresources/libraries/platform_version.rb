@@ -38,9 +38,9 @@ class PlatformVersion < Inspec.resource(1)
   end
 
   def full_info
-    if m = content.match(/DISTRIB_DESCRIPTION="(.*)"/)
+    if (m = content.match(/DISTRIB_DESCRIPTION="(.*)"/))
       m[1]
-    elsif m = content.match(/PRETTY_NAME="(.*)"/)
+    elsif (m = content.match(/PRETTY_NAME="(.*)"/))
       m[1]
     else
       content.lines.map(&:chomp).join(' ')
@@ -72,10 +72,10 @@ class PlatformVersion < Inspec.resource(1)
   end
 
   def read_content
-    if platform_file.file?
-      platform_file.content
-    else
+    unless platform_file.file?
       raise Inspec::Exceptions::ResourceSkipped, "Can't read platform_version.txt"
     end
+
+    platform_file.content
   end
 end

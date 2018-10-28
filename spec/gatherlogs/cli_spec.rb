@@ -40,7 +40,7 @@ RSpec.describe Gatherlogs::CLI do
   end
 
   it 'should print the profile list alphabetically' do
-    cli.profiles = %w[beta alpha gamma]
+    cli.profiles = %w[beta alpha gamma common glresources]
     allow(cli).to receive(:exit)
 
     expect { cli.show_profiles }.to output("alpha\nbeta\ngamma\n").to_stdout
