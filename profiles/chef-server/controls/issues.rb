@@ -12,14 +12,14 @@ control 'gatherlogs.chef-server.413-request-entity-too-large' do
     * Ohai Session plugin on systems with stale logins
     * Clients using the Audit cookbook to submit compliance data.
   '
-  
+
   tag kb: 'https://docs.chef.io/config_rb_server.html#large-node-sizes'
   tag kb: 'https://getchef.zendesk.com/hc/en-us/articles/115002333646-Known-Issues'
 
   common_logs.nginx.each do |logfile|
-    nginx_413 = log_analysis(::File.join('var/log/opscode/nginx', logfile), 'HTTP/1\.\d" 413')
-    tag summary: nginx_413.summary unless nginx_413.empty?
-    describe nginx_413 do
+    nginx413 = log_analysis(::File.join('var/log/opscode/nginx', logfile), 'HTTP/1\.\d" 413')
+    tag summary: nginx413.summary unless nginx413.empty?
+    describe nginx413 do
       its('last_entry') { should be_empty }
     end
   end
@@ -37,7 +37,7 @@ control 'gatherlogs.chef-server.depsolver-timeouts' do
   tag kb: 'https://getchef.zendesk.com/hc/en-us/articles/204381030-Troubleshoot-Cookbook-Dependency-Issues'
 
   common_logs.erchef do |logfile|
-    depsolver = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", "Supervisor pooler_chef_depsolver_member_sup had child chef_depsolver_worker started with {chef_depsolver_worker,start_link,undefined} at .* exit with reason killed in context child_terminated")
+    depsolver = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", 'Supervisor pooler_chef_depsolver_member_sup had child chef_depsolver_worker started with {chef_depsolver_worker,start_link,undefined} at .* exit with reason killed in context child_terminated')
     tag summary: depsolver.summary unless depsolver.empty?
     describe depsolver do
       its('last_entry') { should be_empty }
@@ -45,7 +45,7 @@ control 'gatherlogs.chef-server.depsolver-timeouts' do
   end
 end
 
-control "gatherlogs.chef-server.rabbitmq-connection-failure" do
+control 'gatherlogs.chef-server.rabbitmq-connection-failure' do
   impact 1.0
   title 'Check for erchef errors for rabbitmq connection errors'
   desc "
@@ -64,7 +64,7 @@ control "gatherlogs.chef-server.rabbitmq-connection-failure" do
   end
 end
 
-control "gatherlogs.chef-server.nginx-upstream-host-error" do
+control 'gatherlogs.chef-server.nginx-upstream-host-error' do
   impact 1.0
   title 'Check nginx for errors related to upstream hosts'
   desc "
@@ -86,7 +86,7 @@ control "gatherlogs.chef-server.nginx-upstream-host-error" do
   end
 end
 
-control "gatherlogs.chef-server.solr4-memory-allocation-error" do
+control 'gatherlogs.chef-server.solr4-memory-allocation-error' do
   impact 1.0
   title 'Check solr4 for errors related to memory allocations'
   desc "

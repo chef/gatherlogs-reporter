@@ -17,9 +17,7 @@ class InstalledPackages < Inspec.resource(1)
       @package = VersionManifestJson.new(name, read_content(filename))
     when 'automate2'
       filename = 'chef-automate_current_manifest.txt'
-      c = read_content(filename).lines
-      c.shift
-      @package = A2ManifestJson.new(name, c.join("\n"))
+      @package = A2ManifestJson.new(name, read_content(filename))
     else
       filename = 'installed-packages.txt'
       @package = InstalledPackagesTxt.new(name, read_content(filename), platform_version.os)
@@ -29,7 +27,7 @@ class InstalledPackages < Inspec.resource(1)
   def exist?
     @package.exist?
   end
-  alias_method :exists?, :exist?
+  alias exists? exist?
 
   def version
     @package.version
@@ -39,11 +37,7 @@ class InstalledPackages < Inspec.resource(1)
 
   def read_content(filename)
     f = inspec.file(filename)
-    if f.file?
-      f.content
-    else
-      nil
-    end
+    f.content if f.file?
   end
 
   # This is an ugly hack to get around a bug where other custom resources
@@ -56,32 +50,35 @@ end
 class InstalledPackagesTxt
   attr_accessor :content, :version
 
+  # rubocop:disable Naming/UncommunicativeMethodParamName
   def initialize(name, packages_content, os)
     @package_name = name
     @content = packages_content
     @version = package_version(os)
   end
+  # rubocop:enable Naming/UncommunicativeMethodParamName
 
   def exist?
-    content && content.match?(@package_name)
+    content&.match?(@package_name)
   end
 
   private
 
+  # rubocop:disable Naming/UncommunicativeMethodParamName
   def package_version(os)
     return if os.nil?
     return unless exist?
-    case os.to_sym
-    when :rhel, :centos
-      result = content.match(/#{@package_name}-(\d+\.\d+\.\d+(~\w+\.\d+)*)-\d+.\w.\w/)
-      result[1] unless result.nil?
-    when :ubuntu
-      result = content.match(/#{@package_name}\s+(\d+\.\d+\.\d+)/)
-      result[1] unless result.nil?
-    else
-      nil
-    end
+
+    result = case os.to_sym
+             when :rhel, :centos
+               content.match(/#{@package_name}-(\d+\.\d+\.\d+(~\w+\.\d+)*)-\d+.\w.\w/)
+             when :ubuntu
+               content.match(/#{@package_name}\s+(\d+\.\d+\.\d+)/)
+             end
+
+    result[1] unless result.nil?
   end
+  # rubocop:enable Naming/UncommunicativeMethodParamName
 end
 
 class VersionManifestJson
@@ -108,8 +105,17 @@ class A2ManifestJson
   attr_accessor :content, :version
 
   def initialize(name, packages_content)
-    @content = JSON.parse(packages_content)
     @package_name = name
+    parse_content(packages_content) unless packages_content.nil?
+  end
+
+  def parse_content(content)
+    # strip the first line from content
+    lines = content.lines
+    lines.shift
+    packages_content = lines.join("\n")
+
+    @content = JSON.parse(packages_content)
     @version = package_version
   end
 

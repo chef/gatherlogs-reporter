@@ -1,25 +1,28 @@
-title "Checks for common gatherlog files"
+title 'Checks for common gatherlog files'
 
-control "020.gatherlogs.common.system_info" do
-  sysinfo = {
-    "Uptime" => file('uptime.txt').content.lines.last.chomp
-  }
-  sysinfo.merge!({
-    "CPU Cores" => cpu_info.total,
-    "CPU Model" => cpu_info.model_name
-  }) if cpu_info.exists?
+control '020.gatherlogs.common.system_info' do
+  sysinfo = {}
+
+  if file('uptime.txt').exist?
+    sysinfo['Uptime'] = file('uptime.txt').content.lines.last.chomp
+  end
+
+  if cpu_info.exists?
+    sysinfo['CPU Cores'] = cpu_info.total
+    sysinfo['CPU Model'] = cpu_info.model_name
+  end
 
   tag system: sysinfo
 end
 
-control "020.gatherlogs.common.platform" do
-  title "check platform is valid"
+control '020.gatherlogs.common.platform' do
+  title 'check platform is valid'
   desc "
     Gather-logs was run on an unknown platform. This usually happens when
     running on Amazon Linux
   "
 
-  tag system: { "Platform" => platform_version.full_info } if platform_version.exists?
+  tag system: { 'Platform' => platform_version.full_info } if platform_version.exists?
   tag verbose: true
 
   only_if { platform_version.exists? }
@@ -29,8 +32,8 @@ control "020.gatherlogs.common.platform" do
   end
 end
 
-control "gatherlogs.common.umask" do
-  title "check that we have a reasonable umask setting"
+control 'gatherlogs.common.umask' do
+  title 'check that we have a reasonable umask setting'
   desc "
     If the umask is not set to 0022 it can lead to issues with files not being
     accessible to the services
@@ -39,14 +42,14 @@ control "gatherlogs.common.umask" do
   tag verbose: true
 
   describe file('umask.txt') do
-    its('content') { should match /0022/ }
+    its('content') { should match(/0022/) }
   end
 end
 
 dmesg_oom = log_analysis('dmesg.txt', 'Out of memory: Kill process')
 
-control "gatherlogs.common.dmesg-oom-killer-invoked" do
-  title "Check to see if the kernel OOM kill was invoked"
+control 'gatherlogs.common.dmesg-oom-killer-invoked' do
+  title 'Check to see if the kernel OOM kill was invoked'
   desc "
 Entries for 'Out of memory: Kill process' where found in 'dmesg.txt'
 
@@ -66,8 +69,8 @@ end
 
 dmesg_contrack = log_analysis('dmesg.txt', 'nf_conntrack: table full, dropping packet')
 
-control "gatherlogs.common.dmesg-nf_conntrack-table-full-error" do
-  title "Check to see if the kernel is reporting the nf_conntrack table is full"
+control 'gatherlogs.common.dmesg-nf_conntrack-table-full-error' do
+  title 'Check to see if the kernel is reporting the nf_conntrack table is full'
   desc "
   The nf_conntrack table is full and is causing the kernel to drop packets.
 

@@ -4,8 +4,8 @@ include_controls 'common'
 
 automate = installed_packages('automate2')
 
-control "000.gatherlogs.automate2.package" do
-  title "check that Automate 2 is installed"
+control '000.gatherlogs.automate2.package' do
+  title 'check that Automate 2 is installed'
   desc "
   Automate was not found or is running an older version, please upgraded
   to a newer version of Automate 2
@@ -17,16 +17,16 @@ control "000.gatherlogs.automate2.package" do
   end
 end
 
-control "000.gatherlogs.automate2.system_info" do
+control '000.gatherlogs.automate2.system_info' do
   tag system: {
-    "Habitat" => file('hab_version.txt').content.lines.last.chomp
+    'Habitat' => file('hab_version.txt').content.lines.last.chomp
   }
 end
 
 services = service_status(:automate2)
 
-control "000.gatherlogs.automate2.internal_service_status" do
-  title "check that Automate services are running"
+control '000.gatherlogs.automate2.internal_service_status' do
+  title 'check that Automate services are running'
   desc "
 There was a problem with one or more services in Automate.
 Please check that it's running, doesn't have a short run time, or the
@@ -44,18 +44,19 @@ health checks are reporting an issue.
   end
 end
 
-df = disk_usage()
+df = disk_usage
 
-control "gatherlogs.automate2.critical_disk_usage" do
-  title "check that the automate has plenty of free space"
+control 'gatherlogs.automate2.critical_disk_usage' do
+  title 'check that the automate has plenty of free space'
   desc "
     There are several key directories that we need to make sure have enough
     free space for automate to operate succesfully
   "
   tag verbose: true
 
-  %w(/ /hab /var /var/log).each do |mount|
+  %w[/ /hab /var /var/log].each do |mount|
     next unless df.exists?(mount)
+
     describe df.mount(mount) do
       its('used_percent') { should cmp < 100 }
       its('available') { should cmp > disk_usage.to_filesize('250M') }
@@ -63,51 +64,51 @@ control "gatherlogs.automate2.critical_disk_usage" do
   end
 end
 
-control "gatherlogs.automate2.required_memory" do
-  title "Check that the system has the required amount of memory"
+control 'gatherlogs.automate2.required_memory' do
+  title 'Check that the system has the required amount of memory'
 
   desc "
 Chef recommends that the Automate2 system has at least 16GB of memory.
 Please make sure the system means the minimum hardware requirements
 "
 
-  tag kb: "https://automate.chef.io/docs/system-requirements/"
+  tag kb: 'https://automate.chef.io/docs/system-requirements/'
   tag verbose: true
   tag system: {
-    "Total Memory" => "#{memory.total_mem} MB",
-    "Free Memory" => "#{memory.free_mem} MB"
+    'Total Memory' => "#{memory.total_mem} MB",
+    'Free Memory' => "#{memory.free_mem} MB"
   }
 
   describe memory do
     # rough calculation for 15gb because of reasons
-    its('total_mem') { should cmp >= 15360 }
+    its('total_mem') { should cmp >= 15_360 }
     its('free_swap') { should cmp > 0 }
   end
 end
 
-control "gatherlogs.automate2.sysctl-settings" do
-  title "check that the sysctl settings make sense"
+control 'gatherlogs.automate2.sysctl-settings' do
+  title 'check that the sysctl settings make sense'
   desc "
     Recommended sysctl settings are not correct, recommend that these get updated
     to ensure the best performance possible for Automate 2.
   "
-  only_if { sysctl_a.exists? }
-  describe sysctl_a do
+  only_if { sysctl.exists? }
+  describe sysctl do
     its('vm_swappiness') { should cmp >= 1 }
     its('vm_swappiness') { should cmp <= 20 }
-    its('fs_file-max') { should cmp >= 64000 }
-    its('vm_max_map_count') { should cmp >= 256000 }
+    its('fs_file-max') { should cmp >= 64_000 }
+    its('vm_max_map_count') { should cmp >= 256_000 }
     its('vm_dirty_ratio') { should cmp >= 5 }
     its('vm_dirty_ratio') { should cmp <= 30 }
     its('vm_dirty_background_ratio') { should cmp >= 10 }
     its('vm_dirty_background_ratio') { should cmp <= 60 }
-    its('vm_dirty_expire_centisecs') { should cmp >= 10000 }
-    its('vm_dirty_expire_centisecs') { should cmp <= 30000 }
+    its('vm_dirty_expire_centisecs') { should cmp >= 10_000 }
+    its('vm_dirty_expire_centisecs') { should cmp <= 30_000 }
   end
 end
 
-failed_preflight_checks = log_analysis("chef-automate_preflight-check.txt", 'FAIL')
-control "gatherlogs.automate2.failed_preflight_checks" do
+failed_preflight_checks = log_analysis('chef-automate_preflight-check.txt', 'FAIL')
+control 'gatherlogs.automate2.failed_preflight_checks' do
   impact 1.0
   title 'Check automate preflight output for any failed tests'
   desc "
@@ -126,9 +127,8 @@ Please check the chef-automate_preflight-check.txt for ways to remediate the fai
   end
 end
 
-
-notification_error = log_analysis("journalctl_chef-automate.txt", 'Notifications.WebhookSender.Impl \[error\] .* failed to post', a2service: 'notifications-service.default')
-control "gatherlogs.automate2.notifications-failed-to-send" do
+notification_error = log_analysis('journalctl_chef-automate.txt', 'Notifications.WebhookSender.Impl \[error\] .* failed to post', a2service: 'notifications-service.default')
+control 'gatherlogs.automate2.notifications-failed-to-send' do
   impact 1.0
   title 'Check to see if the notifications services is reporting errors sending messages'
   desc 'The notification service is encountering an error when trying to set a message to the webhook endpoint'

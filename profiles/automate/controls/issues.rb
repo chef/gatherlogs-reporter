@@ -1,4 +1,3 @@
-# encoding: utf-8
 # copyright: 2018, The Authors
 
 title 'GatherLog inspec profile to check for common problems with Chef Automate'
@@ -15,9 +14,9 @@ control 'gatherlogs.automate.missing-data-collector-token' do
   data collector token configured. See: https://docs.chef.io/data_collection.html
   '
 
-  %w{ console.log current }.each do |logfile|
+  %w[console.log current].each do |logfile|
     data_collector = log_analysis(::File.join('var/log/delivery/delivery', logfile), 'Data Collector request made without access token')
-    describe data_collector do                  # The actual test
+    describe data_collector do # The actual test
       its('last_entry') { should be_empty }
     end
   end
@@ -44,8 +43,8 @@ end
 
 automate = installed_packages('automate')
 
-control "gatherlogs.automate.broken-reaper-cron-file-1.8.3" do
-  title "Check for version of Automate with broken reaper cron file"
+control 'gatherlogs.automate.broken-reaper-cron-file-1.8.3' do
+  title 'Check for version of Automate with broken reaper cron file'
   desc "
   It appears you are running Automate 1.8.3, which creates a broken reaper cron
   file in `/etc/cron.d/reaper`. Cron requires that the file contains a blank line
@@ -57,7 +56,7 @@ control "gatherlogs.automate.broken-reaper-cron-file-1.8.3" do
   impact 1.0
 
   describe automate do
-    its('version') { should_not cmp == '1.8.3'}
+    its('version') { should_not cmp == '1.8.3' }
   end
 end
 

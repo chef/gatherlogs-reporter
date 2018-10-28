@@ -19,7 +19,7 @@ class Memory < Inspec.resource(1)
   end
 
   def available_mem
-    if mem.has_key?('available')
+    if mem.key?('available')
       mem['available']
     else
       total_mem.to_i - used_mem.to_i + buffers_mem.to_i + cached_mem.to_i
@@ -47,14 +47,14 @@ class Memory < Inspec.resource(1)
   end
 
   def mem
-    if m = content.match(/^Mem:\s+(.*)$/)
+    if (m = content.match(/^Mem:\s+(.*)$/))
       values = m[1].split(/\s+/).map(&:to_i)
 
-      if h = content.match(/^\s+(total\s+.*)$/)
+      if (h = content.match(/^\s+(total\s+.*)$/))
         headers = h[1].split(/\s+/)
 
         @mem = headers.zip(values).to_h
-        if @mem.has_key?('buff/cache')
+        if @mem.key?('buff/cache')
           @mem['cached'] = @mem['buff/cache']
           @mem['buffers'] = 0
         end
@@ -65,11 +65,11 @@ class Memory < Inspec.resource(1)
   end
 
   def swap
-    if m = content.match(/^Swap:\s+(.*)$/)
+    if (m = content.match(/^Swap:\s+(.*)$/))
       values = m[1].split(/\s+/).map(&:to_i)
-      if h = content.match(/^\s+(total\s+.*)$/)
+      if (h = content.match(/^\s+(total\s+.*)$/))
         headers = h[1].split(/\s+/)
-        @swap ||= headers.zip(values).to_h
+        @swap = headers.zip(values).to_h
       end
     end
 
@@ -82,16 +82,17 @@ class Memory < Inspec.resource(1)
     elsif inspec.file('free-m.txt').exist?
       inspec.file('free-m.txt')
     else
-      false
+      inspec.file('bogusfile.notfound')
     end
   end
 
   def exists?
-    !!mem_file
+    mem_file.exist?
   end
 
   def read_content
     return nil unless mem_file.exist?
+
     mem_file.content
   end
 end

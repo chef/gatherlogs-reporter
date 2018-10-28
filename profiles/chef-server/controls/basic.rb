@@ -4,37 +4,37 @@ include_controls 'common'
 
 chef_server = installed_packages('chef-server-core')
 
-control "000.gatherlogs.chef-server.package" do
-  title "check that chef-server is installed"
+control '000.gatherlogs.chef-server.package' do
+  title 'check that chef-server is installed'
   desc "
   The installed version of Chef-Server is old and should be upgraded
   Installed version: #{chef_server.version}
   "
 
   tag system: {
-    "Product" => "Chef-Server #{chef_server.version}"
+    'Product' => "Chef-Server #{chef_server.version}"
   }
 
   only_if { chef_server.exists? }
   describe chef_server do
     it { should exist }
-    its('version') { should cmp >= '12.17.0'}
+    its('version') { should cmp >= '12.17.0' }
   end
 end
 
-control "010.gatherlogs.chef-server.required_memory" do
-  title "Check that the system has the required amount of memory"
+control '010.gatherlogs.chef-server.required_memory' do
+  title 'Check that the system has the required amount of memory'
 
   desc "
 Chef recommends that the Chef-Server system has at least 8GB of memory.
 Please make sure the system means the minimum hardware requirements
 "
 
-  tag kb: "https://docs.chef.io/chef_system_requirements.html#chef-server-on-premises-or-in-cloud-environment"
+  tag kb: 'https://docs.chef.io/chef_system_requirements.html#chef-server-on-premises-or-in-cloud-environment'
   tag verbose: true
   tag system: {
-    "Total Memory" => "#{memory.total_mem} MB",
-    "Free Memory" => "#{memory.free_mem} MB"
+    'Total Memory' => "#{memory.total_mem} MB",
+    'Free Memory' => "#{memory.free_mem} MB"
   }
 
   describe memory do
@@ -44,20 +44,22 @@ Please make sure the system means the minimum hardware requirements
   end
 end
 
-control "010.gatherlogs.chef-server.required_cpu_cores" do
-  title "Check that the system has the required number of cpu cores"
+control '010.gatherlogs.chef-server.required_cpu_cores' do
+  title 'Check that the system has the required number of cpu cores'
 
   desc "
 Chef recommends that the Chef-Server and Frontend systems have at least 4 cpu cores.
 Please make sure the system means the minimum hardware requirements
 "
 
-  tag kb: "https://docs.chef.io/chef_system_requirements.html#chef-server-on-premises-or-in-cloud-environment"
+  tag kb: 'https://docs.chef.io/chef_system_requirements.html#chef-server-on-premises-or-in-cloud-environment'
   tag verbose: true
-  tag system: {
-    "CPU Cores" => cpu_info.total,
-    "CPU Model" => cpu_info.model_name
-  } if cpu_info.exists?
+  if cpu_info.exists?
+    tag system: {
+      'CPU Cores' => cpu_info.total,
+      'CPU Model' => cpu_info.model_name
+    }
+  end
 
   describe cpu_info do
     # rough calculation for 8gb because of reasons
@@ -65,8 +67,8 @@ Please make sure the system means the minimum hardware requirements
   end
 end
 
-control "gatherlogs.chef-server.postgreql-upgrade-applied" do
-  title "make sure customer is using chef-server version that includes postgresl 9.6"
+control 'gatherlogs.chef-server.postgreql-upgrade-applied' do
+  title 'make sure customer is using chef-server version that includes postgresl 9.6'
   desc "
     Chef Server < 12.16.2 uses PostgreSQL 9.2.
 
@@ -115,9 +117,9 @@ services.external do |service|
   end
 end
 
-df = disk_usage()
+df = disk_usage
 
-%w(/ /var /var/opt /var/opt/opscode /var/log).each do |mount|
+%w[/ /var /var/opt /var/opt/opscode /var/log].each do |mount|
   control "gatherlogs.chef-server.critical_disk_usage.#{mount}" do
     title "check that #{mount} has plenty of free space"
     desc "
