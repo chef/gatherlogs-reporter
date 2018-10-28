@@ -24,7 +24,7 @@ module Gatherlogs
       logger = Logger.new(STDOUT)
       logger.level = Logger::ERROR
 
-      @instance ||= ZendeskAPI::Client.new do |config|
+      @zdclient ||= ZendeskAPI::Client.new do |config|
         config.url = zdconfig[:url]
         config.username = zdconfig[:user]
         config.token = zdconfig[:token]
@@ -35,7 +35,7 @@ module Gatherlogs
 
     def valid_zendesk_request(url)
       uri = URI.parse(url)
-      is_http_request?(uri) && uri.hostname == 'getchef.zendesk.com'
+      http_request?(uri) && uri.hostname == 'getchef.zendesk.com'
     end
 
     def valid_gatherlog_bundle(url)
@@ -47,20 +47,28 @@ module Gatherlogs
       !invalid_extensions.include?(extension)
     end
 
-    def is_http_request?(uri)
+    def http_request?(uri)
       uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)
     end
 
     def check_logs(remote_url)
-      return { error: 'Invalid URL', status: 1 } unless valid_zendesk_request(remote_url)
-      return { error: 'Invalid gather-log bundle', status: 1 } unless valid_gatherlog_bundle(remote_url)
+      unless valid_zendesk_request(remote_url)
+        return { error: 'Invalid URL', status: 1 }
+      end
+      unless valid_gatherlog_bundle(remote_url)
+        return { error: 'Invalid gather-log bundle', status: 1 }
+      end
 
       cmd = ['check_logs', '--remote', remote_url]
 
       puts "[EXECUTING] #{cmd.join(' ')}"
       checklog = shellout(cmd)
 
-      { results: checklog.stdout.utf8!, error: checklog.stderr.utf8!, status: checklog.exitstatus }
+      {
+        results: checklog.stdout.utf8!,
+        error: checklog.stderr.utf8!,
+        status: checklog.exitstatus
+      }
     end
 
     def shellout(cmd, options = {})
@@ -74,16 +82,16 @@ module Gatherlogs
     end
 
     def update_zendesk(id, filename, results)
-      if results[:status] != 1
-        response = zendesk_comment_text(filename, results[:results].chomp)
+      return if results[:status] == 1
 
-        puts "Updating zendesk ticket #{id} with\n#{response}" if debug?
+      response = zendesk_comment_text(filename, results[:results].chomp)
 
-        unless debug?
-          ZendeskAPI::Ticket.update!(zdclient,
-                                     id: id,
-                                     comment: { value: response, public: false })
-        end
+      puts "Updating zendesk ticket #{id} with\n#{response}" if debug?
+
+      unless debug? # rubocop:disable Style/GuardClause
+        ZendeskAPI::Ticket.update!(
+          zdclient, id: id, comment: { value: response, public: false }
+        )
       end
     end
 

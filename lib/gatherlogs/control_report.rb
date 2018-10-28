@@ -26,7 +26,7 @@ module Gatherlogs
       system_info.merge!(tags['system'])
     end
 
-    def set_verbose(tags)
+    def update_verbose_control(tags)
       return unless tags.include?('verbose')
 
       @verbose = tags['verbose']
@@ -73,17 +73,16 @@ module Gatherlogs
         control = controls[index]
 
         update_system_info(control['tags'])
-        set_verbose(control['tags'])
+        update_verbose_control(control['tags'])
 
-        result_messages = control['results'].map { |r| process_result(r) }.compact
+        result_messages = control['results'].map do |result|
+          update_status(result['status'])
+          format_result(result)
+        end.compact
+
         next unless @show_all_controls || @status == FAILED
 
-        @report << control_title(control)
-        if @status == FAILED
-          @report << subsection(desc_text(control))
-          @report << subsection(summary_text(control))
-          @report << subsection(kb_text(control))
-        end
+        @report += control_summary(control)
 
         unless result_messages.empty?
           @report += result_messages
@@ -91,6 +90,18 @@ module Gatherlogs
         end
       end
       @report.compact!
+    end
+
+    def control_summary(control)
+      summary = []
+      summary << control_title(control)
+      if @status == FAILED
+        summary << subsection(desc_text(control))
+        summary << subsection(summary_text(control))
+        summary << subsection(kb_text(control))
+      end
+
+      summary
     end
 
     def control_title(control)
@@ -121,8 +132,8 @@ module Gatherlogs
       colorize message.to_s, color
     end
 
-    def process_result(result)
-      case result['status']
+    def update_status(result_status)
+      case result_status
       when 'skipped'
         if @status != FAILED
           @status = SKIPPED
@@ -132,10 +143,13 @@ module Gatherlogs
         @status = FAILED
         @badge = FAILED_ICON
       end
+    end
 
-      if @show_all_tests || source_error?(result) || (verbose && result['status'] == 'failed')
-        subsection(format_result_message(result))
-      end
+    def format_result(result)
+      return if !@show_all_tests && !source_error?(result) &&
+                !(verbose && result['status'] == 'failed')
+
+      subsection(format_result_message(result))
     end
   end
 end

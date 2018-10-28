@@ -15,7 +15,7 @@ server = Gatherlogs::WebhookServer.new({
 }, development?)
 
 def authenticate!(token)
-  if token != ENV['AUTH_TOKEN']
+  if token != ENV['AUTH_TOKEN'] # rubocop:disable Style/GuardClause
     status 401
     halt "Access denied\n"
   end

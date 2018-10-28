@@ -74,11 +74,10 @@ class DiskUsage < Inspec.resource(1)
   def read_content
     filename = 'df_h.txt'
     f = inspec.file(filename)
-    if f.file?
-      f.content
-    else
-      raise Inspec::Exceptions::ResourceSkipped, "Can't read #{filename}"
-    end
+
+    raise Inspec::Exceptions::ResourceSkipped, "Can't read #{filename}" unless f.file?
+
+    f.content
   end
 end
 

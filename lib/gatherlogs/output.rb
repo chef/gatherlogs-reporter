@@ -15,6 +15,7 @@ module Gatherlogs
     FAILED_ICON = '✗'.freeze
     SKIPPED_ICON = '↺'.freeze
 
+    # rubocop:disable Style/ClassVars
     def enable_colors
       @@enable_colors = true
     end
@@ -26,6 +27,7 @@ module Gatherlogs
     def colors_enabled?
       @@enable_colors
     end
+    # rubocop:enable Style/ClassVars
 
     def debug(*msg)
       color = if msg.last[0] == '#'
