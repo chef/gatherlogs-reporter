@@ -18,24 +18,20 @@ module Gatherlogs
     attr_accessor :logger
 
     def disable_colors
-      @colorize = false
+      @@colorize = false
     end
 
     def enable_colors
-      @colorize = true
+      @@colorize = true
     end
 
     def colorize(text, color)
       return text if color == :nothing
-      @colorize ? Paint[text, color] : text
+      @@colorize ? Paint[text, color] : text
     end
 
-    def setup_logger(logger = nil)
-      logger = logger
-      logger ||= Logger.new(STDERR)
-      logger.level = Logger::INFO
-
-      logger
+    def logger
+      Gatherlogs.logger
     end
 
     def debug(*msg)
@@ -44,7 +40,7 @@ module Gatherlogs
       else
         color = INFO
       end
-      @logger.debug(colorize msg.join(' ').chomp, color)
+      logger.debug(colorize msg.join(' ').chomp, color)
     end
 
     def info(*msg)
@@ -53,7 +49,7 @@ module Gatherlogs
       else
         color = GREEN
       end
-      @logger.info(colorize msg.join(' ').chomp, color)
+      logger.info(colorize msg.join(' ').chomp, color)
     end
 
     def error(*msg)
@@ -62,7 +58,7 @@ module Gatherlogs
       else
         color = FAILED
       end
-      @logger.error(colorize msg.join(' ').chomp, color)
+      logger.error(colorize msg.join(' ').chomp, color)
     end
 
     def truncate(text, length = 700)

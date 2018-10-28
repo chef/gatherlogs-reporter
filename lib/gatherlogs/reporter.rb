@@ -10,9 +10,6 @@ module Gatherlogs
     def initialize(args)
       @show_all_controls = args[:show_all_controls]
       @show_all_tests = args[:show_all_tests]
-      @logger = args[:logger] || Logger.new(STDERR)
-
-      enable_colors
     end
 
     # Format the desc text in the control

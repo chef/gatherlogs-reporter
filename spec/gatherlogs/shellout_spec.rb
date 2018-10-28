@@ -1,10 +1,5 @@
 class ShelloutTest
-  include Gatherlogs::Output
   include Gatherlogs::Shellout
-
-  def initialize
-    @logger = setup_logger
-  end
 end
 
 RSpec.describe Gatherlogs::Shellout do

@@ -15,6 +15,7 @@ module Gatherlogs
     include Gatherlogs::Shellout
 
     attr_accessor :current_log_path, :remote_cache_dir, :reporter
+    attr_accessor :profiles
 
     option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection', default: '.', attribute_name: :log_path
     option ['-r', '--remote'], 'REMOTE_URL', 'URL to the remote tar bal for inspection', attribute_name: :remote_url
@@ -24,6 +25,7 @@ module Gatherlogs
     option ['-v', '--verbose'], :flag, 'Show inspec test output'
     option ['-a', '--all'], :flag, 'Show all tests, default is to only show failed tests'
     option ['-q', '--quiet'], :flag, 'Only show the report output'
+    option ['-m', '--monochrome'], :flag, "Don't use terminal colors for output"
     option ['--version'], :flag, 'Show current version'
 
     parameter "[PROFILE]", "profile to execute", attribute_name: :inspec_profile
@@ -31,43 +33,31 @@ module Gatherlogs
     def initialize(*args)
       super
 
-      @logger = setup_logger
       @profiles = nil
       @current_log_path = nil
       @remote_cache_dir = nil
 
       @reporter = Gatherlogs::Reporter.new({
         show_all_controls: all?,
-        show_all_tests: verbose?,
-        logger: @logger
+        show_all_tests: verbose?
       })
     end
 
-    def version
-      "check_logs: #{Gatherlogs::VERSION}"
-    end
-
     def show_versions
-      puts version
-      puts inspec_version
-
-      exit
+      puts Gatherlogs::Version.cli_version
+      puts Gatherlogs::Version.inspec_version
     end
 
     def execute()
       parse_args
 
-      show_versions if version?
-      show_profiles if list_profiles?
-      
+      return show_versions if version?
+      return show_profiles if list_profiles?
+
       product = inspec_profile.dup
 
       output = log_working_dir do |log_path|
-        if product.nil?
-          info "Attempting to detect gatherlogs product..."
-          product = Gatherlogs::Product.detect(log_path)
-          info "Detected '#{product}' files" unless product.nil?
-        end
+        product ||= detect_product(log_path)
 
         if product.nil?
           signal_usage_error 'Could not determine the product from gatherlog bundle, please specify a profile to use'
@@ -81,6 +71,14 @@ module Gatherlogs
         error_msg "No system summary generated, #{product} not yet supported?"
       end
       print_report('Inspec report', output[:report]) unless summary_only?
+    end
+
+    def detect_product(log_path)
+      debug "Attempting to detect gatherlogs product..."
+      product = Gatherlogs::Product.detect(log_path)
+      debug product.nil? ? 'Could not detect product' : "Detected '#{product}' files"
+
+      product
     end
 
     def show_profiles
@@ -156,23 +154,21 @@ module Gatherlogs
     end
 
     def parse_args
-      enable_colors
-
       if debug?
-        @logger.level = Logger::DEBUG
+        Gatherlogs.logger.level = Logger::DEBUG
       elsif quiet?
-        @logger.level = Logger::ERROR
+        Gatherlogs.logger.level = Logger::ERROR
       else
-        @logger.level = Logger::INFO
+        Gatherlogs.logger.level = Logger::INFO
       end
 
-      @logger.formatter = proc { |severity, datetime, progname, msg|
-        "#{msg}\n"
-      } if @logger.level == Logger::INFO
-    end
+      if monochrome?
+        Gatherlogs.disable_colors
+      end
 
-    def inspec_version
-      "inspec: #{shellout!('inspec --version').stdout.lines.first}"
+      Gatherlogs.logger.formatter = proc { |severity, datetime, progname, msg|
+        "#{msg}\n"
+      } if Gatherlogs.logger.level == Logger::INFO
     end
 
     def inspec_exec(product)
@@ -180,7 +176,7 @@ module Gatherlogs
 
       cmd = ['inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json']
 
-      info "Running inspec..."
+      info "Running inspec profile for #{product}..."
 
       inspec = shellout!(cmd, { returns: [0, 100, 101] })
       JSON.parse(inspec.stdout)
