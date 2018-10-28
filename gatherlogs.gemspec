@@ -1,12 +1,9 @@
-
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-require 'gatherlogs/version'
-
 Gem::Specification.new do |spec|
   spec.name          = "gatherlogs"
-  spec.version       = Gatherlogs::VERSION
+  spec.version       = File.read('VERSION')
   spec.authors       = ["Will Fisher"]
   spec.email         = ["wfisher@chef.io"]
   spec.license       = "Apache-2.0"
