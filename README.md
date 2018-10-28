@@ -4,8 +4,8 @@
 
 This is a set of tools to generate reports from gather-log bundles for various Chef products.
 
-Chef: https://chef.io
-Get InSpec from: https://inspec.io
+* Chef: https://chef.io
+* Get InSpec from: https://inspec.io
 
 ## Requirements
 
@@ -36,36 +36,76 @@ You will need to be in the directory with the expanded gather-logs tar file to r
 The `check_logs` tool will attempt to detect the product used to generate the gather-logs bundle if one hasn't been specified, if it's unable to for some reason you need to give it the profile name.
 
 Currently available profiles
-  * `chef-server`
   * `automate`
   * `automate2`
+  * `chef-server`
   * `chef-backend`
 
 To see all the available options use
 
 ```
-check_log --help
+check_logs --help
 ```
 
 ## Example output
 
 ```
-$ check_log
+Running inspec profile for chef-server...
 
-InSpec profile for Chef-Server generated gather-logs
-  × gatherlogs.chef-server.package: check that chef-server is installed
-    ⓘ The installed version of Chef-Server is old and should be upgraded
+System report
+---------------------------------------------------------------------------------------
+         Product: Chef-Server 12.8.0
+       CPU Cores: 2
+       CPU Model: Intel(R) Xeon(R) CPU E7- 2870  @ 2.40GHz
+    Total Memory: 15872 MB
+     Free Memory: 8834 MB
+        Platform: Red Hat Enterprise Linux Server release 6.5 (Santiago)
+          Uptime: 02:47:49 up 6 days, 18:33,  0 users,  load average: 0.35, 0.14, 0.09
+    DRBD Enabled: Yes
+        Topology: "ha"
+       Reporting: 1.3.0
+          Manage: Not Installed
+Push-Jobs Server: 2.0.0~alpha.3
+---------------------------------------------------------------------------------------
 
-  × gatherlogs.chef-server.postgreql-upgrade-applied: make sure customer is using chef-server version that includes postgresl 9.6
-    ⓘ Chef Server < 12.16.2 uses PostgreSQL 9.2 and will perform a major upgrade
-      to 9.6.  Please make sure there is enough disk space available to perform
-      the upgrade as it will duplicate the database on disk.
+Inspec report
+--------------------------------------------------------------------------------
+✗ 000.gatherlogs.chef-server.package: check that chef-server is installed
+  ⓘ The installed version of Chef-Server is old and should be upgraded
+    Installed version: 12.8.0
 
-  × chef-server.gatherlogs.reporting-with-2018-partition-tables: make sure installed reporting version has 2018 parititon tables fix
-    ⓘ Reporting < 1.7.10 has a bug where it does not create the 2018
-      partition tables. In order to fix this the user should install >= 1.8.0
-      and follow the instructions in this KB:
-      https://getchef.zendesk.com/hc/en-us/articles/360001425252-Fixing-missing-2018-Reporting-partition-tables
+✗ 010.gatherlogs.chef-server.required_cpu_cores: Check that the system has the required number of cpu cores
+  ⓘ Chef recommends that the Chef-Server and Frontend systems have at least 4 cpu cores.
+    Please make sure the system means the minimum hardware requirements
+
+  ✩ https://docs.chef.io/chef_system_requirements.html#chef-server-on-premises-or-in-cloud-environment
+
+  ✗ cpu_info total should cmp >= 4
+
+    expected it to be >= 4
+         got: 2
+
+    (compared using `cmp` matcher)
+
+✗ 010.gatherlogs.chef-server.required_memory: Check that the system has the required amount of memory
+  ⓘ Chef recommends that the Chef-Server system has at least 8GB of memory.
+    Please make sure the system means the minimum hardware requirements
+
+  ✩ https://docs.chef.io/chef_system_requirements.html#chef-server-on-premises-or-in-cloud-environment
+
+  ✗ memory total_mem should cmp >= 7168
+  ✗ memory free_swap should cmp > 0
+
+    expected it to be > 0
+         got: nil
+
+    (compared using `cmp` matcher)
+
+✗ 030.gatherlogs.chef-server.check_for_drbd: Check to see if the system is using legacy DRDB HA configuration
+  ⓘ Chef-server is using a legacy DRBD HA configuration.
+    This feature will reach end-of-life for support on March 31, 2019.
+
+  ✩ https://blog.chef.io/2018/10/02/end-of-life-announcement-for-drbd-based-ha-support-in-chef-server/
 ```
 
 ## Autocompletions
