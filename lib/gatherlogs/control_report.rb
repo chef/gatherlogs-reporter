@@ -3,7 +3,9 @@ require 'gatherlogs/output'
 module Gatherlogs
   class ControlReport
     include Gatherlogs::Output
+
     attr_accessor :controls, :system_info, :report, :verbose
+    attr_accessor :show_all_tests
 
     def initialize(controls, show_all_controls, show_all_tests)
       @system_info = {}
@@ -16,17 +18,19 @@ module Gatherlogs
     end
 
     def ordered_control_ids
-      keys = controls.map.with_index { |c,index| [index,c['id']] }
-      keys.sort { |a,b| a.last <=> b.last }
+      keys = controls.map.with_index { |c, index| [index, c['id']] }
+      keys.sort_by(&:last)
     end
 
     def update_system_info(tags)
       return unless tags.include?('system')
+
       system_info.merge!(tags['system'])
     end
 
-    def set_verbose(tags)
+    def update_verbose_control(tags)
       return unless tags.include?('verbose')
+
       @verbose = tags['verbose']
     end
 
@@ -34,7 +38,7 @@ module Gatherlogs
     # Control snippet:
     #    desc "This is a description from the control!"
     def desc_text(control)
-      return unless control.has_key?('desc')
+      return unless control.key?('desc')
 
       text = control['desc']
       return if text.nil? || text.empty?
@@ -63,7 +67,7 @@ module Gatherlogs
     end
 
     def process
-      ordered_control_ids.each do |index,id|
+      ordered_control_ids.each do |index, _id|
         @status = PASSED
         @badge = PASSED_ICON
         @verbose = false
@@ -71,24 +75,35 @@ module Gatherlogs
         control = controls[index]
 
         update_system_info(control['tags'])
-        set_verbose(control['tags'])
+        update_verbose_control(control['tags'])
 
-        result_messages = control['results'].map{ |r| process_result(r) }.compact
+        result_messages = control['results'].map do |result|
+          update_status(result['status'])
+          format_result(result)
+        end.compact
+
         next unless @show_all_controls || @status == FAILED
 
-        @report << control_title(control)
-        if @status == FAILED
-          @report << subsection(desc_text(control))
-          @report << subsection(summary_text(control))
-          @report << subsection(kb_text(control))
-        end
+        @report += control_summary(control)
 
         unless result_messages.empty?
           @report += result_messages
-          @report << "" # add blank line after messages
+          @report << '' # add blank line after messages
         end
       end
       @report.compact!
+    end
+
+    def control_summary(control)
+      summary = []
+      summary << control_title(control)
+      if @status == FAILED
+        summary << subsection(desc_text(control))
+        summary << subsection(summary_text(control))
+        summary << subsection(kb_text(control))
+      end
+
+      summary
     end
 
     def control_title(control)
@@ -96,7 +111,8 @@ module Gatherlogs
     end
 
     def source_error?(result)
-      result['code_desc'].match?(/Control Source Code Error/)
+      result['status'] == 'failed' &&
+        result['code_desc'].match?(/Control Source Code Error/)
     end
 
     # Format the output used for showing the control test results
@@ -115,13 +131,12 @@ module Gatherlogs
                  color = PASSED
                  result['code_desc']
                end
-
       message = tabbed_text "#{badge} #{output}"
-      colorize "#{message}", color
+      colorize message.to_s, color
     end
 
-    def process_result(result)
-      case result['status']
+    def update_status(result_status)
+      case result_status
       when 'skipped'
         if @status != FAILED
           @status = SKIPPED
@@ -131,10 +146,13 @@ module Gatherlogs
         @status = FAILED
         @badge = FAILED_ICON
       end
+    end
 
-      if @show_all_tests || source_error?(result) || (verbose && result['status'] = 'failed')
-        subsection(format_result_message(result))
-      end
+    def format_result(result)
+      return if !@show_all_tests && !source_error?(result) &&
+                !(verbose && result['status'] == 'failed')
+
+      subsection(format_result_message(result))
     end
   end
 end

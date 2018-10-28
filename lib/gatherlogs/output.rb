@@ -15,6 +15,7 @@ module Gatherlogs
     FAILED_ICON = '✗'.freeze
     SKIPPED_ICON = '↺'.freeze
 
+    # rubocop:disable Style/ClassVars
     def enable_colors
       @@enable_colors = true
     end
@@ -26,46 +27,48 @@ module Gatherlogs
     def colors_enabled?
       @@enable_colors
     end
+    # rubocop:enable Style/ClassVars
 
     def debug(*msg)
-      if msg.last[0] == '#'
-        color = msg.pop
-      else
-        color = INFO
-      end
+      color = if msg.last[0] == '#'
+                msg.pop
+              else
+                INFO
+              end
       msg = colorize(msg.join(' ').chomp, color)
 
       Gatherlogs.logger.debug(msg)
     end
 
     def info(*msg)
-      if msg.last[0] == '#'
-        color = msg.pop
-      else
-        color = GREEN
-      end
+      color = if msg.last[0] == '#'
+                msg.pop
+              else
+                GREEN
+              end
       msg = colorize(msg.join(' ').chomp, color)
 
       Gatherlogs.logger.info(msg)
     end
 
     def error(*msg)
-      if msg.last[0] == '#'
-        color = msg.pop
-      else
-        color = FAILED
-      end
+      color = if msg.last[0] == '#'
+                msg.pop
+              else
+                FAILED
+              end
       msg = colorize(msg.join(' ').chomp, color)
       Gatherlogs.logger.error(msg)
     end
 
     def colorize(text, color)
       return text if color == :nothing || !colors_enabled?
+
       Paint[text, color]
     end
 
     def truncate(text, length = 700)
-      text[0..(length-1)]
+      text[0..(length - 1)]
     end
 
     # Make sure that we tab over the output for multiline text so that it lines

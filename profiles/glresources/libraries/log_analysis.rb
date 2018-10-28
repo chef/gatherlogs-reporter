@@ -37,10 +37,10 @@ class LogAnalysis < Inspec.resource(1)
   end
 
   def summary
-    <<-EOS.strip
-Found #{hits} messages about '#{grep_expr}'
-Last entry: #{last_entry}
-EOS
+    <<~EOS.strip
+      Found #{hits} messages about '#{grep_expr}'
+      Last entry: #{last_entry}
+    EOS
   end
 
   def exists?
@@ -60,13 +60,13 @@ EOS
   def read_content
     cmd = []
 
-    return [] unless File.exists?(logfile)
+    return [] unless File.exist?(logfile)
 
-    if @options[:a2service]
-      cmd << "grep -i '#{@options[:a2service]}' #{logfile} | grep -iE '#{grep_expr}'"
-    else
-      cmd << "grep -iE '#{grep_expr}' #{logfile}"
-    end
+    cmd << if @options[:a2service]
+             "grep -i '#{@options[:a2service]}' #{logfile} | grep -iE '#{grep_expr}'"
+           else
+             "grep -iE '#{grep_expr}' #{logfile}"
+           end
 
     command = inspec.command(cmd.join(' | '))
 

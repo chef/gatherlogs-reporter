@@ -3,10 +3,10 @@ class PlatformVersion < Inspec.resource(1)
   desc 'Attempt to detect the current platform from the gatherlogs'
 
   PLATFORM_MATCH = {
-    :centos => 'CentOS',
-    :rhel => 'Red Hat Enterprise Linux Server',
-    :ubuntu => 'Ubuntu'
-  }
+    centos: 'CentOS',
+    rhel: 'Red Hat Enterprise Linux Server',
+    ubuntu: 'Ubuntu'
+  }.freeze
 
   PLATFORM_MATCH.keys.each do |k|
     define_method("#{k}?".to_sym) { |plat| platform_match(plat) }
@@ -19,6 +19,7 @@ class PlatformVersion < Inspec.resource(1)
 
   def platform_match?(platform)
     return false if content.nil?
+
     content.match?(PLATFORM_MATCH[platform.to_sym])
   end
 
@@ -37,9 +38,9 @@ class PlatformVersion < Inspec.resource(1)
   end
 
   def full_info
-    if m = content.match(/DISTRIB_DESCRIPTION="(.*)"/)
+    if (m = content.match(/DISTRIB_DESCRIPTION="(.*)"/))
       m[1]
-    elsif m = content.match(/PRETTY_NAME="(.*)"/)
+    elsif (m = content.match(/PRETTY_NAME="(.*)"/))
       m[1]
     else
       content.lines.map(&:chomp).join(' ')
@@ -71,10 +72,10 @@ class PlatformVersion < Inspec.resource(1)
   end
 
   def read_content
-    if platform_file.file?
-      platform_file.content
-    else
+    unless platform_file.file?
       raise Inspec::Exceptions::ResourceSkipped, "Can't read platform_version.txt"
     end
+
+    platform_file.content
   end
 end

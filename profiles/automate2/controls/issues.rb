@@ -1,7 +1,7 @@
-#level=error msg="Phase failed" error="hab-sup upgrade pending" phase="supervisor upgrade"
+# level=error msg="Phase failed" error="hab-sup upgrade pending" phase="supervisor upgrade"
 
-upgrade_failed = log_analysis("journalctl_chef-automate.txt", 'level=error msg="Phase failed" error="hab-sup upgrade pending" phase="supervisor upgrade"', a2service: 'service.default')
-control "gatherlogs.automate2.upgrade_failed" do
+upgrade_failed = log_analysis('journalctl_chef-automate.txt', 'level=error msg="Phase failed" error="hab-sup upgrade pending" phase="supervisor upgrade"', a2service: 'service.default')
+control 'gatherlogs.automate2.upgrade_failed' do
   impact 1.0
   title 'Check to see if Automate is reporting a failure during the hab sup upgrade process'
   desc "
@@ -16,8 +16,8 @@ check the logs and contact support to see about getting this fixed."
   end
 end
 
-ldap_group_too_large = log_analysis("journalctl_chef-automate.txt", 'upstream sent too big header while reading response header from upstream.*dex/auth/ldap', a2service: 'automate-load-balancer.default')
-control "gatherlogs.automate2.auth_upstream_header_too_big" do
+ldap_group_too_large = log_analysis('journalctl_chef-automate.txt', 'upstream sent too big header while reading response header from upstream.*dex/auth/ldap', a2service: 'automate-load-balancer.default')
+control 'gatherlogs.automate2.auth_upstream_header_too_big' do
   impact 1.0
   title 'Check to see if Automate is reporting a failure getting data from an upstream LDAP source'
   desc "
@@ -36,9 +36,8 @@ https://automate.chef.io/docs/ldap/#other-common-issues
   end
 end
 
-
-es_gc = log_analysis("journalctl_chef-automate.txt", '\[o.e.m.j.JvmGcMonitorService\] .* \[gc\]', a2service: 'automate-elasticsearch.default')
-control "gatherlogs.automate2.elasticsearch-high-gc-counts" do
+es_gc = log_analysis('journalctl_chef-automate.txt', '\[o.e.m.j.JvmGcMonitorService\] .* \[gc\]', a2service: 'automate-elasticsearch.default')
+control 'gatherlogs.automate2.elasticsearch-high-gc-counts' do
   impact 1.0
   title 'Check to see if the ElasticSearch is reporting large number of GC events'
   desc "
@@ -54,8 +53,8 @@ Instructions on how to adjust your ElasticSearch heap size: https://automate.che
   end
 end
 
-es_oom = log_analysis("journalctl_chef-automate.txt", 'java.lang.OutOfMemoryError', a2service: 'automate-elasticsearch.default')
-control "gatherlogs.automate2.elasticsearch_out_of_memory" do
+es_oom = log_analysis('journalctl_chef-automate.txt', 'java.lang.OutOfMemoryError', a2service: 'automate-elasticsearch.default')
+control 'gatherlogs.automate2.elasticsearch_out_of_memory' do
   impact 1.0
   title 'Check to see if Automate is reporting a OutOfMemoryError for ElasticSearch'
   desc "
@@ -73,8 +72,8 @@ https://automate.chef.io/docs/configuration/#setting-elasticsearch-heap
 end
 
 # max virtual memory areas vm.max_map_count [256000] is too low, increase to at     least [262144]
-es_vmc = log_analysis("journalctl_chef-automate.txt", 'max virtual memory areas vm.max_map_count \[\w+\] is too low, increase to at least \[\w+\]', a2service: 'automate-elasticsearch.default')
-control "gatherlogs.automate2.elasticsearch_max_map_count_error" do
+es_vmc = log_analysis('journalctl_chef-automate.txt', 'max virtual memory areas vm.max_map_count \[\w+\] is too low, increase to at least \[\w+\]', a2service: 'automate-elasticsearch.default')
+control 'gatherlogs.automate2.elasticsearch_max_map_count_error' do
   impact 1.0
   title 'Check to see if Automate ES is reporting a error with vm.max_map_count setting'
   desc "
@@ -97,7 +96,7 @@ vm.max_map_count=262144
 end
 
 lb_workers = log_analysis('journalctl_chef-automate.txt', 'worker_connections are not enough', a2service: 'automate-load-balancer.default')
-control "gatherlogs.automate2.loadbalancer_worker_connections" do
+control 'gatherlogs.automate2.loadbalancer_worker_connections' do
   impact 1.0
   title 'Check to see if Automate is reporting a error with not enough workers for the load balancer'
   desc "
@@ -112,7 +111,7 @@ This is an issue with older version of Automate 2 without persistant connections
 end
 
 butterfly_error = log_analysis('journalctl_chef-automate.txt', 'Butterfly error: Error reading or writing to DatFile', a2service: 'hab-sup')
-control "gatherlogs.automate2.butterfly_dat_error" do
+control 'gatherlogs.automate2.butterfly_dat_error' do
   impact 1.0
   title 'Check to see if Automate is reporting an error reading or write to a DatFile'
   desc '
@@ -124,6 +123,6 @@ control "gatherlogs.automate2.butterfly_dat_error" do
   tag summary: butterfly_error.summary
 
   describe butterfly_error do
-   its('last_entry') { should be_empty }
+    its('last_entry') { should be_empty }
   end
 end

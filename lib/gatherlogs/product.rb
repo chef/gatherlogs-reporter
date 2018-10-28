@@ -9,12 +9,12 @@ module Gatherlogs
         'automate2' => 'chef-automate_status.txt',
         'chef-backend' => 'chef-backend-ctl-status.txt'
       }
-      products.each do |product,filename|
+      products.each do |product, filename|
         full_path = File.join(log_path, filename)
-        return product if File.exists?(full_path)
+        return product if File.exist?(full_path)
       end
 
-      return nil
+      nil
     end
   end
 end

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-libdir = File.realpath(File.join(File.dirname(__FILE__), '../lib'))
+libdir = File.expand_path('../lib', __dir__)
 $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 
 require 'json'
@@ -15,7 +15,7 @@ server = Gatherlogs::WebhookServer.new({
 }, development?)
 
 def authenticate!(token)
-  if token != ENV['AUTH_TOKEN']
+  if token != ENV['AUTH_TOKEN'] # rubocop:disable Style/GuardClause
     status 401
     halt "Access denied\n"
   end
@@ -30,7 +30,7 @@ end
 
 post '/:token' do
   params = JSON.parse request.body.read
-  if remote_url = params['url']
+  if (remote_url = params['url'])
     server.check_logs(remote_url).to_json
   else
     # Invalid request no remote_url param
@@ -39,7 +39,7 @@ post '/:token' do
 end
 
 get '/zendesk/:token' do
-  if info = params['info']
+  if (info = params['info'])
     ticket_info = JSON.parse(info)
     attachments = ticket_info['attachments'].split('|')
 
@@ -59,5 +59,5 @@ get '/zendesk/:token' do
 end
 
 get '/' do
-  "Hello, World!"
+  'Hello, World!'
 end
