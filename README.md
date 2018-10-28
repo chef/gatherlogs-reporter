@@ -1,14 +1,16 @@
-# Gatherlogs InSpec Profile
+# GatherLog reporter with Inspec
 
-This is a proof of concept to see if using InSpec to do some initial
-validation on gatherlog output from chef-products is viable.
+[![Build Status](https://travis-ci.com/teknofire/gatherlogs-inspec-profiles.svg?branch=master)](https://travis-ci.com/teknofire/gatherlogs-inspec-profiles)
 
-Get InSpec from: http://inspec.io
+This is a set of tools to generate reports from gather-log bundles for various Chef products.
+
+Chef: https://chef.io
+Get InSpec from: https://inspec.io
 
 ## Requirements
 
-1. inspec (currently tested with v2 but should work with v1)
-2. ruby 2.4+
+1. inspec (currently tested with v3 but should work with v2)
+2. ruby 2.5+
 3. bundler
 
 ## Installation
@@ -39,23 +41,10 @@ Currently available profiles
   * `automate2`
   * `chef-backend`
 
-Available options
+To see all the available options use
 
 ```
-Usage:
-    check_logs [OPTIONS] [PROFILE]
-
-Parameters:
-    [PROFILE]                     profile to execute
-
-Options:
-    -p, --path PATH               Path to the gatherlogs for inspection (default: ".")
-    -d, --debug                   Enable debug output
-    --profiles                    Show available profiles
-    -v, --verbose                 Show inspec test output
-    -a, --all                     Show all tests, default is to only show failed tests
-    --version                     Show current version
-    -h, --help                    print help
+check_log --help
 ```
 
 ## Example output
