@@ -59,7 +59,7 @@ class InstalledPackagesTxt
   # rubocop:enable Naming/UncommunicativeMethodParamName
 
   def exist?
-    content && content.match?(@package_name)
+    content&.match?(@package_name)
   end
 
   private

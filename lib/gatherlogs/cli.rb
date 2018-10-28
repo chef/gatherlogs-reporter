@@ -20,7 +20,8 @@ module Gatherlogs
     option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection',
            default: '.', attribute_name: :log_path
     option ['-r', '--remote'], 'REMOTE_URL',
-           'URL to the remote tar bal for inspection', attribute_name: :remote_url
+           'URL to the remote tar bal for inspection',
+           attribute_name: :remote_url
     option ['-d', '--debug'], :flag, 'Enable debug output'
     option ['-s', '--system-only'], :flag, 'Only show system report',
            attribute_name: :summary_only
@@ -94,7 +95,6 @@ module Gatherlogs
 
     def show_profiles
       puts profiles.sort.join("\n")
-      exit
     end
 
     def profiles
@@ -162,8 +162,7 @@ module Gatherlogs
       extension = url.split('.').last
       local_filename = File.join(remote_cache_dir, "gatherlogs.#{extension}")
 
-      cmd = ['wget', url, '-O', local_filename]
-      shellout!(cmd)
+      shellout!(['wget', url, '-O', local_filename])
 
       cmd = [
         'tar', 'xvf', local_filename, '-C', remote_cache_dir,
@@ -198,13 +197,11 @@ module Gatherlogs
 
     def inspec_exec(product)
       signal_usage_error 'Please specify a profile to use' if product.nil?
+      info "Running inspec profile for #{product}..."
 
       profile = find_profile_path(product)
 
       cmd = ['inspec', 'exec', profile, '--reporter', 'json']
-
-      info "Running inspec profile for #{product}..."
-
       inspec = shellout!(cmd, returns: [0, 100, 101])
       debug inspec.stderr unless inspec.stderr.empty?
       JSON.parse(inspec.stdout)

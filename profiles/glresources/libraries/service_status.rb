@@ -95,7 +95,7 @@ class ServiceStatus < Inspec.resource(1)
       next if line =~ /^\s*$/ # blank lines
       next if line =~ /Internal Services/
 
-      if line =~ /External Services/
+      if /External Services/.match?(line)
         internal = false
         next
       end

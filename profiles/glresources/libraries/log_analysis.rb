@@ -37,9 +37,9 @@ class LogAnalysis < Inspec.resource(1)
   end
 
   def summary
-    <<-EOS.strip
-Found #{hits} messages about '#{grep_expr}'
-Last entry: #{last_entry}
+    <<~EOS.strip
+      Found #{hits} messages about '#{grep_expr}'
+      Last entry: #{last_entry}
     EOS
   end
 

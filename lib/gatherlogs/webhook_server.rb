@@ -89,12 +89,12 @@ module Gatherlogs
 
     def zendesk_comment_text(filename, output)
       output = 'No issues were found in the gather-log bundle' if output.empty?
-      <<-EOC
-Inspec gather-log results for: #{filename}
+      <<~EOC
+        Inspec gather-log results for: #{filename}
 
-```
-#{Paint.unpaint(output).utf8!}
-```
+        ```
+        #{Paint.unpaint(output).utf8!}
+        ```
       EOC
     end
   end
