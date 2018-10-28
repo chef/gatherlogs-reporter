@@ -7,6 +7,10 @@ RSpec.describe Gatherlogs::Shellout do
     ShelloutTest.new
   end
 
+  before do
+    Gatherlogs.logger = double('logger', info: true, error: true, debug: true)
+  end
+
   it "should call out to mixlib shellout!" do
     dbl = double('cmd')
     allow(Mixlib::ShellOut).to receive(:new).with('test', {}) { dbl }

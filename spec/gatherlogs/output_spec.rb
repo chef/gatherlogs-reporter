@@ -1,5 +1,8 @@
 class TestOutput
   include Gatherlogs::Output
+  def initialize
+    enable_colors
+  end
 end
 
 RSpec.describe Gatherlogs::Output do
@@ -20,19 +23,18 @@ RSpec.describe Gatherlogs::Output do
       Gatherlogs.logger = logger_dbl
     end
 
-    it "should print plain INFO" do
+    it "should print plain log output" do
+      test_output.disable_colors
       allow(logger_dbl).to receive(:info).with('info')
       allow(logger_dbl).to receive(:debug).with('debug')
       allow(logger_dbl).to receive(:error).with('err')
 
-      test_output.info("info")
-      test_output.debug("debug")
-      test_output.error("err")
+      test_output.info("info", green)
+      test_output.debug("debug", green)
+      test_output.error("err", green)
     end
 
-    it "should print colored INFO" do
-      test_output.enable_colors
-
+    it "should print colored log output" do
       allow(logger_dbl).to receive(:info).with("\e[38;5;77minfo\e[0m")
       allow(logger_dbl).to receive(:debug).with("\e[38;5;77mdebug\e[0m")
       allow(logger_dbl).to receive(:error).with("\e[38;5;77merr\e[0m")
@@ -40,6 +42,16 @@ RSpec.describe Gatherlogs::Output do
       test_output.info("info", green)
       test_output.debug("debug", green)
       test_output.error("err", green)
+    end
+
+    it "should auto set colors for logged output" do
+      allow(logger_dbl).to receive(:info).with("\e[38;5;77minfo\e[0m")
+      allow(logger_dbl).to receive(:debug).with("\e[38;5;214mdebug\e[0m")
+      allow(logger_dbl).to receive(:error).with("\e[38;5;203merr\e[0m")
+
+      test_output.info("info")
+      test_output.debug("debug")
+      test_output.error("err")
     end
   end
 

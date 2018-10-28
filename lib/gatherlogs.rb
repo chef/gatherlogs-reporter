@@ -1,21 +1,13 @@
 require 'gatherlogs/version'
 require 'gatherlogs/product'
 require 'gatherlogs/reporter'
-require 'gatherlogs/output'
 
 module Gatherlogs
-  extend Gatherlogs::Output
-
   def self.logger
-    if @logger.nil?
-      @logger = Logger.new(STDERR)
-      @logger.level = Logger::INFO
-      enable_colors
-    end
-    @logger
+    @logger ||= ::Logger.new(STDERR)
   end
 
-  def self.logger=(l)
-    @logger = l
+  def self.logger=(custom_logger)
+    @logger = custom_logger
   end
 end

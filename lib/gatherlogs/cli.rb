@@ -14,7 +14,7 @@ module Gatherlogs
     include Gatherlogs::Output
     include Gatherlogs::Shellout
 
-    attr_accessor :current_log_path, :remote_cache_dir, :reporter
+    attr_accessor :current_log_path, :remote_cache_dir
     attr_accessor :profiles
 
     option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection', default: '.', attribute_name: :log_path
@@ -32,20 +32,22 @@ module Gatherlogs
 
     def initialize(*args)
       super
-
+      enable_colors
       @profiles = nil
       @current_log_path = nil
       @remote_cache_dir = nil
-
-      @reporter = Gatherlogs::Reporter.new({
-        show_all_controls: all?,
-        show_all_tests: verbose?
-      })
     end
 
     def show_versions
       puts Gatherlogs::Version.cli_version
       puts Gatherlogs::Version.inspec_version
+    end
+
+    def reporter
+      @reporter ||= Gatherlogs::Reporter.new({
+        show_all_controls: all?,
+        show_all_tests: verbose?
+      })
     end
 
     def execute()
@@ -155,15 +157,15 @@ module Gatherlogs
 
     def parse_args
       if debug?
-        Gatherlogs.logger.level = Logger::DEBUG
+        Gatherlogs.logger.level = ::Logger::DEBUG
       elsif quiet?
-        Gatherlogs.logger.level = Logger::ERROR
+        Gatherlogs.logger.level = ::Logger::ERROR
       else
-        Gatherlogs.logger.level = Logger::INFO
+        Gatherlogs.logger.level = ::Logger::INFO
       end
 
       if monochrome?
-        Gatherlogs.disable_colors
+        disable_colors
       end
 
       Gatherlogs.logger.formatter = proc { |severity, datetime, progname, msg|

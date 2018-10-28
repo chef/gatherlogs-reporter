@@ -15,23 +15,16 @@ module Gatherlogs
     FAILED_ICON = '✗'.freeze
     SKIPPED_ICON = '↺'.freeze
 
-    attr_accessor :logger
+    def enable_colors
+      @@enable_colors = true
+    end
 
     def disable_colors
-      @@colorize = false
+      @@enable_colors = false
     end
 
-    def enable_colors
-      @@colorize = true
-    end
-
-    def colorize(text, color)
-      return text if color == :nothing
-      @@colorize ? Paint[text, color] : text
-    end
-
-    def logger
-      Gatherlogs.logger
+    def colors_enabled?
+      @@enable_colors
     end
 
     def debug(*msg)
@@ -40,7 +33,9 @@ module Gatherlogs
       else
         color = INFO
       end
-      logger.debug(colorize msg.join(' ').chomp, color)
+      msg = colorize(msg.join(' ').chomp, color)
+
+      Gatherlogs.logger.debug(msg)
     end
 
     def info(*msg)
@@ -49,7 +44,9 @@ module Gatherlogs
       else
         color = GREEN
       end
-      logger.info(colorize msg.join(' ').chomp, color)
+      msg = colorize(msg.join(' ').chomp, color)
+
+      Gatherlogs.logger.info(msg)
     end
 
     def error(*msg)
@@ -58,7 +55,13 @@ module Gatherlogs
       else
         color = FAILED
       end
-      logger.error(colorize msg.join(' ').chomp, color)
+      msg = colorize(msg.join(' ').chomp, color)
+      Gatherlogs.logger.error(msg)
+    end
+
+    def colorize(text, color)
+      return text if color == :nothing || !colors_enabled?
+      Paint[text, color]
     end
 
     def truncate(text, length = 700)
