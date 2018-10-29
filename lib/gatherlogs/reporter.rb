@@ -30,6 +30,7 @@ module Gatherlogs
       output = { system_info: {}, report: [] }
 
       json['profiles'].each do |profile|
+        debug profile['title']
         # don't show profiles that have no controls
         next if profile['controls'].empty?
 
