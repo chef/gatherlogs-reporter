@@ -200,7 +200,9 @@ module Gatherlogs
 
       profile = find_profile_path(product)
 
-      cmd = ['inspec', 'exec', profile, '--reporter', 'json']
+      cmd = [
+        'inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json'
+      ]
       inspec = shellout!(cmd, returns: [0, 100, 101])
       debug inspec.stderr unless inspec.stderr.empty?
       JSON.parse(inspec.stdout)
