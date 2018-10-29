@@ -12,9 +12,20 @@ module Gatherlogs
       @controls = controls
       @show_all_controls = show_all_controls
       @show_all_tests = show_all_tests
-      @report = []
+      @report = process_ordered_controls
+    end
 
-      process
+    def process_ordered_controls
+      all_reports = []
+      ordered_control_ids.each do |index, id|
+        debug "Processing control #{id}"
+        control = controls[index]
+        report = process_control(control)
+
+        all_reports += report unless report.nil?
+      end
+
+      all_reports
     end
 
     def ordered_control_ids
@@ -66,37 +77,34 @@ module Gatherlogs
       labeled_output SUMMARY_ICON, tabbed_text(text) + "\n"
     end
 
-    def process
-      ordered_control_ids.each do |index, id|
-        control = controls[index]
-        # included controls show up in the parent but with no results
-        # so we need to skip them
-        next if control['results'].empty?
+    def process_control(control)
+      # included controls show up in the parent but with no results
+      # so we need to skip them
+      return if control['results'].empty?
 
-        debug "Processing control #{id}"
+      report = []
+      @status = PASSED
+      @badge = PASSED_ICON
+      @verbose = false
 
-        @status = PASSED
-        @badge = PASSED_ICON
-        @verbose = false
+      update_system_info(control['tags'])
+      update_verbose_control(control['tags'])
 
-        update_system_info(control['tags'])
-        update_verbose_control(control['tags'])
+      result_messages = control['results'].map do |result|
+        update_status(result['status'])
+        format_result(result)
+      end.compact
 
-        result_messages = control['results'].map do |result|
-          update_status(result['status'])
-          format_result(result)
-        end.compact
+      # by default only show the failed controls
+      return unless @show_all_controls || @status == FAILED
 
-        next unless @show_all_controls || @status == FAILED
+      report += control_summary(control)
 
-        @report += control_summary(control)
-
-        unless result_messages.empty?
-          @report += result_messages
-          @report << '' # add blank line after messages
-        end
+      unless result_messages.empty?
+        report += result_messages
+        report << '' # add blank line after messages
       end
-      @report.compact!
+      report.compact
     end
 
     def control_summary(control)

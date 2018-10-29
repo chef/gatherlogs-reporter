@@ -29,34 +29,28 @@ module Gatherlogs
     end
     # rubocop:enable Style/ClassVars
 
+    def find_color(msg, default)
+      return msg.pop if msg.last && msg.last[0] == '#'
+
+      default
+    end
+
     def debug(*msg)
-      color = if msg.last[0] == '#'
-                msg.pop
-              else
-                INFO
-              end
+      color = find_color(msg, INFO)
       msg = colorize(msg.join(' ').chomp, color)
 
       Gatherlogs.logger.debug(msg)
     end
 
     def info(*msg)
-      color = if msg.last[0] == '#'
-                msg.pop
-              else
-                GREEN
-              end
+      color = find_color(msg, GREEN)
       msg = colorize(msg.join(' ').chomp, color)
 
       Gatherlogs.logger.info(msg)
     end
 
     def error(*msg)
-      color = if msg.last[0] == '#'
-                msg.pop
-              else
-                FAILED
-              end
+      color = find_color(msg, FAILED)
       msg = colorize(msg.join(' ').chomp, color)
       Gatherlogs.logger.error(msg)
     end

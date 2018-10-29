@@ -83,12 +83,11 @@ module Gatherlogs
     def detect_product(log_path)
       debug 'Attempting to detect gatherlogs product...'
       product = Gatherlogs::Product.detect(log_path)
-      msg = if product.nil?
-              'Could not detect product'
-            else
-              "Detected '#{product}' files"
-            end
-      debug msg
+      if product.nil?
+        debug 'Could not detect product'
+      else
+        debug "Detected '#{product}' files"
+      end
 
       product
     end
