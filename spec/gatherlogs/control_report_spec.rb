@@ -1,37 +1,37 @@
 RSpec.describe Gatherlogs::ControlReport do
   let(:reporter) do
     Gatherlogs::ControlReport.new([{
-                                    'id' => '010.d.e.f',
-                                    'tags' => {
-                                      'summary' => 'Summary text',
-                                      'system' => { 'test' => 'foo' },
-                                      'kb' => ['https://test.com', 'http://google.com']
-                                    },
-                                    'desc' => 'DEF Description text',
-                                    'results' => [{
-                                      'status' => 'success',
-                                      'code_desc' => 'It worked!'
-                                    }, {
-                                      'status' => 'failed',
-                                      'code_desc' => 'Control Source Code Error'
-                                    }]
-                                  }, {
-                                    'id' => '000.a.b.c',
-                                    'tags' => { 'verbose' => true },
-                                    'desc' => 'ABC Description text',
-                                    'results' => [{
-                                      'status' => 'failed',
-                                      'code_desc' => 'Missing all the things'
-                                    }]
-                                  }, {
-                                    'id' => '010.a.b.c',
-                                    'tags' => {},
-                                    'desc' => 'ABC2 Description text',
-                                    'results' => [{
-                                      'status' => 'skipped',
-                                      'code_desc' => 'Skipped because of reasons'
-                                    }]
-                                  }], false, false)
+      'id' => '010.d.e.f',
+      'tags' => {
+        'summary' => 'Summary text',
+        'system' => { 'test' => 'foo' },
+        'kb' => ['https://test.com', 'http://google.com']
+      },
+      'desc' => 'DEF Description text',
+      'results' => [{
+        'status' => 'success',
+        'code_desc' => 'It worked!'
+      }, {
+        'status' => 'failed',
+        'code_desc' => 'Control Source Code Error'
+      }]
+    }, {
+      'id' => '000.a.b.c',
+      'tags' => { 'verbose' => true },
+      'desc' => 'ABC Description text',
+      'results' => [{
+        'status' => 'failed',
+        'code_desc' => 'Missing all the things'
+      }]
+    }, {
+      'id' => '010.a.b.c',
+      'tags' => {},
+      'desc' => 'ABC2 Description text',
+      'results' => [{
+        'status' => 'skipped',
+        'code_desc' => 'Skipped because of reasons'
+      }]
+    }], false, false)
   end
 
   before do
