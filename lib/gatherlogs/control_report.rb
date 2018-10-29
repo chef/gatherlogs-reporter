@@ -69,10 +69,10 @@ module Gatherlogs
     def process
       ordered_control_ids.each do |index, id|
         control = controls[index]
-        next if control['results'].empty?
-
         # included controls show up in the parent but with no results
         # so we need to skip them
+        next if control['results'].empty?
+
         debug "Processing control #{id}"
 
         @status = PASSED
