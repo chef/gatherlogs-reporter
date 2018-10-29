@@ -4,12 +4,14 @@ module Gatherlogs
       return unless File.directory?(log_path)
 
       products = {
-        'automate' => 'delivery-ctl-status.txt',
-        'chef-server' => 'private-chef-ctl_status.txt',
-        'automate2' => 'chef-automate_status.txt',
-        'chef-backend' => 'chef-backend-ctl-status.txt'
+        'delivery-ctl-status.txt' => 'automate',
+        'private-chef-ctl_status.txt' => 'chef-server',
+        'chef-automate_status.txt' => 'automate2',
+        # fall back in case they are using gather-logs local mode
+        'journalctl_chef-automate.txt' => 'automate2',
+        'chef-backend-ctl-status.txt' => 'chef-backend'
       }
-      products.each do |product, filename|
+      products.each do |filename, product|
         full_path = File.join(log_path, filename)
         return product if File.exist?(full_path)
       end
