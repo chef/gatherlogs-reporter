@@ -78,16 +78,17 @@ module Gatherlogs
     end
 
     def process_control(control)
-      # included controls show up in the parent but with no results
-      # so we need to skip them
-      return if control['results'].empty?
-
       report = []
       @status = PASSED
       @badge = PASSED_ICON
       @verbose = false
 
       update_system_info(control['tags'])
+
+      # included controls show up in the parent but with no results
+      # so we need to skip them but make sure to grab sys info first
+      return if control['results'].empty?
+
       update_verbose_control(control['tags'])
 
       result_messages = control['results'].map do |result|
