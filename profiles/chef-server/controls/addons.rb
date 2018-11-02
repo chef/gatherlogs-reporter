@@ -1,5 +1,7 @@
 reporting = installed_packages('opscode-reporting')
 manage = installed_packages('chef-manage')
+manage = installed_packages('opscode-manage') unless manage.exists?
+sync = installed_packages('chef-sync')
 
 control '030.gatherlogs.chef-server.reporting-with-2018-partition-tables' do
   title 'make sure installed reporting version has 2018 parititon tables fix'
@@ -12,10 +14,13 @@ control '030.gatherlogs.chef-server.reporting-with-2018-partition-tables' do
 
   tag kb: 'https://getchef.zendesk.com/hc/en-us/articles/360001425252-Fixing-missing-2018-Reporting-partition-tables'
 
-  tag system: {
+  sysinfo = {
     'Reporting' => reporting.exists? ? reporting.version : 'Not Installed',
     'Manage' => manage.exists? ? manage.version : 'Not Installed'
   }
+  sysinfo['Sync'] = sync.version if sync.exists?
+
+  tag system: sysinfo
 
   only_if { reporting.exists? }
 
