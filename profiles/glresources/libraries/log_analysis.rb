@@ -68,7 +68,6 @@ class LogAnalysis < Inspec.resource(1)
       grep_flag = '-P'
     end
 
-
     cmd << if @options[:a2service]
              "grep -i '#{@options[:a2service]}' #{logfile} | grep -i #{grep_flag} '#{grep_expr}'"
            else
