@@ -2,8 +2,9 @@ class Sysctl < Inspec.resource(1)
   name 'sysctl'
   desc 'Parse the sysctl config'
 
-  def initialize(filename = 'sysctl.txt')
-    @content = parse_sysctl(read_content(filename))
+  def initialize(filename = 'sysctl_a.txt')
+    @filename = filename
+    @content = parse_sysctl(read_content)
   end
 
   def method_missing(name)
@@ -15,7 +16,7 @@ class Sysctl < Inspec.resource(1)
   end
 
   def exists?
-    !@content.empty?
+    sysctl_file.exist?
   end
 
   private
@@ -36,12 +37,13 @@ class Sysctl < Inspec.resource(1)
     data
   end
 
-  def read_content(filename)
-    f = inspec.file(filename)
-    if f.file?
-      f.content
-    else
-      ''
-    end
+  def sysctl_file
+    inspec.file(@filename)
+  end
+
+  def read_content
+    return '' unless sysctl_file.exist?
+
+    sysctl_file.content
   end
 end

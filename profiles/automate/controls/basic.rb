@@ -84,7 +84,7 @@ df = disk_usage
       There are several key directories that we need to make sure have enough
       free space for automate to operate succesfully
     "
-
+    tag verbose: true
     only_if { df.exists?(mount) }
 
     describe df.mount(mount) do
@@ -100,6 +100,7 @@ control 'gatherlogs.automate.sysctl-settings' do
     Recommended sysctl settings are not correct, recommend that these get updated
     to ensure the best performance possible for Automate.
   "
+  tag verbose: true
   only_if { sysctl.exists? }
   describe sysctl do
     its('vm_swappiness') { should cmp >= 1 }
