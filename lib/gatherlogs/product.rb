@@ -6,6 +6,7 @@ module Gatherlogs
       products = {
         'delivery-ctl-status.txt' => 'automate',
         'private-chef-ctl_status.txt' => 'chef-server',
+        'chef-server-ctl_status.txt' => 'chef-server',
         'chef-automate_status.txt' => 'automate2',
         # fall back in case they are using gather-logs local mode
         'journalctl_chef-automate.txt' => 'automate2',

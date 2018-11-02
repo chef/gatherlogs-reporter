@@ -22,6 +22,16 @@ control '000.gatherlogs.chef-server.package' do
   end
 end
 
+license = log_analysis('etc/opscode/chef-server.rb', 'license')
+
+if license.exists?
+  control '020.gatherlogs.chef-server.license_info' do
+    title 'Include any configure license node count'
+
+    tag system: { 'License count': license.last.split(/\s+/).last }
+  end
+end
+
 control '010.gatherlogs.chef-server.required_memory' do
   title 'Check that the system has the required amount of memory'
 
