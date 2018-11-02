@@ -86,23 +86,71 @@ control 'gatherlogs.chef-server.nginx-upstream-host-error' do
   end
 end
 
+control 'gatherlogs.chef-server.solr4_heap_size' do
+  title 'Check solr4 for errors related to the heap size'
+  desc "
+SOLR4 tried to allocate more memory than was available in the configured heap size.
+
+You will need to inscrease the heap configuration by setting
+`opscode_solr4['heap_size']` in `/etc/opscode/chef-server.rb`.  Please ensure
+that this value is no more than 50% of the total RAM and less than 8192, which
+ever value is smaller.
+
+You will also need to make sure that there is enough free memory available on
+the system to increase this value, if not you will also need ot upgrade the
+amount of RAM allocated to this system.
+  "
+
+  common_logs.solr4 do |logfile|
+    solr = log_analysis(
+      "var/log/opscode/opscode-solr4/#{logfile}",
+      'Caused by: java.lang.OutOfMemoryError: Java heap space'
+    )
+
+    tag summary: solr.summary unless solr.empty?
+    describe solr do
+      its('last_entry') { should be_empty }
+    end
+  end
+end
+
 control 'gatherlogs.chef-server.solr4-memory-allocation-error' do
-  impact 1.0
   title 'Check solr4 for errors related to memory allocations'
   desc "
 SOLR4 service is unable to allocate enough memory to operate correctly. Please
 make sure that the system has not run out of physical RAM or swap space.
 
-If `opscode_solr4['heap_size']` is specified in `/etc/opscode/chef-server.rb` ensure
-that this value is no more than 50% of the total RAM and less than 8192, which ever value
-is smaller.
+If `opscode_solr4['heap_size']` is specified in `/etc/opscode/chef-server.rb`
+Please ensure that this value is no more than 50% of the total RAM and less
+than 8192, which ever value is smaller.
   "
 
   common_logs.solr4 do |logfile|
-    solr = log_analysis("var/log/opscode/opscode-solr4/#{logfile}", 'Cannot allocate memory')
+    solr = log_analysis(
+      "var/log/opscode/opscode-solr4/#{logfile}",
+      'Cannot allocate memory'
+    )
+
     tag summary: solr.summary unless solr.empty?
     describe solr do
       its('last_entry') { should be_empty }
     end
+  end
+end
+
+control 'gatherlogs.chef-server.oc_id_unable_to_start' do
+  title 'Check that the oc_id service is not having trouble starting'
+  desc "
+If a stale service.pid file is left behind the oc_id service will be unable to
+start even though the runsv process manager keeps trying to start it up.
+
+To fix the you will need to remove the offending server.pid file.
+"
+
+  oc_id = log_analysis('var/log/opscode/oc_id/current', 'A server is already running. Check .*server.pid')
+  tag summary: oc_id.summary
+
+  describe oc_id do
+    its('last_entry') { should be_empty }
   end
 end
