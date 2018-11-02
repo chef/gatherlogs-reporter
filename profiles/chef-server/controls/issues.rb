@@ -103,9 +103,9 @@ amount of RAM allocated to this system.
 
   common_logs.solr4 do |logfile|
     solr = log_analysis(
-             "var/log/opscode/opscode-solr4/#{logfile}",
-             'Caused by: java.lang.OutOfMemoryError: Java heap space'
-           )
+      "var/log/opscode/opscode-solr4/#{logfile}",
+      'Caused by: java.lang.OutOfMemoryError: Java heap space'
+    )
 
     tag summary: solr.summary unless solr.empty?
     describe solr do
@@ -127,9 +127,9 @@ than 8192, which ever value is smaller.
 
   common_logs.solr4 do |logfile|
     solr = log_analysis(
-             "var/log/opscode/opscode-solr4/#{logfile}",
-             'Cannot allocate memory'
-           )
+      "var/log/opscode/opscode-solr4/#{logfile}",
+      'Cannot allocate memory'
+    )
 
     tag summary: solr.summary unless solr.empty?
     describe solr do
