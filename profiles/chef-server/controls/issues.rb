@@ -106,3 +106,20 @@ is smaller.
     end
   end
 end
+
+control 'gatherlogs.chef-server.oc_id_unable_to_start' do
+  title 'Check that the oc_id service is not having trouble starting'
+  desc "
+If a stale service.pid file is left behind the oc_id service will be unable to
+start even though the runsv process manager keeps trying to start it up.
+
+To fix the you will need to remove the offending server.pid file.
+"
+
+  oc_id = log_analysis('var/log/opscode/oc_id/current', 'A server is already running. Check .*server.pid')
+  tag summary: oc_id.summary
+
+  describe oc_id do
+    its('last_entry') { should be_empty }
+  end
+end
