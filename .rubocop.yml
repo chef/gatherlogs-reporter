@@ -42,3 +42,7 @@ Style/NumericPredicate:
 
 Metrics/ClassLength:
   Max: 200
+
+# These are ugly 
+Style/ConditionalAssignment:
+  Enabled: false
