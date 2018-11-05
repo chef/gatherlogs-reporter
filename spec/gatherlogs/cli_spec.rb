@@ -90,7 +90,34 @@ RSpec.describe Gatherlogs::CLI do
       returns: [0, 100, 101]
     ) { double('shellout', stdout: '{ "test": "bar" }', stderr: 'foo') }
 
-    expect(cli.inspec_exec('chef-server')).to eq('test' => 'bar')
+    expect(cli.inspec_exec('.', 'chef-server')).to eq('test' => 'bar')
+  end
+
+  it 'should extract files' do
+    expect(cli).to receive(:shellout!).with(
+      [
+        'tar', 'xvf', 'abc.gz', '-C', 'somepath', '--strip-components', '2'
+      ]
+    )
+
+    cli.extract_bundle('abc.gz', 'somepath')
+  end
+
+  it 'should not try to fetch files if no url is given' do
+    expect(cli.fetch_remote_tar(nil)).to be_nil
+  end
+
+  it 'should create a tempfile for the download' do
+    expect(Tempfile).to receive(:new).with('gatherlogs') {
+      double('tempfile', path: '/foo/gatherlogs.0123.gz', close: true)
+    }
+    expect(cli).to receive(:shellout!).with(
+      [
+        'wget', 'http://test.test', '-O', '/foo/gatherlogs.0123.gz'
+      ]
+    )
+
+    expect(cli.fetch_remote_tar('http://test.test')).to eq '/foo/gatherlogs.0123.gz'
   end
 
   context 'printing reports' do

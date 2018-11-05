@@ -62,16 +62,14 @@ class LogAnalysis < Inspec.resource(1)
 
     return [] unless File.exist?(logfile)
 
-    if inspec.os.family == 'darwin'
-      grep_flag = '-E'
-    else
-      grep_flag = '-P'
-    end
+    grep_flag = ''
+    grep_flag += '-i ' if @options[:case_sensitive] != true
+    grep_flag += inspec.os.family == 'darwin' ? '-E' : '-P'
 
     cmd << if @options[:a2service]
-             "grep -i '#{@options[:a2service]}' #{logfile} | grep -i #{grep_flag} '#{grep_expr}'"
+             "grep -i '#{@options[:a2service]}' #{logfile} | grep #{grep_flag} '#{grep_expr}'"
            else
-             "grep -i #{grep_flag} '#{grep_expr}' #{logfile}"
+             "grep #{grep_flag} '#{grep_expr}' #{logfile}"
            end
 
     command = inspec.command(cmd.join(' | '))
