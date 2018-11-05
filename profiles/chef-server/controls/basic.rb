@@ -28,7 +28,7 @@ if license.exists?
   control '020.gatherlogs.chef-server.license_info' do
     title 'Include any configure license node count'
 
-    tag system: { 'License count': license.last.split(/\s+/).last }
+    tag system: { 'License count': license.last.split('=').last }
   end
 end
 
