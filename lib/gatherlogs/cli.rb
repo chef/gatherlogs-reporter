@@ -2,6 +2,7 @@ require 'json'
 require 'clamp'
 require 'fileutils'
 require 'logger'
+require 'tempfile'
 
 require 'gatherlogs'
 require 'gatherlogs/shellout'
@@ -14,7 +15,7 @@ module Gatherlogs
     include Gatherlogs::Output
     include Gatherlogs::Shellout
 
-    attr_accessor :current_log_path, :remote_cache_dir
+    attr_accessor :current_log_path, :tmp_cache_file
     attr_writer :profiles
 
     option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection',
@@ -41,7 +42,7 @@ module Gatherlogs
       enable_colors
       @profiles = nil
       @current_log_path = nil
-      @remote_cache_dir = nil
+      @tmp_cache_file = nil
     end
 
     def show_versions
@@ -70,7 +71,7 @@ module Gatherlogs
 
       output = log_working_dir do |log_path|
         product ||= detect_product(log_path)
-        reporter.report(inspec_exec(product))
+        reporter.report(inspec_exec(log_path, product))
       end
 
       print_report('System report', output[:system_info])
@@ -82,14 +83,7 @@ module Gatherlogs
 
     def detect_product(log_path)
       debug 'Attempting to detect gatherlogs product...'
-      product = Gatherlogs::Product.detect(log_path)
-      if product.nil?
-        debug 'Could not detect product'
-      else
-        debug "Detected '#{product}' files"
-      end
-
-      product
+      Gatherlogs::Product.detect(log_path)
     end
 
     def show_profiles
@@ -140,36 +134,38 @@ module Gatherlogs
                            fetch_remote_tar(remote_url)
                          end
 
-      debug("Using log_path: #{current_log_path}")
-
-      Dir.chdir(current_log_path) do
-        return yield '.'
+      if File.directory?(current_log_path)
+        debug("Using log_path: #{current_log_path}")
+        return yield current_log_path
+      else
+        Dir.mktmpdir do |work_dir|
+          extract_bundle(current_log_path, work_dir)
+          return yield work_dir
+        end
       end
     ensure
-      if remote_cache_dir && File.exist?(remote_cache_dir)
-        FileUtils.remove_entry(remote_cache_dir)
-      end
+      tmp_cache_file&.unlink
+    end
+
+    def extract_bundle(filename, path)
+      cmd = [
+        'tar', 'xvf', filename, '-C', path,
+        '--strip-components', '2'
+      ]
+      shellout!(cmd)
     end
 
     def fetch_remote_tar(url)
       return if url.nil?
 
       info 'Fetching remote gatherlogs bundle'
-      @remote_cache_dir = Dir.mktmpdir('gatherlogs')
-      debug "Remote cache dir: #{@remote_cache_dir}"
+      @tmp_cache_file = ::Tempfile.new('gatherlogs')
+      @tmp_cache_file.close
+      debug "tmp_cache_file: #{@tmp_cache_file}"
 
-      extension = url.split('.').last
-      local_filename = File.join(remote_cache_dir, "gatherlogs.#{extension}")
+      shellout!(['wget', url, '-O', @tmp_cache_file.path])
 
-      shellout!(['wget', url, '-O', local_filename])
-
-      cmd = [
-        'tar', 'xvf', local_filename, '-C', remote_cache_dir,
-        '--strip-components', '2'
-      ]
-      shellout!(cmd)
-
-      remote_cache_dir
+      @tmp_cache_file.path
     end
 
     def find_profile_path(profile)
@@ -194,7 +190,7 @@ module Gatherlogs
       disable_colors if monochrome?
     end
 
-    def inspec_exec(product)
+    def inspec_exec(path, product)
       signal_usage_error 'Please specify a profile to use' if product.nil?
       info "Running inspec profile for #{product}..."
 
@@ -203,9 +199,11 @@ module Gatherlogs
       cmd = [
         'inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json'
       ]
-      inspec = shellout!(cmd, returns: [0, 100, 101])
-      debug inspec.stderr unless inspec.stderr.empty?
-      JSON.parse(inspec.stdout)
+      Dir.chdir(path) do
+        inspec = shellout!(cmd, returns: [0, 100, 101])
+        debug inspec.stderr unless inspec.stderr.empty?
+        JSON.parse(inspec.stdout)
+      end
     end
   end
 end

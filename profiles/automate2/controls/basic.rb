@@ -107,7 +107,7 @@ control 'gatherlogs.automate2.sysctl-settings' do
   end
 end
 
-failed_preflight_checks = log_analysis('chef-automate_preflight-check.txt', 'FAIL')
+failed_preflight_checks = log_analysis('chef-automate_preflight-check.txt', 'FAIL', case_sensitive: true)
 control 'gatherlogs.automate2.failed_preflight_checks' do
   impact 1.0
   title 'Check automate preflight output for any failed tests'
@@ -123,7 +123,7 @@ Please check the chef-automate_preflight-check.txt for ways to remediate the fai
   tag summary: failed_preflight_checks.messages
 
   describe failed_preflight_checks do
-    its('hits') { should cmp == 1 }
+    its('hits') { should cmp <= 1 }
   end
 end
 

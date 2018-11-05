@@ -7,4 +7,4 @@ _gatherlog_profiles() {
   reply=("${(ps:\n:)completions}")
 }
 
-compctl -K _gatherlog_profiles -x 's[--]' -k '(path debug all profiles verbose version)' -- check_logs
+compctl -K _gatherlog_profiles -x 'c[-1,--path]' -f - 's[--]' -k '(path debug all profiles verbose version)' -- check_logs
