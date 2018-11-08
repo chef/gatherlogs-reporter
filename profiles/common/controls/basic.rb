@@ -89,3 +89,26 @@ control 'gatherlogs.common.dmesg-nf_conntrack-table-full-error' do
     its('last_entry') { should be_empty }
   end
 end
+
+
+xfs_errors = log_analysis('dmesg.txt', 'XFS .* error .* returned', case_sensitive: true)
+xfs_shutdown = log_analysis('dmesg.txt', 'xfs_do_force_shutdown')
+
+control 'gatherlogs.common.xfs_disk_error' do
+  title 'Check to see if XFS is reporting any disk errors'
+  desc "
+XFS is reporting errors, this likely means that a filesystem has
+encountered a runtime error and has shut down.  Check the rest of the dmesg or
+kernel logs to see what might have lead to this event.
+  "
+
+  tag summary: [xfs_errors.summary, xfs_shutdown.summary]
+
+  describe xfs_errors do
+    its('last_entry') { should be_empty }
+  end
+
+  describe xfs_shutdown do
+    its('last_entry') { should be_empty }
+  end
+end
