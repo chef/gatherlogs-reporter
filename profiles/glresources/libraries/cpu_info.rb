@@ -17,8 +17,6 @@ class CpuInfo < Inspec.resource(1)
   end
 
   def cpus
-    return [] unless exists?
-
     @cpus ||= content.select { |l| l.match?(CPU_NAME_REGEXP) }
   end
 
@@ -44,6 +42,8 @@ class CpuInfo < Inspec.resource(1)
   end
 
   def read_content
-    cpu_file.content.lines if exists?
+    return [] unless exists?
+
+    cpu_file.content.lines
   end
 end
