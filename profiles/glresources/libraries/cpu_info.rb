@@ -4,6 +4,10 @@ class CpuInfo < Inspec.resource(1)
 
   attr_accessor :content
 
+  # This is needed because some arches like POWER8 uses a cpu header
+  # instead of model name like Intel systems.
+  CPU_NAME_REGEXP = /model name|cpu\s+:/.freeze
+
   def initialize
     @content = read_content
   end
@@ -12,18 +16,19 @@ class CpuInfo < Inspec.resource(1)
     cpu_file.exist?
   end
 
-  def total
-    return 0 if content.nil?
+  def cpus
+    @cpus ||= content.select { |l| l.match?(CPU_NAME_REGEXP) }
+  end
 
-    cpus = content.lines.select { |l| l.match?(/model name/) }
+  def total
     cpus.length
   end
 
   def model_name
-    return 'Unknown' if content.nil?
+    info = cpus.first.split(/\s+:\s+/).last unless cpus.empty?
+    info ||= 'Unknown'
 
-    cpus = content.lines.select { |l| l.match?(/model name/) }
-    cpus.first.split(/\s+:\s+/).last
+    info
   end
 
   def cpu_file
@@ -37,6 +42,8 @@ class CpuInfo < Inspec.resource(1)
   end
 
   def read_content
-    cpu_file.content if exists?
+    return [] unless exists?
+
+    cpu_file.content.lines
   end
 end
