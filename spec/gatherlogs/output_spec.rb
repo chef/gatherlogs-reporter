@@ -65,11 +65,11 @@ RSpec.describe Gatherlogs::Output do
   end
 
   it 'should default to returning text with 4 spaces' do
-    expect(test_output.tabbed_text("123\n")).to eq "123\n    "
+    expect(test_output.tabbed_text("123\nabc")).to eq "123\n    abc"
   end
 
   it 'should add additional spaces' do
-    expect(test_output.tabbed_text("123\n", 2)).to eq "123\n      "
+    expect(test_output.tabbed_text("123\nabc", 2)).to eq "123\n      abc"
   end
 
   it 'should return text with labels' do

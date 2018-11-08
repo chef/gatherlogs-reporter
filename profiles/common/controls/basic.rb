@@ -90,7 +90,6 @@ control 'gatherlogs.common.dmesg-nf_conntrack-table-full-error' do
   end
 end
 
-
 xfs_errors = log_analysis('dmesg.txt', 'XFS .* error .* returned', case_sensitive: true)
 xfs_shutdown = log_analysis('dmesg.txt', 'xfs_do_force_shutdown')
 

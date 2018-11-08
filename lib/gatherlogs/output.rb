@@ -73,7 +73,7 @@ module Gatherlogs
 
     def labeled_output(label, output, override_colors = {})
       return if output.strip.empty?
-      
+
       colors = { label: INFO, output: :nothing }.merge(override_colors)
 
       label_output = colorize(label, colors[:label])
