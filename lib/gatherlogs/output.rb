@@ -68,10 +68,12 @@ module Gatherlogs
     # Make sure that we tab over the output for multiline text so that it lines
     # up with the rest of the output.
     def tabbed_text(text, spaces = 0)
-      Array(text).join("\n").gsub("\n", "\n#{' ' * (4 + spaces.to_i)}")
+      Array(text).join("\n").gsub("\n", "\n#{' ' * (4 + spaces.to_i)}").strip
     end
 
     def labeled_output(label, output, override_colors = {})
+      return if output.strip.empty?
+
       colors = { label: INFO, output: :nothing }.merge(override_colors)
 
       label_output = colorize(label, colors[:label])

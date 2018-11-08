@@ -2,10 +2,10 @@ class LogAnalysis < Inspec.resource(1)
   name 'log_analysis'
   desc 'Parse log files to find issues'
 
-  attr_accessor :logfile, :grep_expr, :messages
+  attr_accessor :logfile, :search, :messages
   def initialize(log, expr, options = {})
     @options = options || {}
-    @grep_expr = expr
+    @search = expr
     @logfile = log
     @messages = read_content
   end
@@ -37,8 +37,10 @@ class LogAnalysis < Inspec.resource(1)
   end
 
   def summary
-    <<~EOS.strip
-      Found #{hits} messages about '#{grep_expr}'
+    return '' if hits.zero?
+
+    <<~EOS
+      Found #{hits} messages about '#{search}'
       Last entry: #{last_entry}
     EOS
   end
@@ -52,7 +54,7 @@ class LogAnalysis < Inspec.resource(1)
   end
 
   def to_s
-    "log_analysis(#{logfile}, #{grep_expr})"
+    "log_analysis(#{logfile}, #{search})"
   end
 
   private
@@ -62,15 +64,16 @@ class LogAnalysis < Inspec.resource(1)
 
     return [] unless File.exist?(logfile)
 
-    grep_flag = ''
-    grep_flag += '-i ' if @options[:case_sensitive] != true
-    grep_flag += inspec.os.family == 'darwin' ? '-E' : '-P'
+    flags = ''
+    flags += '-i ' if @options[:case_sensitive] != true
+    flags += inspec.os.family == 'darwin' ? '-E' : '-P'
 
-    cmd << if @options[:a2service]
-             "grep -i '#{@options[:a2service]}' #{logfile} | grep #{grep_flag} '#{grep_expr}'"
-           else
-             "grep #{grep_flag} '#{grep_expr}' #{logfile}"
-           end
+    if @options[:a2service]
+      cmd << "grep -i '#{@options[:a2service]}' #{logfile}"
+      cmd << "grep #{flags} '#{search}'"
+    else
+      cmd << "grep #{flags} '#{search}' #{logfile}"
+    end
 
     command = inspec.command(cmd.join(' | '))
 
