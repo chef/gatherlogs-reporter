@@ -45,14 +45,20 @@ end
 
 services = service_status(:automate)
 
-services.internal do |service|
-  control "gatherlogs.automate.internal_service_status.#{service.name}" do
-    title "check that #{service.name} service is running"
-    desc "
-    Internal #{service.name} service is not running or has a short runtime, check the logs
-    and make sure the service is not flapping.
-    "
+control 'gatherlogs.automate.internal_service_status' do
+  title 'check that Automate internal services are running'
+  desc "
+  One or more Automate services are not running or have a short runtime,
+  check the logs and make sure the service are not flapping.
+  "
 
+  tag verbose: true
+
+  describe services do
+    it { should exist }
+  end
+
+  services.internal do |service|
     describe service do
       its('status') { should eq 'run' }
       its('runtime') { should cmp >= 80 }

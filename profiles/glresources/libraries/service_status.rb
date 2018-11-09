@@ -24,7 +24,7 @@ class ServiceStatus < Inspec.resource(1)
   end
 
   def exists?
-    inspec.file(status_file).exists?
+    inspec.file(status_file).exist?
   end
 
   def internal
@@ -37,6 +37,10 @@ class ServiceStatus < Inspec.resource(1)
     @content[:external].each do |_service, service_object|
       yield service_object
     end
+  end
+
+  def to_s
+    "service log #{status_file}"
   end
 
   private
