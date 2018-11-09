@@ -28,12 +28,16 @@ services = service_status(:automate2)
 control '000.gatherlogs.automate2.internal_service_status' do
   title 'check that Automate services are running'
   desc "
-There was a problem with one or more services in Automate.
-Please check that it's running, doesn't have a short run time, or the
-health checks are reporting an issue.
+One or more Automate services are reporting issues. Please check for any
+services that might be failed, have a short run time or failing their health
+checks.
 "
 
   tag verbose: true
+
+  describe services do
+    it { should exist }
+  end
 
   services.internal do |service|
     describe service do
