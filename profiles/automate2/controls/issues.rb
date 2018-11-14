@@ -126,3 +126,20 @@ control 'gatherlogs.automate2.butterfly_dat_error' do
     its('last_entry') { should be_empty }
   end
 end
+
+# FATAL:  sorry, too many clients already
+pg_client_count = log_analysis('journalctl_chef-automate.txt', 'FATAL:\s+sorry, too many clients already', a2service: 'automate-postgresql.default')
+control 'gatherlgos.automate2.postgresql_too_many_clients_error' do
+  title 'Check to see if PostgreSQL is complaining about too many client connections'
+
+  desc "
+There appears to be too many client connections to PostgreSQL, this is a non-fatal issue
+as connections should be queued.
+"
+
+  tag summary: pg_client_count.summary
+
+  describe pg_client_count do
+    its('last_entry') { should be_empty }
+  end
+end
