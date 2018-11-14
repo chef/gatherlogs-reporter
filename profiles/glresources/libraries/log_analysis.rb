@@ -5,6 +5,11 @@ class LogAnalysis < Inspec.resource(1)
   attr_accessor :logfile, :search, :messages
   def initialize(log, expr, options = {})
     @options = options || {}
+
+    # setting this default fairly high, most logs are limited to 10000 lines
+    # except for Automate v2 which includes the entire journalctl log output.
+    @options[:log_limit] ||= 100000
+
     @search = expr
     @logfile = log
     @messages = read_content
@@ -68,14 +73,9 @@ class LogAnalysis < Inspec.resource(1)
     flags += '-i ' if @options[:case_sensitive] != true
     flags += inspec.os.family == 'darwin' ? '-E' : '-P'
 
-    @options[:log_limit] ||= 100000
-    if @options[:a2service]
-      cmd << "tail -n#{@options[:log_limit]} #{logfile}"
-      cmd << "grep -i '#{@options[:a2service]}'"
-      cmd << "grep #{flags} '#{search}'"
-    else
-      cmd << "grep #{flags} '#{search}' #{logfile}"
-    end
+    cmd << "tail -n#{@options[:log_limit]} #{logfile}"
+    cmd << "grep -i '#{@options[:a2service]}'" if @options[:a2service]
+    cmd << "grep #{flags} '#{search}'"
 
     command = inspec.command(cmd.join(' | '))
 
