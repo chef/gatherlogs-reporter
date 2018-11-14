@@ -46,3 +46,6 @@ Metrics/ClassLength:
 # These are ugly 
 Style/ConditionalAssignment:
   Enabled: false
+
+Style/NumericLiterals:
+  Enabled: false
