@@ -133,8 +133,8 @@ control 'gatherlgos.automate2.postgresql_too_many_clients_error' do
   title 'Check to see if PostgreSQL is complaining about too many client connections'
 
   desc "
-There appears to be too many client connections to PostgreSQL, please contact support
-to see how this can be resolved
+There appears to be too many client connections to PostgreSQL, this is a non-fatal issue
+as connections should be queued.
 "
 
   tag summary: pg_client_count.summary
