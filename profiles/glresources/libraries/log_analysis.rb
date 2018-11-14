@@ -68,8 +68,10 @@ class LogAnalysis < Inspec.resource(1)
     flags += '-i ' if @options[:case_sensitive] != true
     flags += inspec.os.family == 'darwin' ? '-E' : '-P'
 
+    @options[:log_limit] ||= 100000
     if @options[:a2service]
-      cmd << "grep -i '#{@options[:a2service]}' #{logfile}"
+      cmd << "tail -n#{@options[:log_limit]} #{logfile}"
+      cmd << "grep -i '#{@options[:a2service]}'"
       cmd << "grep #{flags} '#{search}'"
     else
       cmd << "grep #{flags} '#{search}' #{logfile}"
