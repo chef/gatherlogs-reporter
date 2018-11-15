@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gatherlogs (0.3.6)
+    gatherlogs (0.3.7)
       clamp (~> 1.3)
       mixlib-shellout (~> 2.4)
       paint (~> 2.0)
