@@ -26,8 +26,10 @@ Gem::Specification.new do |spec|
                    Gemfile Gemfile.lock] + Dir.glob(
                      '{bin,lib,etc,profiles,completions}/**/*', File::FNM_DOTMATCH
                    ).reject { |f| File.directory?(f) || f.match?('inspec.lock') }
-  spec.bindir        = 'bin'
-  spec.executables   = %w[check_logs]
+  if ENV['BUILD_GEM']
+    spec.bindir        = 'bin'
+    spec.executables   = %w[check_logs]
+  end
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bump'
