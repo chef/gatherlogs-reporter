@@ -38,6 +38,7 @@ do_setup_environment() {
   set_runtime_env HOME "$pkg_svc_data_path"
   push_runtime_env GEM_PATH "$GEM_PATH"
   push_buildtime_env GEM_PATH "$GEM_PATH"
+  set_buildtime_env BUILD_GEM "true"
 }
 
 do_unpack() {
