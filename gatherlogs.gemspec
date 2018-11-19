@@ -1,7 +1,7 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-Gem::Specification.new do |spec|
+Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.name          = 'gatherlogs'
   spec.version       = File.read('VERSION')
   spec.authors       = ['Will Fisher']
