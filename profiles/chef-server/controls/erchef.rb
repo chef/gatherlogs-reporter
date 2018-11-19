@@ -4,10 +4,14 @@ control 'gatherlogs.chef-server.erchef_bookshelf_errors' do
   impact 1.0
   title 'Checking presence of checksum timeout for bookshelf'
   desc "
-opscode-erchef is reporting timeouts while trying to check for cookbook file checksums
+opscode-erchef is reporting timeouts while trying to check for cookbook file checksums.
 
-Please contact support to get this problem resolved
-  "
+Please check for the following issues:
+1. DNS resolution works for all DNS servers in `/etc/resolv.conf` or equiv
+2. Correct hostname resolution
+3. Correct api_fqdn settings in /etc/opscode/chef-server.rb
+
+Please contact support to get this problem resolved"
 
   common_logs.erchef do |logfile|
     erchef_bookshelf = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", 'Checking presence of checksum: .* from bucket "bookshelf" has taken longer than 5000 ms')
