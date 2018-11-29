@@ -22,14 +22,36 @@ control '000.gatherlogs.chef-server.package' do
   end
 end
 
-license = log_analysis('etc/opscode/chef-server.rb', 'license')
+control 'gatherlogs.chef-server.postgreql-upgrade-applied' do
+  title 'make sure customer is using chef-server version that includes postgresl 9.6'
+  desc "
+    Chef Server < 12.16.2 uses PostgreSQL 9.2.
 
-if license.exists?
-  control '020.gatherlogs.chef-server.license_info' do
-    title 'Include any configure license node count'
+    Upgrading to a newer version of Chef Server requires a major upgrade to
+    9.6, make sure there is enough free disk space create a copy during the
+    upgrade process.
+  "
 
-    tag system: { 'License count': license.last.split('=').last }
+  impact 0.5
+
+  only_if { chef_server.exists? }
+  describe chef_server do
+    its('version') { should cmp >= '12.16.2' }
   end
+end
+
+license = log_analysis('etc/opscode/chef-server.rb', 'license')
+ldap = log_analysis('etc/opscode/chef-server.rb', "ldap\\\[['\"'\"'\"]host['\"'\"'\"]\\\]")
+sys_info = {
+  'LDAP Enabled' => ldap.exists? ? 'Yes' : 'No'
+}
+sys_info['License count'] = license.last.split('=').last unless license.last.nil?
+
+control '040.gatherlogs.chef-server.system_info' do
+  title 'Include any configuration information for chef-server'
+
+  tag system: sys_info
+  only_if { license.exists? }
 end
 
 control '010.gatherlogs.chef-server.required_memory' do
@@ -74,24 +96,6 @@ Please make sure the system means the minimum hardware requirements
   describe cpu_info do
     # rough calculation for 8gb because of reasons
     its('total') { should cmp >= 4 }
-  end
-end
-
-control 'gatherlogs.chef-server.postgreql-upgrade-applied' do
-  title 'make sure customer is using chef-server version that includes postgresl 9.6'
-  desc "
-    Chef Server < 12.16.2 uses PostgreSQL 9.2.
-
-    Upgrading to a newer version of Chef Server requires a major upgrade to
-    9.6, make sure there is enough free disk space create a copy during the
-    upgrade process.
-  "
-
-  impact 0.5
-
-  only_if { chef_server.exists? }
-  describe chef_server do
-    its('version') { should cmp >= '12.16.2' }
   end
 end
 
