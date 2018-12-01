@@ -98,3 +98,18 @@ that there is enough RAM available on the system
     its('last_entry') { should be_empty }
   end
 end
+
+notifications = log_analysis('var/log/delivery/notifications/current', 'application_start_failure.*eacces')
+control 'gatherlogs.automate.notifications-start-failure' do
+  title 'Check to see if the notifications service is failing to start'
+  desc '
+Notification service is encountering an error accessing a file and is unable to
+start, check the error message for the specific file.
+'
+
+  tag summary: notifications.summary
+
+  describe notifications do
+    its('last_entry') { should be_empty }
+  end
+end
