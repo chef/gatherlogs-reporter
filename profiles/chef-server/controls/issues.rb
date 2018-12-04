@@ -154,3 +154,27 @@ To fix the you will need to remove the offending server.pid file.
     its('last_entry') { should be_empty }
   end
 end
+
+control 'gatherlogs.chef-server.cookbook_segment_request_api_error' do
+  title 'Check to see if there are errors uploading cookbooks'
+  desc "
+erchef is reporting errors during cookbook upload due to an invalid api version
+being specified. Chef-Server 12.18.14 added a new segment free api for cookbook
+uploads and some older versions of tools do not properly send the correct API
+version.
+
+Which means that Berkshelf >= 7.0.5 and ChefDK >= 3.2.30
+should be used.
+"
+
+  common_logs.erchef do |logfile|
+    cookbook_upload = log_analysis(
+      "var/log/opscode/opscode-erchef/#{logfile}",
+      'invalid_key,<<"all_files">>.*req_api_version=1'
+    )
+    tag summary: cookbook_upload.summary unless cookbook_upload.empty?
+    describe cookbook_upload do
+      its('last_entry') { should be_empty }
+    end
+  end
+end
