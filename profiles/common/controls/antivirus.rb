@@ -5,7 +5,7 @@ The system is running an Antivirus agent, this isn't strictly an errors and
 instead just an advisory message as sometimes these agents can interfere with
 some internal processes."
 
-  %w{ symantec ds_agent }.each do |av_agent|
+  %w[symantec ds_agent].each do |av_agent|
     agent_log = log_analysis('ps_fauxww.txt', av_agent)
     tag summary: agent_log.summary unless agent_log.empty?
 

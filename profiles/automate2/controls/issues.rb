@@ -129,7 +129,7 @@ end
 
 # FATAL:  sorry, too many clients already
 pg_client_count = log_analysis('journalctl_chef-automate.txt', 'FATAL:\s+sorry, too many clients already', a2service: 'automate-postgresql.default')
-control 'gatherlgos.automate2.postgresql_too_many_clients_error' do
+control 'gatherlogs.automate2.postgresql_too_many_clients_error' do
   title 'Check to see if PostgreSQL is complaining about too many client connections'
 
   desc "
@@ -140,6 +140,21 @@ as connections should be queued.
   tag summary: pg_client_count.summary
 
   describe pg_client_count do
+    its('last_entry') { should be_empty }
+  end
+end
+
+panic_errors = log_analysis('journalctl_chef-automate.txt', 'panic: runtime error:')
+control 'gatherlogs.automate2.panic_errors' do
+  title 'Check to see if there are any panic errors in Automate logs'
+  desc "
+There appears to be some issue with a service throwing panic errors.  Please
+check the logs for more information about what service is crashing and contact
+support to in order to resolve this issue.
+  "
+
+  tag summary: panic_errors.summary
+  describe panic_errors do
     its('last_entry') { should be_empty }
   end
 end
