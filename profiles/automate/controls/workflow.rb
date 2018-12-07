@@ -10,7 +10,8 @@ To resolve this issue restart the delivery service.
 
   %w[console.log current].each do |logfile|
     runner_worker_terminated = log_analysis(::File.join('var/log/delivery/delivery', logfile), 'terminated with reason:.*jobs_queue')
-    tag summary: runner_worker_terminated.summary
+    tag summary: runner_worker_terminated.summary unless runner_worker_terminated.empty?
+
     describe runner_worker_terminated do # The actual test
       its('last_entry') { should be_empty }
     end
