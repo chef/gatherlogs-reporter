@@ -5,7 +5,7 @@ copyright: Will Fisher
 copyright_email: will@chef.io
 license: Apache-2.0
 summary: InSpec profile for automate2 generated gather-logs
-version: 0.3.7
+version: 0.3.8
 
 depends:
   - name: common
