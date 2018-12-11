@@ -85,3 +85,21 @@ control 'gatherlogs.chef-server.erchef-depsolver-listening' do
     its('hits') { should cmp >= 1 }
   end
 end
+
+error_limit = 100
+control 'gatherlogs.chef-server.erchef-500-errors' do
+  impact 1.0
+  title 'Check for a large number of 500 errors being returned from erchef'
+  desc "
+  Found more than #{error_limit} number of messages with status=500 errors,
+  please review the logs for errors and contact support.
+  "
+
+  common_logs.erchef do |logfile|
+    erchef_errors = log_analysis("var/log/opscode/opscode-erchef/#{logfile}", 'status=500')
+    tag summary: erchef_errors.summary unless erchef_errors.empty?
+    describe erchef_errors do
+      its('count') { should < error_limit }
+    end
+  end
+end
