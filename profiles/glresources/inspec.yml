@@ -5,4 +5,4 @@ copyright: Will Fisher
 copyright_email: will@chef.io
 license: Apache-2.0
 summary: This contains custom resources for inspec for parsing files from chef-product gatherlogs
-version: 0.5.0
+version: 0.5.1

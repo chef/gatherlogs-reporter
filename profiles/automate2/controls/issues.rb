@@ -43,9 +43,9 @@ control 'gatherlogs.automate2.elasticsearch-high-gc-counts' do
   desc "
 The ElasticSearch service is reporting a large number of GC events, this is usually
 an indication that the heap size needs to be increased.
-
-Instructions on how to adjust your ElasticSearch heap size: https://automate.chef.io/docs/configuration/#setting-elasticsearch-heap
   "
+
+  tag kb: 'https://automate.chef.io/docs/configuration/#setting-elasticsearch-heap'
   tag summary: es_gc.summary
 
   describe es_gc do

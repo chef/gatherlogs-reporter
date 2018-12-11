@@ -18,6 +18,7 @@ class LogAnalysis < Inspec.resource(1)
   def hits
     @messages.count
   end
+  alias_method :count, :hits
 
   def first
     @messages.first
@@ -46,6 +47,7 @@ class LogAnalysis < Inspec.resource(1)
 
     <<~EOS
       Found #{hits} messages about '#{search}'
+      File: #{logfile}
       Last entry: #{last_entry}
     EOS
   end
