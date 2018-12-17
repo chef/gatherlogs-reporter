@@ -11,6 +11,7 @@ pkg_deps=(
   core/file
   core/grep
   core/bash
+  core/findutils
   chef/inspec
 )
 
