@@ -64,6 +64,11 @@ module Gatherlogs
       return show_profiles if list_profiles?
 
       generate_report
+    ensure
+      @cleanup_paths.each do |d|
+        debug "cleaning up #{d}"
+        FileUtils.remove_entry(d, true)
+      end
     end
 
     def generate_report
@@ -136,11 +141,6 @@ module Gatherlogs
 
       debug("Using log_path: #{current_log_path}")
       yield current_log_path
-    ensure
-      @cleanup_paths.each do |d|
-        debug "cleaning up #{d}"
-        FileUtils.remove_entry(d, true)
-      end
     end
 
     def extract_remote_file(url)
