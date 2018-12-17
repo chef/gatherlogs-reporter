@@ -15,7 +15,7 @@ module Gatherlogs
     include Gatherlogs::Output
     include Gatherlogs::Shellout
 
-    attr_accessor :current_log_path, :tmp_cache_file
+    attr_accessor :current_log_path
     attr_writer :profiles
 
     option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection',
@@ -42,7 +42,7 @@ module Gatherlogs
       enable_colors
       @profiles = nil
       @current_log_path = nil
-      @tmp_cache_file = nil
+      @cleanup_paths = []
     end
 
     def show_versions
@@ -64,6 +64,11 @@ module Gatherlogs
       return show_profiles if list_profiles?
 
       generate_report
+    ensure
+      @cleanup_paths.each do |d|
+        debug "cleaning up #{d}"
+        FileUtils.remove_entry(d, true)
+      end
     end
 
     def generate_report
@@ -131,20 +136,23 @@ module Gatherlogs
       current_log_path = if remote_url.nil?
                            log_path.dup
                          else
-                           fetch_remote_tar(remote_url)
+                           extract_remote_file(remote_url)
                          end
 
-      if File.directory?(current_log_path)
-        debug("Using log_path: #{current_log_path}")
-        return yield current_log_path
-      else
-        Dir.mktmpdir do |work_dir|
-          extract_bundle(current_log_path, work_dir)
-          return yield work_dir
-        end
-      end
+      debug("Using log_path: #{current_log_path}")
+      yield current_log_path
+    end
+
+    def extract_remote_file(url)
+      remote_file = fetch_remote_tar(url)
+      return if remote_file.nil?
+
+      @cleanup_paths << (tmpdir = Dir.mktmpdir)
+      extract_bundle(remote_file, tmpdir)
+
+      tmpdir
     ensure
-      tmp_cache_file&.unlink
+      FileUtils.remove_entry(remote_file, true)
     end
 
     def extract_bundle(filename, path)
@@ -153,19 +161,29 @@ module Gatherlogs
         '--strip-components', '2'
       ]
       shellout!(cmd)
+      fix_archive_perms(path)
+    end
+
+    # it's possible for an archive to set permissions that prevent us from
+    # accessing or removing files.  This fixes those permissions
+    def fix_archive_perms(path)
+      cmd = "find '#{path}' -type d -exec chmod 755 {} \\\;"
+      shellout!(cmd)
+      cmd = "find '#{path}' -type f -exec chmod 644 {} \\\;"
+      shellout!(cmd)
     end
 
     def fetch_remote_tar(url)
       return if url.nil?
 
       info 'Fetching remote gatherlogs bundle'
-      @tmp_cache_file = ::Tempfile.new('gatherlogs')
-      @tmp_cache_file.close
-      debug "tmp_cache_file: #{@tmp_cache_file}"
+      tmp_cache_file = ::Tempfile.new('gatherlogs')
+      tmp_cache_file.close
+      debug "tmp_cache_file: #{tmp_cache_file.path}"
 
-      shellout!(['wget', url, '-O', @tmp_cache_file.path])
+      shellout!(['wget', url, '-O', tmp_cache_file.path])
 
-      @tmp_cache_file.path
+      tmp_cache_file.path
     end
 
     def find_profile_path(profile)

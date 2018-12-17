@@ -5,8 +5,8 @@ pkg_license=('Apache-2.0')
 pkg_deps=(
   core/tar
   core/bzip2
-  core/wget/1.19.4/20180608102523 # need to pin because inspec uses old version of openssl
-  core/ruby/2.5.1/20180702162818 # need to pin because inspec uses old version of openssl
+  core/wget
+  core/ruby
   core/gzip
   core/file
   core/grep
