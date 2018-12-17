@@ -99,6 +99,12 @@ RSpec.describe Gatherlogs::CLI do
         'tar', 'xvf', 'abc.gz', '-C', 'somepath', '--strip-components', '2'
       ]
     )
+    expect(cli).to receive(:shellout!).with(
+      "find 'somepath' -type d -exec chmod 755 {} \\;"
+    )
+    expect(cli).to receive(:shellout!).with(
+      "find 'somepath' -type f -exec chmod 644 {} \\;"
+    )
 
     cli.extract_bundle('abc.gz', 'somepath')
   end
