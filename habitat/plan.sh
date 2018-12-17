@@ -5,8 +5,10 @@ pkg_license=('Apache-2.0')
 pkg_deps=(
   core/tar
   core/bzip2
-  core/wget
-  core/ruby
+  core/wget/1.19.4/20180608102523 # need to pin because inspec uses old version of openssl
+  core/ruby/2.5.1/20180702162818 # need to pin because inspec uses old version of openssl
+  core/gzip
+  core/file
   core/grep
   core/bash
   chef/inspec
@@ -71,7 +73,7 @@ wrap_bin() {
 
   build_line "Adding wrapper $bin to $real_bin"
   cat <<EOF > "$bin"
-#!$(pkg_path_for core/bash)/bin/sh
+#!$(pkg_path_for core/bash)/bin/bash
 set -e
 
 source $pkg_prefix/RUNTIME_ENVIRONMENT
