@@ -191,7 +191,7 @@ control 'gatherlogs.chef-server.rabbitmq_access_error' do
   '
 
   rmq_access_error = log_analysis(
-    "var/opt/opscode/rabbitmq/log/rabbit@localhost.log",
+    'var/opt/opscode/rabbitmq/log/rabbit@localhost.log',
     '{error,eacces}'
   )
 
