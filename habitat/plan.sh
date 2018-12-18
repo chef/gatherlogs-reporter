@@ -38,7 +38,6 @@ do_setup_environment() {
 
   set_runtime_env GEM_HOME "$GEM_HOME"
   set_buildtime_env GEM_HOME "$GEM_HOME"
-  set_runtime_env HOME "$pkg_svc_data_path"
   push_runtime_env GEM_PATH "$GEM_PATH"
   push_buildtime_env GEM_PATH "$GEM_PATH"
   set_buildtime_env BUILD_GEM "true"
@@ -64,7 +63,6 @@ do_install() {
   popd
 
   wrap_bin 'check_logs'
-  wrap_bin 'server'
 }
 
 # Need to wrap the gatherlogs binary to ensure GEM_HOME/GEM_PATH is correct
@@ -78,7 +76,7 @@ wrap_bin() {
 set -e
 
 source $pkg_prefix/RUNTIME_ENVIRONMENT
-export GEM_PATH GEM_HOME PATH HOME
+export GEM_PATH GEM_HOME PATH
 
 exec $(pkg_path_for core/ruby)/bin/ruby $real_bin \$@
 EOF
