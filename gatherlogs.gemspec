@@ -1,7 +1,7 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
+Gem::Specification.new do |spec|
   spec.name          = 'gatherlogs'
   spec.version       = File.read('VERSION')
   spec.authors       = ['Will Fisher']
@@ -41,8 +41,4 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.add_dependency 'clamp', '~> 1.3'
   spec.add_dependency 'mixlib-shellout', '~> 2.4'
   spec.add_dependency 'paint', '~> 2.0'
-  spec.add_dependency 'puma'
-  spec.add_dependency 'sinatra', '~> 2.0'
-  spec.add_dependency 'string_utf8', '~> 0.1'
-  spec.add_dependency 'zendesk_api'
 end
