@@ -178,3 +178,25 @@ should be used.
     end
   end
 end
+
+control 'gatherlogs.chef-server.rabbitmq_access_error' do
+  title 'Check to see if rabbmit mq is having error accessing files'
+  desc '
+  Rabbitmq is reporting an issue accessing some file(s), please check the
+  log output to see what file is causing issues.
+
+  Common causes:
+  1. Permission issues with ssl certificates
+  2. Corrupted rabbmitmq database files
+  '
+
+  rmq_access_error = log_analysis(
+    'var/opt/opscode/rabbitmq/log/rabbit@localhost.log',
+    '{error,eacces}'
+  )
+
+  tag summary: rmq_access_error.summary
+  describe rmq_access_error do
+    its('last_entry') { should be_empty }
+  end
+end
