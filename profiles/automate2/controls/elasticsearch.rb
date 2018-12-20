@@ -32,3 +32,27 @@ and limit the size of the field being upload to the Chef-server/Automate.
     its('last_entry') { should be_empty }
   end
 end
+
+es_translog_truncated = log_analysis('journalctl_chef-automate.txt', 'misplaced codec footer \(file truncated\?\)', a2service: 'automate-elasticsearch.default')
+control 'gatherlogs.automate2.es_translog_truncated' do
+  title 'Check to see if there are any errors about truncated transaction logs'
+  desc "
+Elasticsearch is reporting errors for possibly truncated or corrupted transaction
+logs.  This can happen if there was a disk full event that occured or if the ES
+service was unexpectedly terminated.
+
+To resolve this:
+1. Stop Automate services
+2. Remove the bad transaction log file
+3. Start the services again.
+  "
+
+  tag kb: [
+    'https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-translog.html#corrupt-translog-truncation'
+  ]
+
+  tag summary: es_translog_truncated.summary
+  describe es_translog_truncated do
+    its('last_entry') { should be_empty }
+  end
+end
