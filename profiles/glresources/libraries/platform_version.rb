@@ -38,10 +38,17 @@ class PlatformVersion < Inspec.resource(1)
   end
 
   def full_info
+    # data = TOML.load(content)
+    # STDERR.puts data.inspect
     if (m = content.match(/DISTRIB_DESCRIPTION="(.*)"/))
       m[1]
     elsif (m = content.match(/PRETTY_NAME="(.*)"/))
-      m[1]
+      v = content.match(/VERSION_ID=(.*)/)
+
+      version = v[1].gsub('"', '')
+      version ||= ''
+
+      "#{m[1]} (#{version})"
     else
       content.lines.map(&:chomp).join(' ')
     end
@@ -60,12 +67,12 @@ class PlatformVersion < Inspec.resource(1)
   private
 
   def platform_file
-    if inspec.file('platform_version.txt').exist?
+    if inspec.file('etc/os-release').exist?
+      inspec.file('etc/os-release')
+    elsif inspec.file('platform_version.txt').exist?
       inspec.file('platform_version.txt')
     elsif inspec.file('etc/lsb-release').exist?
       inspec.file('etc/lsb-release')
-    elsif inspec.file('etc/os-release').exist?
-      inspec.file('etc/os-release')
     else
       inspec.file('invalid')
     end
