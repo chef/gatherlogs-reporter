@@ -45,7 +45,7 @@ class PlatformVersion < Inspec.resource(1)
     elsif (m = content.match(/PRETTY_NAME="(.*)"/))
       v = content.match(/VERSION_ID=(.*)/)
 
-      version = v[1].gsub('"', '')
+      version = v[1].delete('"')
       version ||= ''
 
       "#{m[1]} (#{version})"
