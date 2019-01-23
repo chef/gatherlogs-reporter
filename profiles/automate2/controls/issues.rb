@@ -100,7 +100,13 @@ control 'gatherlogs.automate2.loadbalancer_worker_connections' do
   impact 1.0
   title 'Check to see if Automate is reporting a error with not enough workers for the load balancer'
   desc "
-This is an issue with older version of Automate 2 without persistant connections.  Please upgrade to the latest Automate version.
+This is an issue with older version of Automate 2 without persistant connections.
+Please upgrade to the latest Automate version.
+
+If running a recent version of Automate 2 then check to make sure there are no
+issues with ElasticSearch, if there are a large number of GC events or disk io
+problems then the ingestion process can get backed up and cause take up all the
+available workers.
   "
 
   tag summary: lb_workers.summary
