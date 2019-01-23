@@ -35,9 +35,9 @@ RSpec.describe Gatherlogs::Output do
     end
 
     it 'should print colored log output' do
-      allow(logger_dbl).to receive(:info).with("\e[38;5;77minfo\e[0m")
-      allow(logger_dbl).to receive(:debug).with("\e[38;5;77mdebug\e[0m")
-      allow(logger_dbl).to receive(:error).with("\e[38;5;77merr\e[0m")
+      allow(logger_dbl).to receive(:info).with("\e[38;2;50;205;50minfo\e[0m")
+      allow(logger_dbl).to receive(:debug).with("\e[38;2;50;205;50mdebug\e[0m")
+      allow(logger_dbl).to receive(:error).with("\e[38;2;50;205;50merr\e[0m")
 
       test_output.info('info', green)
       test_output.debug('debug', green)
@@ -45,9 +45,9 @@ RSpec.describe Gatherlogs::Output do
     end
 
     it 'should auto set colors for logged output' do
-      allow(logger_dbl).to receive(:info).with("\e[38;5;77minfo\e[0m")
-      allow(logger_dbl).to receive(:debug).with("\e[38;5;214mdebug\e[0m")
-      allow(logger_dbl).to receive(:error).with("\e[38;5;203merr\e[0m")
+      allow(logger_dbl).to receive(:info).with("\e[38;2;50;205;50minfo\e[0m")
+      allow(logger_dbl).to receive(:debug).with("\e[38;2;255;140;0mdebug\e[0m")
+      allow(logger_dbl).to receive(:error).with("\e[38;2;255;51;51merr\e[0m")
 
       test_output.info('info')
       test_output.debug('debug')
@@ -56,7 +56,7 @@ RSpec.describe Gatherlogs::Output do
   end
 
   it 'should colorize the text' do
-    expect(test_output.colorize('test', green)).to eq "\e[38;5;77mtest\e[0m"
+    expect(test_output.colorize('test', green)).to eq "\e[38;2;50;205;50mtest\e[0m"
   end
 
   it 'should not colorize the text' do
