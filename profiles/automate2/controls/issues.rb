@@ -158,3 +158,21 @@ support to in order to resolve this issue.
     its('last_entry') { should be_empty }
   end
 end
+
+port_exhaustion = log_analysis('ss.txt', 'TIME-WAIT|ESTAB')
+control 'gatherlogs.automate2.port_exhaustion' do
+  title 'Check to see if all the available ports have been used by Automate'
+  desc "
+There appears to be a large number of open ports on the Automate system.  This
+can cause high cpu and memory usage on the system as services queue requests
+waiting for a port to become available for message processing.
+
+If the ports are being used by Automate you will need to restart the services
+using `chef-automate restart-services`
+  "
+
+  tag verbose: true
+  describe port_exhaustion do
+    its('count') { should be < 10000 }
+  end
+end
