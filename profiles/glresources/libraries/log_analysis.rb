@@ -8,7 +8,7 @@ class LogAnalysis < Inspec.resource(1)
 
     # setting this default fairly high, most logs are limited to 10000 lines
     # except for Automate v2 which includes the entire journalctl log output.
-    @options[:log_limit] ||= 100000
+    @options[:log_limit] ||= 500000
 
     @search = expr
     @logfile = log
