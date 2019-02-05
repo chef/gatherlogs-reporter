@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gatherlogs (1.0.9)
+    gatherlogs_reporter (1.0.9)
       clamp (~> 1.3)
       mixlib-shellout (~> 2.4)
       paint (~> 2.0)
@@ -59,7 +59,7 @@ PLATFORMS
 DEPENDENCIES
   bump
   bundler (>= 1.16)
-  gatherlogs!
+  gatherlogs_reporter!
   rake (~> 10.0)
   rspec (~> 3.0)
   rubocop
