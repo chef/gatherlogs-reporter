@@ -165,6 +165,28 @@ support to in order to resolve this issue.
   end
 end
 
+certificate_permissions = log_analysis('journalctl_chef-automate.txt', 'failed to generate TLS certificate: failed to generate deployment-service TLS certificate: certstrap sign failure: Get CA certificate error: permission denied', a2service: 'deployment-service.default')
+control 'gatherlogs.automate2.rootcert_permissions_error' do
+  title 'Check for permission error when generating root TLS certificate'
+  desc "
+Automate was unable to generate a new root TLS certificate, this is needed to
+create certificates used for service communication.
+
+To fix this error you will need to manually modify the permissons in
+`/hab/svc/deployment-service/data/`.
+
+```
+chmod 0440 /hab/svc/deployment-service/data/Chef_Automate*.key
+chmod 0444 /hab/svc/deployment-service/data/Chef_Automate*.crt /hab/svc/deployment-service/data/Chef_Automate*.crl
+```
+  "
+
+  tag summary: certificate_permissions.summary
+  describe certificate_permissions do
+    its('last_entry') { should be_empty }
+  end
+end
+
 port_exhaustion = log_analysis('ss.txt', 'TIME-WAIT|ESTAB')
 control 'gatherlogs.automate2.port_exhaustion' do
   title 'Check to see if all the available ports have been used by Automate'
