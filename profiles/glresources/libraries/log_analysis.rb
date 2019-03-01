@@ -48,7 +48,7 @@ class LogAnalysis < Inspec.resource(1)
     <<~EOS
       Found #{hits} messages about '#{search}'
       File: #{logfile}
-      Last entry: #{last_entry}
+      Last entry: #{last_entry[0..2000]}
     EOS
   end
 
