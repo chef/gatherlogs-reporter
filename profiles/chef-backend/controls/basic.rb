@@ -101,3 +101,20 @@ running, doesn't have a short run time, or the health checks are reporting an is
     end
   end
 end
+
+# the clock difference against peer d4fed0cf06663880 is too high
+clocksync = log_analysis('var/log/chef-backend/etcd/current', 'the clock difference against peer .* is too high')
+control 'gatherlogs.chef-backend.clock_out_of_sync' do
+  impact 1.0
+  title 'Check to see if ETCD is reporting issues with clocks being out of sync'
+  desc "
+ETCD is reporting issues with the local system clocking being too far out of sync with other peers.
+
+Ensure that `chrony` or `ntpd` services are installed and running to keep the clocks in sync.
+  "
+  tag summary: clocksync.summary
+
+  describe clocksync do
+    its('last_entry') { should be_empty }
+  end
+end
