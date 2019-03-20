@@ -102,7 +102,7 @@ running, doesn't have a short run time, or the health checks are reporting an is
   end
 end
 
-#the clock difference against peer d4fed0cf06663880 is too high
+# the clock difference against peer d4fed0cf06663880 is too high
 clocksync = log_analysis('var/log/chef-backend/etcd/current', 'the clock difference against peer .* is too high')
 control 'gatherlogs.chef-backend.clock_out_of_sync' do
   impact 1.0
