@@ -1,4 +1,4 @@
-pkg_name=gatherlogs
+pkg_name=gatherlogs_reporter
 pkg_origin=will
 pkg_maintainer="Will Fisher <will@chef.io>"
 pkg_license=('Apache-2.0')
@@ -50,25 +50,27 @@ do_unpack() {
 
 do_build() {
   pushd "$HAB_CACHE_SRC_PATH/$pkg_dirname/"
-    build_line "gem build gatherlogs.gemspec ${GEM_HOME}"
+    build_line "gem build $pkg_name.gemspec ${GEM_HOME}"
 
-    gem build gatherlogs.gemspec
+    gem build ${pkg_name}.gemspec
   popd
 }
 
 do_install() {
   pushd "$HAB_CACHE_SRC_PATH/$pkg_dirname/"
-    build_line "Gem install gatherlogs gem"
-    gem install gatherlogs-*.gem --no-document
+    build_line "Gem install ${pkg_name} gem"
+    gem install ${pkg_name}-*.gem --no-document
   popd
 
+  wrap_bin 'gatherlogs_report'
+  # old bin name, kept for now for backwards compatability.
   wrap_bin 'check_logs'
 }
 
 # Need to wrap the gatherlogs binary to ensure GEM_HOME/GEM_PATH is correct
 wrap_bin() {
   local bin="$pkg_prefix/bin/$1"
-  local real_bin="$GEM_PATH/gems/gatherlogs-${pkg_version}/bin/$1"
+  local real_bin="$GEM_PATH/gems/${pkg_name}-${pkg_version}/bin/$1"
 
   build_line "Adding wrapper $bin to $real_bin"
   cat <<EOF > "$bin"
