@@ -1,4 +1,4 @@
-# GatherLog reporter with Inspec
+# Gatherlog reports with Inspec
 
 [![Build Status](https://travis-ci.com/teknofire/gatherlogs-inspec-profiles.svg?branch=master)](https://travis-ci.com/teknofire/gatherlogs-inspec-profiles)
 
@@ -11,22 +11,22 @@ This is a set of tools to generate reports from gather-log bundles for various C
 
 1. inspec (currently tested with v3 but should work with v2)
 2. ruby 2.5+
-3. bundler
+3. bundler >= 2.0
 
 ## Installation
 
 1. Download code and the gems
 
   ```bash
-  git clone https://github.com/teknofire/gatherlogs-inspec-profiles
-  cd gatherlogs-inspec-profiles
+  git clone https://github.com/teknofire/gatherlogs-inspec-profiles gatherlogs-reporter
+  cd gatherlogs-reporter
   bundle
   ```
 
-2. Add `gatherlogs-inspec-profiles/bin` to your path, put this in your `.bashrc` or the equivalent file for your shell.
+2. Add `gatherlogs-reporter/bin` to your path, put this in your `.bashrc` or the equivalent file for your shell.
 
   ```
-  export PATH=$PATH:PATH/TO/gatherlogs-inspec-profiles/bin;
+  export PATH=$PATH:PATH/TO/gatherlogs-reporter/bin;
   ```
 
 ## Usage
@@ -44,7 +44,7 @@ Currently available profiles
 To see all the available options use
 
 ```
-check_logs --help
+gatherlogs_report --help
 ```
 
 ## Example output
@@ -110,13 +110,9 @@ Inspec report
 
 ## Autocompletions
 
-If you use the zsh shell you can add autocompletions for the `check_log` command by adding the following
+If you use the zsh shell you can add autocompletions for the `gatherlogs_report` command by adding the following
 to your `~/.zshrc` config
 
 ```
-source "/PATH/TO/gatherlogs/completions/check_logs.zsh"
+source "/PATH/TO/gatherlogs/completions/gatherlogs_report.zsh"
 ```
-
-## TODO
-
-* [ ] It would be nice if we could test to see if `noexec` is set on `/tmp`

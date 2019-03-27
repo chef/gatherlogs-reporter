@@ -9,10 +9,7 @@ Metrics/LineLength:
     - profiles/**/*.rb
     - gatherlogs.gemspec
     - spec/**/*.rb
-
-Metrics/BlockLength:
-  Exclude:
-    - spec/**/*.rb
+    - gatherlogs_reporter.gemspec
 
 Style/Documentation:
   Enabled: false
