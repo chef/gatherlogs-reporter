@@ -46,6 +46,20 @@ control 'gatherlogs.common.umask' do
   end
 end
 
+control 'gatherlogs.common.portusage' do
+  title 'check ss_ontap.txt for excessive port usage'
+  desc "
+    Generally gather-logs bundles show less than 200 ports in use, this control
+    checks the size of the ss_ontap.txt file and alerts if it's roughly double that.
+  "
+  only_if { file('ss_ontap.txt').exist? }
+  tag verbose: true
+
+  describe file('ss_ontap.txt') do
+    its('size') { should < 40000 }
+  end
+end
+
 dmesg_oom = log_analysis('dmesg.txt', 'Out of memory: Kill process')
 
 control 'gatherlogs.common.dmesg-oom-killer-invoked' do
