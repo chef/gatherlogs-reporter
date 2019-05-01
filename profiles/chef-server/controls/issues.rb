@@ -188,7 +188,7 @@ file io is unable to keep up with the writing the keys to disk.
 
 To workaround this issue increase the keygen timeout config in /etc/opscode/chef-server.rb:
 
-`opscode_erchef['keygen_timeout'] = 5000`
+opscode_erchef['keygen_timeout'] = 5000
 "
 
   common_logs.erchef do |logfile|
