@@ -184,7 +184,7 @@ control 'gatherlogs.chef-server.keygen_timeout_issue' do
   desc "
 erchef is reporting timeout errors while trying to generate keys for the keygen
 cache.  This usually indicates that there is a high load on the system or the
-file io is unable to keep up with the writing the keys to disk.
+file io is unable to keep up with the writing keys to disk.
 
 To workaround this issue increase the keygen timeout config in /etc/opscode/chef-server.rb:
 
@@ -229,7 +229,8 @@ control 'gatherlogs.common.too_many_openssl_processes_running' do
   title 'Check to see if there are too many openssl genrsa processes running'
   desc "
 If the chef-server keygen has issues populating the cache it may leave several
-openssl genrsa processes behind.  Which will cause a high amount of cpu load."
+openssl genrsa processes behind.  This will cause a high amount of cpu load on the system and may
+interfere with the operation of other chef-server processes."
 
   openssl_processes = log_analysis('ps_fauxww.txt', 'openssl genrsa')
   tag summary: openssl_processes.summary unless openssl_processes.empty?
