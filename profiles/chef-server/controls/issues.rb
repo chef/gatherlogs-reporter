@@ -231,7 +231,6 @@ control 'gatherlogs.common.too_many_openssl_processes_running' do
 If the chef-server keygen has issues populating the cache it may leave several
 openssl genrsa processes behind.  Which will cause a high amount of cpu load."
 
-
   openssl_processes = log_analysis('ps_fauxww.txt', 'openssl genrsa')
   tag summary: openssl_processes.summary unless openssl_processes.empty?
 
