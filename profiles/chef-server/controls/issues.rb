@@ -184,7 +184,7 @@ control 'gatherlogs.chef-server.keygen_timeout_issue' do
   desc "
 erchef is reporting timeout errors while trying to generate keys for the keygen
 cache.  This usually indicates that there is a high load on the system or the
-file io is unable to keep up with the writing keys to disk.
+file IO is unable to keep up with writing the keys to disk.
 
 To workaround this issue increase the keygen timeout config in /etc/opscode/chef-server.rb:
 
