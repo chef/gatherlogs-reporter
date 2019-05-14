@@ -113,3 +113,21 @@ kernel logs to see what might have lead to this event.
     its('last_entry') { should be_empty }
   end
 end
+
+
+common_logs.ss_ontap do |ss_ontap|
+  port_exhaustion = log_analysis(ss_ontap, 'TIME-WAIT|ESTAB')
+  control "gatherlogs.common.port_exhaustion.#{ss_ontap}" do
+    title 'Check to see if all the available ports have been used'
+    desc "
+  There appears to be a large number of open ports on the system.  This
+  can cause high cpu and memory usage on the system as services queue requests
+  waiting for a port to become available for message processing.
+    "
+
+    tag verbose: true
+    describe port_exhaustion do
+      its('count') { should be < 10000 }
+    end
+  end
+end
