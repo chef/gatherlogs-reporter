@@ -114,7 +114,6 @@ kernel logs to see what might have lead to this event.
   end
 end
 
-
 common_logs.ss_ontap do |ss_ontap|
   port_exhaustion = log_analysis(ss_ontap, 'TIME-WAIT|ESTAB')
   control "gatherlogs.common.port_exhaustion.#{ss_ontap}" do
