@@ -122,6 +122,12 @@ common_logs.ss_ontap do |ss_ontap|
   There appears to be a large number of open ports on the system.  This
   can cause high cpu and memory usage on the system as services queue requests
   waiting for a port to become available for message processing.
+
+  This can sometimes happen if a service like ElasticSearch is unable to process
+  requests fast enough. Try restarting the Chef-Server/Automate services and
+  monitor the system to see if it starts to happen again. If so ensure there
+  are no performance issues with the system due to high I/O wait times or
+  other services using a large amount of memory.
     "
 
     tag verbose: true
