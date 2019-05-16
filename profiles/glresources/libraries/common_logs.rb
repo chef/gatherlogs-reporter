@@ -28,4 +28,14 @@ class CommonLogs < Inspec.resource(1)
       files
     end
   end
+
+  def ss_ontap
+    # automate 2 uses a different filename
+    files = %w[ss_ontap.txt ss.txt]
+    if block_given?
+      files.each { |f| yield f }
+    else
+      files
+    end
+  end
 end
