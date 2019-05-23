@@ -8,11 +8,11 @@ class DiskUsage < Inspec.resource(1)
   end
 
   def mount(name)
-    @content[name]
+    @content[name] || DiskUsageItem.new()
   end
 
   def exists?(name)
-    @content.key?(name)
+    mount(name).exists?
   end
 
   def each
@@ -20,6 +20,8 @@ class DiskUsage < Inspec.resource(1)
       yield @content[mount]
     end
   end
+
+  private
 
   # need to normalize the filesize
   def to_filesize(size)
@@ -38,8 +40,6 @@ class DiskUsage < Inspec.resource(1)
 
     "#{size[0..-1].to_f * units[unit]}M"
   end
-
-  private
 
   def parse_mounts(input)
     diskusage = []
@@ -75,24 +75,30 @@ class DiskUsage < Inspec.resource(1)
     filename = 'df_h.txt'
     f = inspec.file(filename)
 
-    raise Inspec::Exceptions::ResourceSkipped, "Can't read #{filename}" unless f.file?
-
-    f.content
+    if  f.exist?
+      f.content
+    else
+      ''
+    end
   end
 end
 
 class DiskUsageItem
-  def initialize(name, args = {})
+  def initialize(name = nil, args = {})
     @name = name
     @content = args
   end
 
   def method_missing(item)
-    @content[item.to_sym] || super
+    @content[item.to_sym] || nil
   end
 
   def respond_to_missing?(item, include_private = false)
     @content.key?(item.to_sym) || super
+  end
+
+  def exists?
+    !@name.nil?
   end
 
   def to_s

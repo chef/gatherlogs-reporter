@@ -17,7 +17,7 @@ class CpuInfo < Inspec.resource(1)
   end
 
   def cpus
-    @cpus ||= content.select { |l| l.match?(CPU_NAME_REGEXP) }
+    @cpus ||= content.select { |l| l.match?(CPU_NAME_REGEXP) }.map(&:strip)
   end
 
   def total

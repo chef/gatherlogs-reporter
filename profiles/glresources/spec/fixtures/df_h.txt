@@ -1,0 +1,19 @@
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/rootvg-rootlv
+                      9.8G  913M  8.4G  10% /
+tmpfs                  16G  8.0K   16G   1% /dev/shm
+/dev/sda1             756M   88M  631M  13% /boot
+/dev/mapper/rootvg-homelv
+                      9.4G  1.3M  8.9G   1% /home
+/dev/mapper/rootvg-optlv
+                       11G  347M   10G   4% /opt
+/dev/mapper/rootvg-tmplv
+                      3.9G  8.3M  3.7G   1% /tmp
+/dev/mapper/rootvg-usrlv
+                      3.8G  2.0G  1.7G  54% /usr
+/dev/mapper/rootvg-varlv
+                      3.8G  1.2G  2.5G  33% /var
+/dev/mapper/chefvg-var_opt_delivery
+                       79G  174M   75G   1% /var/opt/delivery
+/dev/mapper/chefvg-opt_delivery
+                       20G  1.7G   17G   9% /opt/delivery
