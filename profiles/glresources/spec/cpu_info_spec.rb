@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+# rubocop:disable Metrics/BlockLength
 describe_inspec_resource 'cpu_info' do
   context 'with bad content' do
     before do
@@ -28,7 +29,6 @@ describe_inspec_resource 'cpu_info' do
       expect(resource.total).to eq 0
     end
   end
-
 
   context 'with cpuinfo.txt' do
     before do
@@ -81,3 +81,4 @@ describe_inspec_resource 'cpu_info' do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

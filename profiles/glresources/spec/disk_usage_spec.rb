@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+# rubocop:disable Metrics/BlockLength
 describe_inspec_resource 'disk_usage' do
   context 'with bad content' do
     before do
@@ -48,3 +48,4 @@ describe_inspec_resource 'disk_usage' do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

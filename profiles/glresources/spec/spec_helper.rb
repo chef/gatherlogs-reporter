@@ -71,7 +71,7 @@ class DoubleBuilder
     @test_context.define_singleton_method :backend do
       b = double('backend')
       backend_doubles.each do |backend_double|
-        if backend_double.has_inputs?
+        if backend_double.inputs?
           allow(b).to receive(backend_double.name).with(*backend_double.inputs).and_return(backend_double.outputs)
         else
           allow(b).to receive(backend_double.name).with(no_args).and_return(backend_double.outputs)
@@ -86,13 +86,15 @@ class DoubleBuilder
     @backend_doubles ||= []
   end
 
-  def method_missing(backend_method_name, *args, &block)
+  # rubocop:disable Style/MethodMissingSuper,Style/MissingRespondToMissing
+  def method_missing(backend_method_name, *args)
     backend_double = BackendDouble.new(backend_method_name)
     backend_double.inputs = args unless args.empty?
     backend_doubles.push backend_double
     # NOTE: The block is ignored.
     self
   end
+  # rubocop:enable Style/MethodMissingSuper,Style/MissingRespondToMissing
 
   class InSpecResouceMash < Hashie::Mash
     disable_warnings
@@ -103,24 +105,23 @@ class DoubleBuilder
     return_result = InSpecResouceMash.new(method_signature_as_hash)
     last_double = backend_doubles.last
     results_double_name = "#{last_double.name}_#{last_double.inputs}_RESULTS"
-    last_double.outputs = @test_context.double(results_double_name,return_result)
+    last_double.outputs = @test_context.double(results_double_name, return_result)
     self
   end
 
   # Create a object to hold the backend doubling information
   class BackendDouble
-    class NoInputsSpecifed ; end
+    class NoInputsSpecifed; end
 
     def initialize(name)
       @name = name
       @inputs = NoInputsSpecifed
     end
 
-    def has_inputs?
+    def inputs?
       inputs != NoInputsSpecifed
     end
 
     attr_accessor :name, :inputs, :outputs
   end
-
 end

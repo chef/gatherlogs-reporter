@@ -8,7 +8,7 @@ class DiskUsage < Inspec.resource(1)
   end
 
   def mount(name)
-    @content[name] || DiskUsageItem.new()
+    @content[name] || DiskUsageItem.new
   end
 
   def exists?(name)
@@ -89,9 +89,11 @@ class DiskUsageItem
     @content = args
   end
 
+  # rubocop:disable Style/MethodMissingSuper
   def method_missing(item)
     @content[item.to_sym] || nil
   end
+  # rubocop:enable Style/MethodMissingSuper
 
   def respond_to_missing?(item, include_private = false)
     @content.key?(item.to_sym) || super
