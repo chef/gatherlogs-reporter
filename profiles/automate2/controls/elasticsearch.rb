@@ -92,7 +92,7 @@ To attempt a retry for the shards run
     curl -XPOST localhost:10141/_cluster/reroute?retry_failed
 
 If that gives an error saying the shard is already assigned then you will need to issue a flush to clear
-the sync id and then retry the reroute command above
+the sync id and then retry the above reroute command
 
     curl -XPOST localhost:10141/stats_new/_flush?force=true
   "
