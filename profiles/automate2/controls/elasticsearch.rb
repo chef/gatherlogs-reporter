@@ -102,3 +102,24 @@ the sync id and then retry the above reroute command
     its('last_entry') { should be_empty }
   end
 end
+
+# read-only indices
+read_only = log_analysis('elasticsearch_cluster_state.txt', '"read_only_allow_delete"\s+:\s+"true"')
+control 'gatherlogs.automate2.elasticsearch_read_only_indicies' do
+  title 'Check to see if ElasticSearch is reporting any indicies as read_only'
+  desc "
+ElasticSearch is reporting that there indices that have been set as read-only.
+This is usually due to a disk getting near to capacity. It's possible that this
+can be cause by a running backup of `/hab` was symlinked into the same FS as the
+local backup directory like: `/var`.
+
+To fix this issue run:
+
+    curl -k -XPUT -H \"Content-Type: application/json\" http://localhost:10141/_all/_settings -d '{\"index.blocks.read_only_allow_delete\": null}'
+  "
+
+  tag summary: read_only.summary
+  describe read_only do
+    its('last_entry') { should be_empty }
+  end
+end
