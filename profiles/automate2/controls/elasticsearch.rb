@@ -75,3 +75,30 @@ Also check that there are no other processing using a large amount of memory.
     its('last_entry') { should be_empty }
   end
 end
+
+# primary shard is not active
+primary_shard = log_analysis('journalctl_chef-automate.txt', 'primary shard is not active', a2service: 'automate-elasticsearch')
+control 'gatherlogs.automate2.elasticsearch_primary_shard_unavailable' do
+  title 'Check to see if ElasticSearch is reporting issues with primary shards'
+  desc "
+ElasticSearch is reporting that there are primary shards that are unavailable.
+
+To find which shards are unavailable you can run
+
+    curl -XGET localhost:10141/_cat/shards?h=index,shard,prirep,state,unassigned.reason| grep UNASSIGNED
+
+To attempt a retry for the shards run
+
+    curl -XPOST localhost:10141/_cluster/reroute?retry_failed
+
+If that gives an error saying the shard is already assigned then you will need to issue a flush to clear
+the sync id and then retry the above reroute command
+
+    curl -XPOST localhost:10141/stats_new/_flush?force=true
+  "
+
+  tag summary: primary_shard.summary
+  describe primary_shard do
+    its('last_entry') { should be_empty }
+  end
+end
