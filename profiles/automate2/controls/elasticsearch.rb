@@ -108,13 +108,19 @@ read_only = log_analysis('elasticsearch_cluster_state.txt', '"read_only_allow_de
 control 'gatherlogs.automate2.elasticsearch_read_only_indicies' do
   title 'Check to see if ElasticSearch is reporting any indicies as read_only'
   desc "
-ElasticSearch is reporting that there indices that have been set as read-only.
-This is usually due to a disk getting near to capacity. It's possible that this
-can be cause by a running backup of `/hab` was symlinked into the same FS as the
-local backup directory like: `/var`.
+  ElasticSearch is reporting that some indices are read-only. Typically this
+  happens when the disk that contains the ElasticSearch database runs low on
+  available free space.
 
-To fix this issue run:
+  It's possible that this can be triggered when running a backup if `/hab` and
+  the local backup directory are on the same mount. For example if `/hab` is
+  symlinked to `/var/chef-automate` or a similar location in `/var`, then if the
+  backup uses a large amount of disk space and then later cleans it up this
+  could trigger a low disk warning in ES and cause it to mark the indices as
+  read-only. Then later, the system appears to have adequate free space.
 
+  Once the disk space issues are resolved, you can remove the read-only flag by
+  running the following command from the Automate server:
     curl -k -XPUT -H \"Content-Type: application/json\" http://localhost:10141/_all/_settings -d '{\"index.blocks.read_only_allow_delete\": null}'
   "
 
