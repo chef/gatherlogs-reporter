@@ -11,4 +11,4 @@ depends:
   - name: common
     path: ../common
   - name: glresources
-    path: ../glresources
+    url: https://github.com/teknofire/glresources/archive/master.tar.gz
