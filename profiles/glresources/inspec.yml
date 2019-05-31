@@ -1,8 +1,0 @@
-name: glresources
-title: Shared resources for gather-log inspection
-maintainer: Will Fisher <will@chef.io>
-copyright: Will Fisher
-copyright_email: will@chef.io
-license: Apache-2.0
-summary: This contains custom resources for inspec for parsing files from chef-product gatherlogs
-version: 0.5.2
