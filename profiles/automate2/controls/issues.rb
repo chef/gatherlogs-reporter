@@ -186,3 +186,23 @@ chmod 0444 /hab/svc/deployment-service/data/Chef_Automate*.crt /hab/svc/deployme
     its('last_entry') { should be_empty }
   end
 end
+
+saml_audience_check = log_analysis('journalctl_chef-automate.txt', 'Failed to authenticate: required audience', a2service: 'automate-dex.default')
+control 'gatherlogs.automate2.failed_saml_audience_response' do
+  title 'Check for errors related to failed audience checks for SAML IdP responses'
+  desc "
+Automate was unable to validate the SAML assertion for `AudienceRestriction` contained a valid value.
+
+Possible ways to fix this:
+1. Ensure that the response from the SAML IdP contains `https://AUTOMATE_HOST/dex/callback` in the response XML
+2. Disable `AudienceRestriction` on the SAML IdP
+3. Set `entity_issuer` in `[dex.v1.sys.connectors.saml]` to the value it should match (https://automate.chef.io/docs/configuration/#saml)
+  "
+
+  tag kb: 'https://automate.chef.io/docs/configuration/#saml'
+
+  tag summary: saml_audience_check.summary
+  describe saml_audience_check do
+    its('last_entry') { should be_empty }
+  end
+end
