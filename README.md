@@ -29,7 +29,7 @@ hab pkg exec will/gatherlogs_reporter gatherlogs_report --help
 1. Download code and the gems
 
   ```bash
-  git clone https://github.com/teknofire/gatherlogs-inspec-profiles gatherlogs-reporter
+  git clone https://github.com/teknofire/gatherlogs-reporter
   cd gatherlogs-reporter
   bundle
   ```
