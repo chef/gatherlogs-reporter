@@ -18,10 +18,11 @@ module Gatherlogs
     attr_accessor :current_log_path
     attr_writer :profiles
 
-    option ['-p', '--path'], 'PATH', 'Path to the gatherlogs for inspection',
+    option ['-p', '--path'], 'PATH',
+           'Path to the gatherlogs directory or a compressed bundle',
            default: '.', attribute_name: :log_path
     option ['-r', '--remote'], 'REMOTE_URL',
-           'URL to the remote tar bal for inspection',
+           'URL to the remote bundle for inspection',
            attribute_name: :remote_url
     option ['-d', '--debug'], :flag, 'Enable debug output'
     option ['-s', '--system-only'], :flag, 'Only show system report',
@@ -136,32 +137,31 @@ module Gatherlogs
       current_log_path = if remote_url.nil?
                            log_path.dup
                          else
-                           extract_remote_file(remote_url)
+                           fetch_remote_tar(remote_url)
                          end
 
       debug("Using log_path: #{current_log_path}")
-      yield current_log_path
+      if File.directory?(current_log_path)
+        yield current_log_path
+      else
+        yield extract_bundle(current_log_path)
+      end
     end
 
-    def extract_remote_file(url)
-      remote_file = fetch_remote_tar(url)
-      return if remote_file.nil?
-
+    def tmpdir
       @cleanup_paths << (tmpdir = Dir.mktmpdir)
-      extract_bundle(remote_file, tmpdir)
-
       tmpdir
-    ensure
-      FileUtils.remove_entry(remote_file, true)
     end
 
-    def extract_bundle(filename, path)
+    def extract_bundle(filename)
+      path = tmpdir
       cmd = [
         'tar', 'xvf', filename, '-C', path,
         '--strip-components', '2'
       ]
       shellout!(cmd)
       fix_archive_perms(path)
+      path
     end
 
     # it's possible for an archive to set permissions that prevent us from
@@ -182,6 +182,7 @@ module Gatherlogs
       debug "tmp_cache_file: #{tmp_cache_file.path}"
 
       shellout!(['wget', url, '-O', tmp_cache_file.path])
+      @cleanup_paths << tmp_cache_file.path
 
       tmp_cache_file.path
     end

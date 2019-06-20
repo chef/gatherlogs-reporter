@@ -94,6 +94,7 @@ RSpec.describe Gatherlogs::CLI do
   end
 
   it 'should extract files' do
+    expect(Dir).to receive(:mktmpdir) { 'somepath' }
     expect(cli).to receive(:shellout!).with(
       [
         'tar', 'xvf', 'abc.gz', '-C', 'somepath', '--strip-components', '2'
@@ -106,7 +107,7 @@ RSpec.describe Gatherlogs::CLI do
       "find 'somepath' -type f -exec chmod 644 {} \\;"
     )
 
-    cli.extract_bundle('abc.gz', 'somepath')
+    cli.extract_bundle('abc.gz')
   end
 
   it 'should not try to fetch files if no url is given' do
