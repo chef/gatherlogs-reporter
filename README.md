@@ -5,15 +5,26 @@
 This is a set of tools to generate reports from gather-log bundles for various Chef products.
 
 * Chef: https://chef.io
-* Get InSpec from: https://inspec.io
+* Get Chef-InSpec from: https://inspec.io
 
 ## Requirements
 
-1. inspec (currently tested with v3 but should work with v2)
+1. Chef-InSpec (currently tested with v4 but should work with v3)
 2. ruby 2.5+
 3. bundler >= 2.0
 
 ## Installation
+
+### Habitat package
+
+**NOTE**: This brings in Chef-InSpec v4 which requires [license acceptance](https://docs.chef.io/chef_license_accept.html) in order to run.
+
+```bash
+hab pkg install will/gatherlogs_reporter
+hab pkg exec will/gatherlogs_reporter gatherlogs_report --help
+```
+
+### Source code
 
 1. Download code and the gems
 
