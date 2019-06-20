@@ -5,7 +5,7 @@
 This is a set of tools to generate reports from gather-log bundles for various Chef products.
 
 * Chef: https://chef.io
-* Get Chef-InSpec from: https://inspec.io
+* Get Chef InSpec from: https://inspec.io
 
 ## Requirements
 
@@ -15,7 +15,7 @@ This is a set of tools to generate reports from gather-log bundles for various C
 
 ## Installation
 
-### Habitat package
+### using Habitat package
 
 **NOTE**: This brings in Chef InSpec v4 which requires [license acceptance](https://docs.chef.io/chef_license_accept.html) in order to run.
 
@@ -24,7 +24,7 @@ hab pkg install will/gatherlogs_reporter
 hab pkg exec will/gatherlogs_reporter gatherlogs_report --help
 ```
 
-### Source code
+### from source
 
 1. Download code and the gems
 
@@ -42,19 +42,48 @@ hab pkg exec will/gatherlogs_reporter gatherlogs_report --help
 
 ## Usage
 
-You will need to be in the directory with the expanded gather-logs tar file to run this tool and should be in the same directory where you find the `installed-packages.txt` or `platform_version.txt` files.
+To run this tool you will need access to the `gather-log` output from a supported Chef product.  
 
-The `check_logs` tool will attempt to detect the product used to generate the gather-logs bundle if one hasn't been specified, if it's unable to for some reason you need to give it the profile name.
+1. Generate a log bundle from a Chef product
 
-Currently available profiles
-  * `automate`
-  * `automate2`
-  * `chef-server`
-  * `chef-backend`
+    **Note:** See *Generating log bundles for Chef products* below for how to generate log bundles for all supported products.
+
+    For example on a Chef Infra Server run:
+    ```bash
+    chef-server-ctl gather-logs
+    ```  
+
+    This will generate a `tar.bz2` or `tar.gz` file that contains the logs and various information about the product installation.
+
+2. Generate a report from the log bundle run:
+
+   ```bash
+   gatherlogs_report -p PATH/TO/LOG_BUNDLE.tar.bz2
+   ```
+
+##### Alternatively you can run it against the extract the log bundle
+
+1. Extract the logs
+
+    ```bash
+    tar xvfz LOG_BUNDLE.tar.bz2
+    ```
+
+2. `cd` into the directory with the extracted logs.  
+
+    ```bash
+    # default directory structure <SERVER_HOSTNAME>/<BUNDLE_TIMESTAMP>
+    cd chef.myhostname.com/2019-06-20-16:54:01
+    ```
+3. Run the reporter: `gatherlogs_report`
+
+    *No options are required as it will look in the current directory for the extracted files by default.*
+
+The `gatherlogs_report` command will attempt to detect the product used to generate the gather-logs bundle, if for some reason it's unable to do so, ensure that you are in the correct directory with the log bundle or specify the product name manually.
 
 To see all the available options use
 
-```
+```bash
 gatherlogs_report --help
 ```
 
@@ -118,6 +147,19 @@ Inspec report
 
   ✩ https://blog.chef.io/2018/10/02/end-of-life-announcement-for-drbd-based-ha-support-in-chef-server/
 ```
+
+## Currently supported product profiles:
+  * `automate`
+  * `automate2`
+  * `chef-server`
+  * `chef-backend`
+
+## Generating log bundles for Chef products
+
+* Chef Infra Server: `chef-server-ctl gather-logs`
+* Chef Automate v1: `automate-ctl gather-logs`
+* Chef Automate v2: `chef-automate gather-logs`
+* Chef Backend: `chef-backend-ctl gather-logs`
 
 ## Autocompletions
 
