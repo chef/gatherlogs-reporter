@@ -18,7 +18,8 @@ module Gatherlogs
     attr_accessor :current_log_path
     attr_writer :profiles
 
-    option ['-p', '--path'], 'PATH', 'Path to the gatherlogs directory or tar for inspection',
+    option ['-p', '--path'], 'PATH',
+           'Path to the gatherlogs directory or a compressed bundle',
            default: '.', attribute_name: :log_path
     option ['-r', '--remote'], 'REMOTE_URL',
            'URL to the remote bundle for inspection',
