@@ -85,13 +85,13 @@ Elasticsearch is reporting that there are primary shards that are unavailable.
 
 To attempt a retry for the shards, issue the following
 
-    curl -XPOST 'localhost:10141/_cluster/reroute?retry_failed&pretty'
+    curl -XPOST 'localhost:10144/_cluster/reroute?retry_failed&pretty'
 
 If that gives an error saying the shard is already assigned, then you will need to issue a flush to clear
 the sync ID per each associated index that you received the 'already assigned' error for, and then retry
 the above reroute command
 
-    curl -XPOST 'localhost:10141/INDEX_NAME/_flush?force=true&pretty'
+    curl -XPOST 'localhost:10144/INDEX_NAME/_flush?force=true&pretty'
   "
 
   tag summary: primary_shard.summary
@@ -118,7 +118,7 @@ control 'gatherlogs.automate2.elasticsearch_read_only_indicies' do
 
   Once the disk space issues are resolved, you can remove the read-only flag by
   running the following command from the Automate server:
-    curl -k -XPUT -H \"Content-Type: application/json\" http://localhost:10141/_all/_settings -d '{\"index.blocks.read_only_allow_delete\": null}'
+    curl -k -XPUT -H \"Content-Type: application/json\" http://localhost:10144/_all/_settings -d '{\"index.blocks.read_only_allow_delete\": null}'
   "
 
   tag summary: read_only.summary
