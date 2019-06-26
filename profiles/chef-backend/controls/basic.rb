@@ -105,7 +105,6 @@ end
 # the clock difference against peer d4fed0cf06663880 is too high
 clocksync = log_analysis('var/log/chef-backend/etcd/current', 'the clock difference against peer .* is too high')
 control 'gatherlogs.chef-backend.clock_out_of_sync' do
-  impact 1.0
   title 'Check to see if ETCD is reporting issues with clocks being out of sync'
   desc "
 ETCD is reporting issues with the local system clocking being too far out of sync with other peers.

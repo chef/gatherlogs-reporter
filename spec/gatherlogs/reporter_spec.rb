@@ -41,19 +41,19 @@ RSpec.describe Gatherlogs::Reporter do
   end
 
   it 'should generate a blank report if there are no controls' do
-    expect(Gatherlogs::ControlReport).to receive(:new).with([], nil, nil) { double('results', system_info: {}, report: []) }
+    expect(Gatherlogs::ControlReport).to receive(:new).with([], {}) { double('results', system_info: {}, report: []) }
     expect(reporter.process_profile('controls' => [])).to eq(system_info: {}, report: [])
   end
 
   it 'should pass the show_all_controls to the control report' do
     reporter = Gatherlogs::Reporter.new(show_all_controls: true)
-    expect(Gatherlogs::ControlReport).to receive(:new).with([], true, nil) { double('results', system_info: {}, report: []) }
+    expect(Gatherlogs::ControlReport).to receive(:new).with([], show_all_controls: true) { double('results', system_info: {}, report: []) }
     expect(reporter.process_profile('controls' => [])).to eq(system_info: {}, report: [])
   end
 
   it 'should pass the show_all_tests to the control report' do
     reporter = Gatherlogs::Reporter.new(show_all_tests: true)
-    expect(Gatherlogs::ControlReport).to receive(:new).with([], nil, true) { double('results', system_info: {}, report: []) }
+    expect(Gatherlogs::ControlReport).to receive(:new).with([], show_all_tests: true) { double('results', system_info: {}, report: []) }
     expect(reporter.process_profile('controls' => [])).to eq(system_info: {}, report: [])
   end
 end
