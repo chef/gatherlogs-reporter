@@ -18,8 +18,6 @@ module Gatherlogs
     attr_accessor :current_log_path
     attr_writer :profiles
 
-    ALLOWED_IMPACTS = %w{ low medium high critical }.freeze
-
     option ['-p', '--path'], 'PATH',
            'Path to the gatherlogs directory or a compressed bundle',
            default: '.', attribute_name: :log_path
