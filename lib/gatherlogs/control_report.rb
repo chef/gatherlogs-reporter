@@ -5,14 +5,26 @@ module Gatherlogs
     include Gatherlogs::Output
 
     attr_accessor :controls, :system_info, :report, :verbose
-    attr_accessor :show_all_tests
 
-    def initialize(controls, show_all_controls, show_all_tests)
+    def initialize(controls, options = {})
       @system_info = {}
       @controls = controls
-      @show_all_controls = show_all_controls
-      @show_all_tests = show_all_tests
+      @options = options
+      @verbose = false
+      debug @options.inspect
       @report = process_ordered_controls
+    end
+
+    def min_impact
+      @options[:min_impact].to_f || 0.0
+    end
+
+    def show_all_tests?
+      @options[:show_all_tests] || false
+    end
+
+    def show_all_controls?
+      @options[:show_all_controls] || false
     end
 
     def process_ordered_controls
@@ -40,9 +52,11 @@ module Gatherlogs
     end
 
     def update_verbose_control(tags)
-      return unless tags.include?('verbose')
+      @verbose = tags.include?('verbose') ? tags['verbose'] : false
+    end
 
-      @verbose = tags['verbose']
+    def control_marked_as_verbose?
+      @verbose
     end
 
     # Format the desc text in the control
@@ -97,7 +111,7 @@ module Gatherlogs
       end.compact
 
       # by default only show the failed controls
-      return unless @show_all_controls || @status == FAILED
+      return unless show_control?(control)
 
       report += control_summary(control)
 
@@ -106,6 +120,14 @@ module Gatherlogs
         report << '' # add blank line after messages
       end
       report.compact
+    end
+
+    def show_control?(control)
+      return true if show_all_controls?
+
+      control_impact = control['impact'].to_f || 0
+
+      @status == FAILED && control_impact >= min_impact
     end
 
     def control_summary(control)
@@ -125,8 +147,7 @@ module Gatherlogs
     end
 
     def source_error?(result)
-      result['status'] == 'failed' &&
-        result['code_desc'].match?(/Control Source Code Error/)
+      result['code_desc'].match?(/Control Source Code Error/)
     end
 
     # Format the output used for showing the control test results
@@ -162,10 +183,12 @@ module Gatherlogs
       end
     end
 
-    def format_result(result)
-      return if !@show_all_tests && !source_error?(result) &&
-                !(verbose && result['status'] == 'failed')
+    def show_result?(result)
+      show_all_tests? || source_error?(result) || (control_marked_as_verbose? && result['status'] == 'failed')
+    end
 
+    def format_result(result)
+      return unless show_result?(result)
       subsection(format_result_message(result))
     end
   end

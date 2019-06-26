@@ -18,6 +18,8 @@ module Gatherlogs
     attr_accessor :current_log_path
     attr_writer :profiles
 
+    ALLOWED_IMPACTS = %w{ low medium high critical }.freeze
+
     option ['-p', '--path'], 'PATH',
            'Path to the gatherlogs directory or a compressed bundle',
            default: '.', attribute_name: :log_path
@@ -32,6 +34,10 @@ module Gatherlogs
     option ['-v', '--verbose'], :flag, 'Show inspec test output'
     option ['-a', '--all'], :flag,
            'Show all tests, default is to only show failed tests'
+    option ['-i', '--impact'], 'IMPACT', 'Only show tests that are higher than the given IMPACT value (0-1)', attribute_name: :min_impact do |i|
+      i.to_f
+    end
+
     option ['-q', '--quiet'], :flag, 'Only show the report output'
     option ['-m', '--monochrome'], :flag, "Don't use terminal colors for output"
     option ['--version'], :flag, 'Show current version'
@@ -54,13 +60,13 @@ module Gatherlogs
     def reporter
       @reporter ||= Gatherlogs::Reporter.new(
         show_all_controls: all?,
-        show_all_tests: verbose?
+        show_all_tests: verbose?,
+        min_impact: min_impact
       )
     end
 
     def execute
       parse_args
-
       return show_versions if version?
       return show_profiles if list_profiles?
 
