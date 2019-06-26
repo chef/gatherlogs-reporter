@@ -35,7 +35,7 @@ RSpec.describe Gatherlogs::CLI do
   end
 
   it 'should setup a new reporter' do
-    expect(Gatherlogs::Reporter).to receive(:new).with({:min_impact=>nil, :show_all_controls=>nil, :show_all_tests=>nil})
+    expect(Gatherlogs::Reporter).to receive(:new).with(min_impact: nil, show_all_controls: nil, show_all_tests: nil)
     cli.reporter
   end
 

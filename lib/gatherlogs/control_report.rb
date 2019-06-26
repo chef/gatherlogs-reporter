@@ -55,7 +55,7 @@ module Gatherlogs
       @verbose = tags.include?('verbose') ? tags['verbose'] : false
     end
 
-    def control_marked_as_verbose?
+    def verbose_control?
       @verbose
     end
 
@@ -184,11 +184,13 @@ module Gatherlogs
     end
 
     def show_result?(result)
-      show_all_tests? || source_error?(result) || (control_marked_as_verbose? && result['status'] == 'failed')
+      show_all_tests? || source_error?(result) ||
+        (verbose_control? && result['status'] == 'failed')
     end
 
     def format_result(result)
       return unless show_result?(result)
+
       subsection(format_result_message(result))
     end
   end

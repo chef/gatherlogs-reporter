@@ -47,13 +47,13 @@ RSpec.describe Gatherlogs::Reporter do
 
   it 'should pass the show_all_controls to the control report' do
     reporter = Gatherlogs::Reporter.new(show_all_controls: true)
-    expect(Gatherlogs::ControlReport).to receive(:new).with([], { show_all_controls: true }) { double('results', system_info: {}, report: []) }
+    expect(Gatherlogs::ControlReport).to receive(:new).with([], show_all_controls: true) { double('results', system_info: {}, report: []) }
     expect(reporter.process_profile('controls' => [])).to eq(system_info: {}, report: [])
   end
 
   it 'should pass the show_all_tests to the control report' do
     reporter = Gatherlogs::Reporter.new(show_all_tests: true)
-    expect(Gatherlogs::ControlReport).to receive(:new).with([], { show_all_tests: true }) { double('results', system_info: {}, report: []) }
+    expect(Gatherlogs::ControlReport).to receive(:new).with([], show_all_tests: true) { double('results', system_info: {}, report: []) }
     expect(reporter.process_profile('controls' => [])).to eq(system_info: {}, report: [])
   end
 end
