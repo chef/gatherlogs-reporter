@@ -17,6 +17,7 @@ RSpec.describe Gatherlogs::ControlReport do
       }]
     }, {
       'id' => '000.a.b.c',
+      'impact' => '0.7',
       'tags' => { 'verbose' => true },
       'desc' => 'ABC Description text',
       'results' => [{
@@ -113,6 +114,16 @@ RSpec.describe Gatherlogs::ControlReport do
 
   it 'should return correct result message for failed' do
     expect(reporter.format_result_message(failed_result)).to eq "✗ CODE_DESC\n    Something failed"
+  end
+
+  it 'should not return any controls if min_impact is 1.0' do
+    reporter = Gatherlogs::ControlReport.new(controls, { min_impact: 1.0 })
+    expect(reporter.report).to be_empty
+  end
+
+  it 'should return one if min_impact is 0.7' do
+    reporter = Gatherlogs::ControlReport.new(controls, { min_impact: 0.7 })
+    expect(reporter.report).to_not be_empty
   end
 
   it 'should not return nil if show_all_tests is true' do

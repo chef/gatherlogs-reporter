@@ -6,8 +6,6 @@ module Gatherlogs
   class Reporter
     include Gatherlogs::Output
 
-    attr_reader :show_all_controls, :show_all_tests
-
     def initialize(args)
       debug args.inspect
       @options = args
@@ -30,7 +28,7 @@ module Gatherlogs
         profile['controls'],
         @options
       )
-      
+
       {
         system_info: control_report.system_info,
         report: control_report.report
