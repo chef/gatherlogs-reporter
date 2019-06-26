@@ -19,7 +19,7 @@ end
 
 es_gc = log_analysis('var/log/chef-backend/elasticsearch/current', '\[o.e.m.j.JvmGcMonitorService\] .* \[gc\]')
 control 'gatherlogs.chef-backend.elasticsearch-high-gc-counts' do
-  impact 1.0
+  impact 'high'
   title 'Check to see if the ElasticSearch is reporting large number of GC events'
   desc "
 The ElasticSearch service is reporting a large number of GC events, this is usually

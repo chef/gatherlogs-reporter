@@ -26,7 +26,6 @@ control 'gatherlogs.chef-server.413-request-entity-too-large' do
 end
 
 control 'gatherlogs.chef-server.depsolver-timeouts' do
-  impact 1.0
   title 'Check for depsolver timeouts'
   desc '
   It appears that depsolver is being killed and causing a failure to
@@ -46,7 +45,6 @@ control 'gatherlogs.chef-server.depsolver-timeouts' do
 end
 
 control 'gatherlogs.chef-server.rabbitmq-connection-failure' do
-  impact 1.0
   title 'Check for erchef errors for rabbitmq connection errors'
   desc "
   It appears that the erchef process if having issues connecting to RabbitMQ.
@@ -65,7 +63,6 @@ control 'gatherlogs.chef-server.rabbitmq-connection-failure' do
 end
 
 control 'gatherlogs.chef-server.nginx-upstream-host-error' do
-  impact 1.0
   title 'Check nginx for errors related to upstream hosts'
   desc "
   NGINX is reporting issues finding the host for an upstream service.  This could

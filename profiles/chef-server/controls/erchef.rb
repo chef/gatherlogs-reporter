@@ -1,7 +1,6 @@
 # Checking presence of checksum: <<"aec79664a83e5086e738ab8659c81399">> for org <<"654cafca20690e27f34035e3e0a558ef">> from bucket "bookshelf" has taken longer than 5000 ms
 
 control 'gatherlogs.chef-server.erchef_bookshelf_errors' do
-  impact 1.0
   title 'Checking presence of checksum timeout for bookshelf'
   desc "
 opscode-erchef is reporting timeouts while trying to check for cookbook file checksums.
@@ -23,7 +22,6 @@ Please contact support to get this problem resolved"
 end
 
 control 'gatherlogs.chef-server.erchef-bad_actor-permission-errors' do
-  impact 1.0
   title 'Check erchef for permission errors related to bad_actor'
   desc "
   This usually indicates that a user has been disassociated from an organization
@@ -48,7 +46,7 @@ control 'gatherlogs.chef-server.erchef-bad_actor-permission-errors' do
 end
 
 control 'gatherlogs.chef-server.erchef-depsolver-startup-failure' do
-  impact 1.0
+  impact 'high'
   title 'Check for erchef startup errors for depsolver'
   desc "
   It appears that the erchef process is not starting due to an error when starting
@@ -73,7 +71,6 @@ end
 
 # moved to a separate check as it's not a good indication of the depsolver problem.
 control 'gatherlogs.chef-server.erchef-depsolver-listening' do
-  impact 1.0
   title 'Check for erchef process is listening on port 8000'
   desc "
   It appears that the erchef process is not listening on port 8000.  Please check
@@ -88,7 +85,6 @@ end
 
 error_limit = 100
 control 'gatherlogs.chef-server.erchef-500-errors' do
-  impact 1.0
   title 'Check for a large number of 500 errors being returned from erchef'
   desc "
   Found more than #{error_limit} number of messages with status=500 errors,

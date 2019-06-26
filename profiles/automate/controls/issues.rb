@@ -53,8 +53,6 @@ control 'gatherlogs.automate.broken-reaper-cron-file-1.8.3' do
   Please upgrade to a newer version of Automate to ensure reaper run correctly.
   "
 
-  impact 1.0
-
   describe automate do
     its('version') { should_not cmp == '1.8.3' }
   end

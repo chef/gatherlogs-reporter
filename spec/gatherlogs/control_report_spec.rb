@@ -1,6 +1,6 @@
 RSpec.describe Gatherlogs::ControlReport do
-  let(:reporter) do
-    Gatherlogs::ControlReport.new([{
+  let(:controls) do
+    [{
       'id' => '010.d.e.f',
       'tags' => {
         'summary' => 'Summary text',
@@ -17,6 +17,7 @@ RSpec.describe Gatherlogs::ControlReport do
       }]
     }, {
       'id' => '000.a.b.c',
+      'impact' => '0.7',
       'tags' => { 'verbose' => true },
       'desc' => 'ABC Description text',
       'results' => [{
@@ -31,7 +32,11 @@ RSpec.describe Gatherlogs::ControlReport do
         'status' => 'skipped',
         'code_desc' => 'Skipped because of reasons'
       }]
-    }], false, false)
+    }]
+  end
+
+  let(:reporter) do
+    Gatherlogs::ControlReport.new(controls)
   end
 
   before do
@@ -111,8 +116,18 @@ RSpec.describe Gatherlogs::ControlReport do
     expect(reporter.format_result_message(failed_result)).to eq "✗ CODE_DESC\n    Something failed"
   end
 
+  it 'should not return any controls if min_impact is 1.0' do
+    reporter = Gatherlogs::ControlReport.new(controls, min_impact: 1.0)
+    expect(reporter.report).to be_empty
+  end
+
+  it 'should return one if min_impact is 0.7' do
+    reporter = Gatherlogs::ControlReport.new(controls, min_impact: 0.7)
+    expect(reporter.report).to_not be_empty
+  end
+
   it 'should not return nil if show_all_tests is true' do
-    reporter.show_all_tests = true
+    reporter = Gatherlogs::ControlReport.new(controls, show_all_tests: true)
     expect(reporter.format_result(success_result)).to_not be_nil
   end
 

@@ -6,18 +6,27 @@ module Gatherlogs
   class Reporter
     include Gatherlogs::Output
 
-    attr_reader :show_all_controls, :show_all_tests
-
     def initialize(args)
-      @show_all_controls = args[:show_all_controls]
-      @show_all_tests = args[:show_all_tests]
+      debug args.inspect
+      @options = args
+    end
+
+    def min_impact
+      @options[:min_impact].to_f || 0.0
+    end
+
+    def show_all_tests
+      @options[:show_all_tests] || false
+    end
+
+    def show_all_controls
+      @options[:show_all_controls] || false
     end
 
     def process_profile(profile)
       control_report = Gatherlogs::ControlReport.new(
         profile['controls'],
-        show_all_controls,
-        show_all_tests
+        @options
       )
 
       {
