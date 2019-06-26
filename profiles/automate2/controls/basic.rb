@@ -33,6 +33,8 @@ services that might be failed, have a short run time or failing their health
 checks.
 "
 
+  impact 'critical'
+
   tag verbose: true
 
   describe services do
@@ -56,6 +58,8 @@ control 'gatherlogs.automate2.critical_disk_usage' do
     There are several key directories that we need to make sure have enough
     free space for automate to operate succesfully
   "
+
+  impact 'critical'
   tag verbose: true
 
   %w[/ /hab /var /var/log].each do |mount|
@@ -113,7 +117,6 @@ end
 
 failed_preflight_checks = log_analysis('chef-automate_preflight-check.txt', 'FAIL', case_sensitive: true)
 control 'gatherlogs.automate2.failed_preflight_checks' do
-  impact 1.0
   title 'Check automate preflight output for any failed tests'
   desc "
 Automate preflight checks are reporting issues failures, the failure for 'automate already deployed'
@@ -133,7 +136,6 @@ end
 
 notification_error = log_analysis('journalctl_chef-automate.txt', 'Notifications.WebhookSender.Impl \[error\] .* failed to post', a2service: 'notifications-service.default')
 control 'gatherlogs.automate2.notifications-failed-to-send' do
-  impact 1.0
   title 'Check to see if the notifications services is reporting errors sending messages'
   desc 'The notification service is encountering an error when trying to set a message to the webhook endpoint'
 

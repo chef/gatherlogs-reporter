@@ -2,7 +2,7 @@
 
 upgrade_failed = log_analysis('journalctl_chef-automate.txt', 'level=error msg="Phase failed" error="hab-sup upgrade pending" phase="supervisor upgrade"', a2service: 'service.default')
 control 'gatherlogs.automate2.upgrade_failed' do
-  impact 1.0
+  impact 'critical'
   title 'Check to see if Automate is reporting a failure during the hab sup upgrade process'
   desc "
 It appears that there was a failure during the upgrade process for Automate, please
@@ -18,17 +18,16 @@ end
 
 ldap_group_too_large = log_analysis('journalctl_chef-automate.txt', 'upstream sent too big header while reading response header from upstream.*dex/auth/ldap', a2service: 'automate-load-balancer.default')
 control 'gatherlogs.automate2.auth_upstream_header_too_big' do
-  impact 1.0
+  impact 'medium'
   title 'Check to see if Automate is reporting a failure getting data from an upstream LDAP source'
   desc "
 Automate is reporting errors fetching data from an upstream LDAP source. This commonly
 occurs when LDAP returns too many groups or referencing LDAP groups by distinguished names (DN).
 
-See this link to on how to resolve this issue:
-
-https://automate.chef.io/docs/ldap/#other-common-issues
+To resolve this you will need to add a `group_query_filter` to your Automate configs to
+filter which groups Automate should use
   "
-
+  tag kb: 'https://automate.chef.io/docs/ldap/#other-common-issues'
   tag summary: ldap_group_too_large.summary
 
   describe ldap_group_too_large do
@@ -38,7 +37,7 @@ end
 
 es_gc = log_analysis('journalctl_chef-automate.txt', '\[o.e.m.j.JvmGcMonitorService\] .* \[gc\]', a2service: 'automate-elasticsearch.default')
 control 'gatherlogs.automate2.elasticsearch-high-gc-counts' do
-  impact 1.0
+  impact 'high'
   title 'Check to see if the ElasticSearch is reporting large number of GC events'
   desc "
 The ElasticSearch service is reporting a large number of GC events, this is usually
@@ -55,7 +54,7 @@ end
 
 es_oom = log_analysis('journalctl_chef-automate.txt', 'java.lang.OutOfMemoryError', a2service: 'automate-elasticsearch.default')
 control 'gatherlogs.automate2.elasticsearch_out_of_memory' do
-  impact 1.0
+  impact 'high'
   title 'Check to see if Automate is reporting a OutOfMemoryError for ElasticSearch'
   desc "
 Automate is reporting OutOfMemoryError for ElasticSearch. Please check to heap size for ElasticSearch
@@ -74,7 +73,7 @@ end
 # max virtual memory areas vm.max_map_count [256000] is too low, increase to at     least [262144]
 es_vmc = log_analysis('journalctl_chef-automate.txt', 'max virtual memory areas vm.max_map_count \[\w+\] is too low, increase to at least \[\w+\]', a2service: 'automate-elasticsearch.default')
 control 'gatherlogs.automate2.elasticsearch_max_map_count_error' do
-  impact 1.0
+  impact 'high'
   title 'Check to see if Automate ES is reporting a error with vm.max_map_count setting'
   desc "
 ElasticSearch is reporting that the vm.max_map_count is not set correctly. This is a sysctl setting
@@ -97,7 +96,6 @@ end
 
 lb_workers = log_analysis('journalctl_chef-automate.txt', 'worker_connections are not enough', a2service: 'automate-load-balancer.default')
 control 'gatherlogs.automate2.loadbalancer_worker_connections' do
-  impact 1.0
   title 'Check to see if Automate is reporting a error with not enough workers for the load balancer'
   desc "
 This is an issue with older version of Automate 2 without persistant connections.
@@ -118,7 +116,6 @@ end
 
 butterfly_error = log_analysis('journalctl_chef-automate.txt', 'Butterfly error: Error reading or writing to DatFile', a2service: 'hab-sup')
 control 'gatherlogs.automate2.butterfly_dat_error' do
-  impact 1.0
   title 'Check to see if Automate is reporting an error reading or write to a DatFile'
   desc '
   The Habitat supervisor is having problems reading or writing to an internal DatFile.
