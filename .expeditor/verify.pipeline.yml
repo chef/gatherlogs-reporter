@@ -1,0 +1,25 @@
+---
+steps:
+  - label: "Spec Tests :ruby: 2.6"
+    commands:
+      - cd /workdir; bundle install --jobs=3 --retry=3
+      - bundle exec rake spec
+    expeditor:
+      executor:
+        docker:
+          image: rubydistros/ubuntu-18.04
+          privileged: true
+          environment:
+            - CHEF_LICENSE=accept-no-persist
+  - label: "Lint Tests :ruby: 2.6"
+    commands:
+      - cd /workdir; bundle install --jobs=3 --retry=3
+      - bundle exec rake rubocop
+    expeditor:
+      executor:
+        docker:
+          image: rubydistros/ubuntu-18.04
+          privileged: true
+          environment:
+            - CHEF_LICENSE=accept-no-persist
+
