@@ -20,7 +20,7 @@ control '000.gatherlogs.automate.package' do
   end
 end
 
-control 'gatherlogs.automate1.required_memory' do
+control 'gatherlogs.automate.required_memory' do
   impact 'medium'
   title 'Check that the system has the required amount of memory'
   desc "
