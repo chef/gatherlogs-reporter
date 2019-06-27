@@ -24,7 +24,7 @@ control 'gatherlogs.automate.required_memory' do
   impact 'medium'
   title 'Check that the system has the required amount of memory'
   desc "
-  Chef recommends that an Automate 1 system have at least 16GB of memory.
+  Chef recommends that an Automate 1 system has at least 16GB of memory.
   Please make sure the system meets the minimum hardware requirements.
   "
 
