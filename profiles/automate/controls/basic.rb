@@ -1,14 +1,15 @@
-title 'Basic checks for the automate configuration'
+title 'Basic checks for Automate 1 configuration'
 
 include_controls 'common'
 
 automate = installed_packages('automate')
 
 control '000.gatherlogs.automate.package' do
-  title 'check that automate is installed'
+  impact 'medium'
+  title 'Check that Automate 1 is installed and at a recent version'
   desc "
-  Automate was not found or is running an older version, please upgraded
-  to a newer version of Automate: https://downloads.chef.io/automate
+  Automate 1 was not found, or is running an older version. Please upgrade
+  to a newer version of Automate 1: https://downloads.chef.io/automate
   "
 
   tag system: { "Product": "Automate #{automate.version}" }
@@ -19,15 +20,14 @@ control '000.gatherlogs.automate.package' do
   end
 end
 
-control 'gatherlogs.automate2.required_memory' do
+control 'gatherlogs.automate.required_memory' do
+  impact 'medium'
   title 'Check that the system has the required amount of memory'
-
   desc "
-Chef recommends that the Automate2 system has at least 16GB of memory.
-Please make sure the system means the minimum hardware requirements
-"
+  Chef recommends that an Automate 1 system has at least 16GB of memory.
+  Please make sure the system meets the minimum hardware requirements.
+  "
 
-  tag kb: 'https://automate.chef.io/docs/system-requirements/'
   tag verbose: true
   tag system: {
     'Total Memory' => "#{memory.total_mem} MB",
@@ -37,7 +37,7 @@ Please make sure the system means the minimum hardware requirements
   }
 
   describe memory do
-    # rough calculation for 15gb because of reasons
+    # rough calculation for 15GB because reasons
     its('total_mem') { should cmp >= 15_360 }
     its('free_swap') { should cmp > 0 }
   end
@@ -46,10 +46,11 @@ end
 services = service_status(:automate)
 
 control 'gatherlogs.automate.internal_service_status' do
-  title 'check that Automate internal services are running'
+  impact 'high'
+  title 'Check that Automate 1 internal services are running'
   desc "
-  One or more Automate services are not running or have a short runtime,
-  check the logs and make sure the service are not flapping.
+  One or more Automate 1 internal services are not running or have a short runtime.
+  Check the logs to make sure that services are not flapping.
   "
 
   tag verbose: true
@@ -68,10 +69,11 @@ end
 
 services.external do |service|
   control "gatherlogs.automate.external_service_status.#{service.name}" do
-    title "check that external #{service.name} is running"
+    impact 'high'
+    title "Check that Automate 1 external service #{service.name} is running"
     desc "
-      External #{service.name} service is not running or has a short runtime, check the logs
-      and make sure the service is not flapping.
+    The Automate 1 external service #{service.name} is not running or has a short runtime.
+    Check the logs to make sure that the service is not flapping.
     "
 
     describe service do
@@ -85,11 +87,13 @@ df = disk_usage
 
 %w[/ /var /var/opt /var/opt/delivery /var/log].each do |mount|
   control "gatherlogs.automate.critical_disk_usage.#{mount}" do
+    impact 'critical'
     title 'check that the automate has plenty of free space'
     desc "
-      There are several key directories that we need to make sure have enough
-      free space for automate to operate succesfully
+    There are several key directories that we need to make sure have enough
+    free space for Automate 1 to operate normally.
     "
+
     tag verbose: true
     only_if { df.exists?(mount) }
 
@@ -101,11 +105,13 @@ df = disk_usage
 end
 
 control 'gatherlogs.automate.sysctl-settings' do
-  title 'check that the sysctl settings make sense'
+  impact 'medium'
+  title 'Check that the sysctl settings make sense'
   desc "
-    Recommended sysctl settings are not correct, recommend that these get updated
-    to ensure the best performance possible for Automate.
+  Recommended sysctl settings are not correct. These should be updated
+  to ensure a performant Automate 1 system.
   "
+
   tag verbose: true
   only_if { sysctl.exists? }
   describe sysctl do
