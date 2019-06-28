@@ -8,7 +8,6 @@ steps:
       executor:
         docker:
           image: rubydistros/ubuntu-18.04
-          privileged: true
           environment:
             - CHEF_LICENSE=accept-no-persist
   - label: "Lint Tests :ruby: 2.6"
@@ -19,7 +18,6 @@ steps:
       executor:
         docker:
           image: rubydistros/ubuntu-18.04
-          privileged: true
           environment:
             - CHEF_LICENSE=accept-no-persist
 
