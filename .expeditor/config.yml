@@ -2,7 +2,8 @@
 ---
 pipelines:
   - verify:
-    description: Run pull request verification tests (spec/lint)
+      public: true
+      description: Run pull request verification tests (spec/lint)
 
 github:
   # This deletes the GitHub PR branch after successfully merged into the release branch
