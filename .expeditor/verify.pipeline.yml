@@ -2,6 +2,7 @@
 steps:
   - label: "Spec Tests :ruby: 2.6"
     commands:
+      - /workdir/scripts/bk_container_prep.sh
       - cd /workdir; bundle install --jobs=3 --retry=3
       - bundle exec rake spec
     expeditor:
@@ -12,6 +13,7 @@ steps:
             - CHEF_LICENSE=accept-no-persist
   - label: "Lint Tests :ruby: 2.6"
     commands:
+      - /workdir/scripts/bk_container_prep.sh
       - cd /workdir; bundle install --jobs=3 --retry=3
       - bundle exec rake rubocop
     expeditor:
@@ -20,4 +22,3 @@ steps:
           image: rubydistros/ubuntu-18.04
           environment:
             - CHEF_LICENSE=accept-no-persist
-

@@ -145,3 +145,19 @@ control 'gatherlogs.automate2.notifications-failed-to-send' do
     its('last_entry') { should be_empty }
   end
 end
+
+control 'gatherlogs.automate2.required_cpu_cores' do
+  title 'Check that the system has the required number of cpu cores'
+
+  desc "
+Chef recommends that the Automate v2 systems have at least 4 cpu cores.
+Please make sure the system means the minimum hardware requirements
+"
+
+  tag kb: 'https://automate.chef.io/docs/system-requirements/#hardware'
+  tag verbose: true
+
+  describe cpu_info do
+    its('total') { should cmp >= 4 }
+  end
+end
