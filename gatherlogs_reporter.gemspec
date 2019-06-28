@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.email         = ['wfisher@chef.io']
   spec.license       = 'Apache-2.0'
   spec.summary       = 'Generate reports gather-logs bundles'
-  spec.description   = 'Inspec profiles used to generate reports for gather-logs bundles from Chef products'
-  spec.homepage      = 'https://github.com/teknofire/gatherlogs-inspec-profiles'
+  spec.description   = 'Chef InSpec profiles used to generate reports for gather-logs bundles from Chef products'
+  spec.homepage      = 'https://github.com/chef/gatherlogs-reporter'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.

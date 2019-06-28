@@ -1,5 +1,5 @@
 name: automate
-title: InSpec profile for automate generated gather-logs
+title: Chef InSpec profile for automate generated gather-logs
 maintainer: Will Fisher <will@chef.io>
 copyright: Will Fisher
 copyright_email: will@chef.io

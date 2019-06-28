@@ -29,7 +29,7 @@ module Gatherlogs
            attribute_name: :summary_only
     option ['--profiles'], :flag, 'Show available profiles',
            attribute_name: :list_profiles
-    option ['-v', '--verbose'], :flag, 'Show inspec test output'
+    option ['-v', '--verbose'], :flag, 'Show output from all control tests'
     option ['-a', '--all'], :flag,
            'Show all tests, default is to only show failed tests'
     option ['-i', '--impact'], 'IMPACT',
@@ -88,7 +88,7 @@ module Gatherlogs
       if output[:system_info].nil? && summary_only?
         error_msg "No system summary generated, #{product} not yet supported?"
       end
-      print_report('Inspec report', output[:report]) unless summary_only?
+      print_report('gather-log report', output[:report]) unless summary_only?
     end
 
     def detect_product(log_path)

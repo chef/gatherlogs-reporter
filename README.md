@@ -1,4 +1,4 @@
-# Gatherlog reports with Inspec
+# Gather-log reports with Chef InSpec
 
 This is a set of tools to generate reports from gather-log bundles for various Chef products.
 
@@ -27,7 +27,7 @@ hab pkg exec will/gatherlogs_reporter gatherlogs_report --help
 1. Download code and the gems
 
   ```bash
-  git clone https://github.com/teknofire/gatherlogs-reporter
+  git clone https://github.com/chef/gatherlogs-reporter
   cd gatherlogs-reporter
   bundle
   ```
@@ -106,7 +106,7 @@ System report
 Push-Jobs Server: 2.0.0~alpha.3
 ---------------------------------------------------------------------------------------
 
-Inspec report
+Gather-log report
 --------------------------------------------------------------------------------
 ✗ 000.gatherlogs.chef-server.package: check that chef-server is installed
   ⓘ The installed version of Chef-Server is old and should be upgraded
