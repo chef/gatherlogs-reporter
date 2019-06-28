@@ -1,7 +1,13 @@
 # Change Log
 
+<!-- latest_release 1.2.1 -->
+## [v1.2.1](https://github.com/chef/gatherlogs-reporter/tree/v1.2.1) (2019-06-28)
+
+#### Merged Pull Requests
+- Adding start of expeditor config [#108](https://github.com/chef/gatherlogs-reporter/pull/108) ([teknofire](https://github.com/teknofire))
 <!-- latest_release -->
-<!-- latest_release -->
+
+
 
 
 v1.1.2 / 2019-06-21
