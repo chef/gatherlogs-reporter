@@ -1,7 +1,5 @@
 # Gatherlog reports with Inspec
 
-[![Build Status](https://travis-ci.com/teknofire/gatherlogs-inspec-profiles.svg?branch=master)](https://travis-ci.com/teknofire/gatherlogs-inspec-profiles)
-
 This is a set of tools to generate reports from gather-log bundles for various Chef products.
 
 * Chef: https://chef.io

@@ -1,3 +1,9 @@
+# Change Log
+
+<!-- latest_release -->
+<!-- latest_release -->
+
+
 v1.1.2 / 2019-06-21
 ===================
 
