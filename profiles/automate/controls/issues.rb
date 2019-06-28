@@ -1,6 +1,6 @@
 # copyright: 2018, The Authors
 
-title 'GatherLog inspec profile to check for common problems with Chef Automate'
+title 'GatherLog Chef InSpec profile to check for common problems with Chef Automate'
 
 # you add controls here
 control 'gatherlogs.automate.missing-data-collector-token' do
