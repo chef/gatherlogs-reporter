@@ -1,10 +1,10 @@
 name: common
-title: InSpec Profile for common gatherlog checks
+title: Chef InSpec Profile for common gatherlog checks
 maintainer: Will Fisher <will@chef.io>
 copyright: Will Fisher
 copyright_email: will@chef.io
 license: Apache-2.0
-summary: This contains common checks for inspec for chef-product gatherlogs
+summary: This contains common checks for chef-product gather-logs
 version: 0.3.5
 
 depends:
