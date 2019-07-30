@@ -1,11 +1,16 @@
 # Change Log
 
-<!-- latest_release 1.2.4 -->
+<!-- latest_release 1.2.5 -->
+## [v1.2.5](https://github.com/chef/gatherlogs-reporter/tree/v1.2.5) (2019-07-30)
+
+#### Merged Pull Requests
+- Attempting to determine why buildkite is failing [#116](https://github.com/chef/gatherlogs-reporter/pull/116) ([teknofire](https://github.com/teknofire))
+<!-- latest_release -->
+
 ## [v1.2.4](https://github.com/chef/gatherlogs-reporter/tree/v1.2.4) (2019-07-30)
 
 #### Merged Pull Requests
 - Build habitat packages for the service and cli [#115](https://github.com/chef/gatherlogs-reporter/pull/115) ([teknofire](https://github.com/teknofire))
-<!-- latest_release -->
 
 ## [v1.2.3](https://github.com/chef/gatherlogs-reporter/tree/v1.2.3) (2019-07-30)
 
