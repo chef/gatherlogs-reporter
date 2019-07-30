@@ -1,5 +1,8 @@
 # Documentation available at https://expeditor.chef.io/docs/getting-started/
 ---
+project:
+  alias: gatherlog-reporter
+
 pipelines:
   - verify:
       public: true
