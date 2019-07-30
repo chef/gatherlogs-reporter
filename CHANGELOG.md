@@ -1,11 +1,16 @@
 # Change Log
 
-<!-- latest_release 1.2.2 -->
+<!-- latest_release 1.2.3 -->
+## [v1.2.3](https://github.com/chef/gatherlogs-reporter/tree/v1.2.3) (2019-07-30)
+
+#### Merged Pull Requests
+- Documentation and various text fixes [#111](https://github.com/chef/gatherlogs-reporter/pull/111) ([teknofire](https://github.com/teknofire))
+<!-- latest_release -->
+
 ## [v1.2.2](https://github.com/chef/gatherlogs-reporter/tree/v1.2.2) (2019-06-28)
 
 #### Merged Pull Requests
 - Adding check for required cpu counts [#110](https://github.com/chef/gatherlogs-reporter/pull/110) ([teknofire](https://github.com/teknofire))
-<!-- latest_release -->
 
 ## [v1.2.1](https://github.com/chef/gatherlogs-reporter/tree/v1.2.1) (2019-06-28)
 
