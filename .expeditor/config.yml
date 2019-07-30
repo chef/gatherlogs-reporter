@@ -4,6 +4,7 @@ pipelines:
   - verify:
       public: true
       description: Run pull request verification tests (spec/lint)
+  - habitat/build
 
 github:
   # This deletes the GitHub PR branch after successfully merged into the release branch
@@ -26,3 +27,8 @@ merge_actions:
       ignore_labels:
         - "Expeditor: Skip Changelog"
         - "Expeditor: Skip All"
+  - trigger_pipeline:habitat/build:
+      ignore_labels:
+        - "Expeditor: Skip Habitat"
+        - "Expeditor: Skip All"
+      only_if: built_in:bump_version
