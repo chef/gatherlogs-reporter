@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'gatherlogs_service'
-  spec.version       = File.read('VERSION')
+  spec.version       = File.read('../VERSION')
   spec.authors       = ['Will Fisher']
   spec.email         = ['wfisher@chef.io']
   spec.license       = 'Apache-2.0'
