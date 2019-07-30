@@ -1,0 +1,15 @@
+[gatherlogs_reporter]
+plan_path = "habitat-packages/cli"
+paths = [
+  'bin/*',
+  'completions/*',
+  'lib/**/*',
+  'profiles/**/*',
+  'VERSION'
+]
+[gatherlogs_service]
+plan_path = "habitat-packages/service"
+paths = [
+  'service/**/*',
+  'VERSION'
+]
