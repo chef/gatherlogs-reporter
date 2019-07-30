@@ -28,7 +28,7 @@ Metrics/BlockLength:
   Exclude: 
     - spec/**/*.rb
 
-Layout/IndentHash:
+Layout/IndentFirstHashElement:
   Enabled: false
 
 Naming/HeredocDelimiterNaming:

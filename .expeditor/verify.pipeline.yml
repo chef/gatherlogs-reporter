@@ -1,10 +1,21 @@
 ---
 steps:
-  - label: "Spec Tests :ruby: 2.6"
+  - label: "Reporter Spec Tests :ruby: 2.6"
     commands:
       - /workdir/scripts/bk_container_prep.sh
       - cd /workdir; bundle install --jobs=3 --retry=3
-      - bundle exec rake spec
+      - bundle exec rspec
+    expeditor:
+      executor:
+        docker:
+          image: rubydistros/ubuntu-18.04
+          environment:
+            - CHEF_LICENSE=accept-no-persist
+  - label: "Service Spec Tests :ruby: 2.6"
+    commands:
+      - /workdir/scripts/bk_container_prep.sh
+      - cd /workdir/service; bundle install --jobs=3 --retry=3
+      - bundle exec rspec
     expeditor:
       executor:
         docker:
