@@ -1,9 +1,15 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
+def read_version(file)
+  File.read(file) if File.exist?(file)
+end
+
+gem_version = read_version('../VERSION') || read_version('VERSION')
+
 Gem::Specification.new do |spec|
   spec.name          = 'gatherlogs_service'
-  spec.version       = File.exist?('../VERSION') ? File.read('../VERSION') : File.read('VERSION')
+  spec.version       = gem_version
   spec.authors       = ['Will Fisher']
   spec.email         = ['wfisher@chef.io']
   spec.license       = 'Apache-2.0'
