@@ -1,11 +1,16 @@
 # Change Log
 
-<!-- latest_release 1.2.7 -->
+<!-- latest_release 1.2.8 -->
+## [v1.2.8](https://github.com/chef/gatherlogs-reporter/tree/v1.2.8) (2019-07-31)
+
+#### Merged Pull Requests
+- Add build promotions [#119](https://github.com/chef/gatherlogs-reporter/pull/119) ([teknofire](https://github.com/teknofire))
+<!-- latest_release -->
+
 ## [v1.2.7](https://github.com/chef/gatherlogs-reporter/tree/v1.2.7) (2019-07-31)
 
 #### Merged Pull Requests
 - Fix version handling when building hab pkgs [#118](https://github.com/chef/gatherlogs-reporter/pull/118) ([teknofire](https://github.com/teknofire))
-<!-- latest_release -->
 
 ## [v1.2.6](https://github.com/chef/gatherlogs-reporter/tree/v1.2.6) (2019-07-30)
 
