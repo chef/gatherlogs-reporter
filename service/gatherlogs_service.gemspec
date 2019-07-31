@@ -1,11 +1,9 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-def read_version(file)
-  File.read(file) if File.exist?(file)
-end
-
-gem_version = read_version('../VERSION') || read_version('VERSION')
+gem_version = File.read('../VERSION') if File.exist?('../VERSION')
+# when building the gem in hab the version file gets copied into the local dir
+gem_version ||= File.read('VERSION') if File.exist?('VERSION')
 
 Gem::Specification.new do |spec|
   spec.name          = 'gatherlogs_service'
