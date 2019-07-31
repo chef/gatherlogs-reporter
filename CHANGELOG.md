@@ -7,28 +7,6 @@
 - Add build promotions [#119](https://github.com/chef/gatherlogs-reporter/pull/119) ([teknofire](https://github.com/teknofire))
 <!-- latest_release -->
 
-## [v1.2.7](https://github.com/chef/gatherlogs-reporter/tree/v1.2.7) (2019-07-31)
-
-#### Merged Pull Requests
-- Fix version handling when building hab pkgs [#118](https://github.com/chef/gatherlogs-reporter/pull/118) ([teknofire](https://github.com/teknofire))
-
-## [v1.2.6](https://github.com/chef/gatherlogs-reporter/tree/v1.2.6) (2019-07-30)
-
-#### Merged Pull Requests
-- Add build promotions [#117](https://github.com/chef/gatherlogs-reporter/pull/117) ([teknofire](https://github.com/teknofire))
-
-## [v1.2.5](https://github.com/chef/gatherlogs-reporter/tree/v1.2.5) (2019-07-30)
-
-#### Merged Pull Requests
-- Attempting to determine why buildkite is failing [#116](https://github.com/chef/gatherlogs-reporter/pull/116) ([teknofire](https://github.com/teknofire))
-
-## [v1.2.4](https://github.com/chef/gatherlogs-reporter/tree/v1.2.4) (2019-07-30)
-
-#### Merged Pull Requests
-- Build habitat packages for the service and cli [#115](https://github.com/chef/gatherlogs-reporter/pull/115) ([teknofire](https://github.com/teknofire))
-
-## [v1.2.3](https://github.com/chef/gatherlogs-reporter/tree/v1.2.3) (2019-07-30)
-
 #### Merged Pull Requests
 - Documentation and various text fixes [#111](https://github.com/chef/gatherlogs-reporter/pull/111) ([teknofire](https://github.com/teknofire))
 
