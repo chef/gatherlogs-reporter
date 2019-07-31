@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gatherlogs_service (1.2.2)
+    gatherlogs_service (1.2.5)
       mixlib-shellout (~> 2.4)
       puma
       sinatra (~> 2.0)
