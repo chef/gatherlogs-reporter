@@ -13,30 +13,12 @@ This is a set of tools to generate reports from gather-log bundles for various C
 
 ## Installation
 
-### using Habitat package
-
 **NOTE**: This brings in Chef InSpec v4 which requires [license acceptance](https://docs.chef.io/chef_license_accept.html) in order to run.
 
 ```bash
 hab pkg install will/gatherlogs_reporter
 hab pkg exec will/gatherlogs_reporter gatherlogs_report --help
 ```
-
-### from source
-
-1. Download code and the gems
-
-  ```bash
-  git clone https://github.com/chef/gatherlogs-reporter
-  cd gatherlogs-reporter
-  bundle
-  ```
-
-2. Add `gatherlogs-reporter/bin` to your path, put this in your `.bashrc` or the equivalent file for your shell.
-
-  ```
-  export PATH=$PATH:PATH/TO/gatherlogs-reporter/bin;
-  ```
 
 ## Usage
 
@@ -164,6 +146,30 @@ Gather-log report
 If you use the zsh shell you can add autocompletions for the `gatherlogs_report` command by adding the following
 to your `~/.zshrc` config
 
-```
+```bash
 source "/PATH/TO/gatherlogs/completions/gatherlogs_report.zsh"
 ```
+
+## Local development
+
+
+1. Download the source code
+
+  ```bash
+  git clone https://github.com/chef/gatherlogs-reporter
+  git clone https://github.com/teknofire/glprofiles
+  cd gatherlogs-reporter
+  bundle
+  ```
+
+2. Add `gatherlogs-reporter/bin` to your path, put this in your `.bashrc` or the equivalent file for your shell.
+
+  ```bash
+  export PATH=$PATH:PATH/TO/gatherlogs-reporter/bin;
+  ```
+
+3. Run the reporter
+
+  ```bash
+  GL_DEV=true gatherlogs_report -p PATH/TO/LOGS
+  ```

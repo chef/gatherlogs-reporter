@@ -97,7 +97,7 @@ module Gatherlogs
     end
 
     def show_profiles
-      puts profiles.sort.join("\n")
+      puts profiles.sort.join("\n").gsub('-wrapper', '')
     end
 
     def profiles
@@ -192,7 +192,7 @@ module Gatherlogs
     end
 
     def find_profile_path(profile)
-      path = File.join(::PROFILES_PATH, profile)
+      path = File.join(::PROFILES_PATH, "#{profile}-wrapper")
       return path if File.exist?(path)
 
       raise "Couldn't find '#{profile}' profile, tried in '#{path}'"
@@ -222,6 +222,7 @@ module Gatherlogs
       cmd = [
         'inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json'
       ]
+      cmd << '--log-level=debug' if debug
       Dir.chdir(path) do
         inspec = shellout!(cmd, returns: [0, 100, 101])
         debug inspec.stderr unless inspec.stderr.empty?
