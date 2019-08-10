@@ -7,9 +7,10 @@ This is a set of tools to generate reports from gather-log bundles for various C
 
 ## Requirements
 
-1. Chef InSpec (currently tested with v4 but should work with v3)
+1. Chef InSpec >= 4.10.4
 2. ruby 2.5+
 3. bundler >= 2.0
+4. git >= 2.22
 
 ## Installation
 

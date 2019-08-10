@@ -222,7 +222,7 @@ module Gatherlogs
       cmd = [
         'inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json'
       ]
-      cmd << '--log-level=debug' if debug
+      cmd << '--log-level=debug' if debug?
       Dir.chdir(path) do
         inspec = shellout!(cmd, returns: [0, 100, 101])
         debug inspec.stderr unless inspec.stderr.empty?
