@@ -3,6 +3,7 @@ require 'clamp'
 require 'fileutils'
 require 'logger'
 require 'tempfile'
+require 'inspec'
 
 require 'gatherlogs'
 require 'gatherlogs/shellout'
@@ -166,7 +167,7 @@ module Gatherlogs
         'tar', 'xvf', filename, '-C', path,
         '--strip-components', '2'
       ]
-      spinner "Extracting log bundle" do |s|
+      spinner "Extracting log bundle" do
         shellout!(cmd)
         fix_archive_perms(path)
       end
@@ -219,13 +220,7 @@ module Gatherlogs
       disable_colors if monochrome?
     end
 
-    def inspec_exec(path, product)
-      signal_usage_error 'Please specify a profile to use' if product.nil?
-
-      profile = find_profile_path(product)
-      tmpfile = Tempfile.new('inspec_exec')
-
-      require 'inspec'
+    def inspec_runner
       opts = {
         "logger" => Gatherlogs.logger,
         "report" => false,
@@ -235,14 +230,20 @@ module Gatherlogs
         "create_lockfile" => false
       }
 
-      runner = Inspec::Runner.new(opts)
-      runner.add_target(profile, opts)
+      @inspec_runner ||= Inspec::Runner.new(opts)
+    end
+
+    def inspec_exec(path, product)
+      signal_usage_error 'Please specify a profile to use' if product.nil?
+
+      profile = find_profile_path(product)
+      inspec_runner.add_target(profile)
 
       Dir.chdir(path) do
-        runner.run
+        inspec_runner.run
       end
 
-      runner.report
+      inspec_runner.report
     end
   end
 end

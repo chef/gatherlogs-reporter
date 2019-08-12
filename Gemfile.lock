@@ -6,7 +6,7 @@ PATH
       inspec-core (>= 4.10.4)
       mixlib-shellout (~> 2.4)
       paint (~> 2.0)
-      tty-spinner
+      tty-spinner (~> 0.9)
 
 GEM
   remote: https://rubygems.org/

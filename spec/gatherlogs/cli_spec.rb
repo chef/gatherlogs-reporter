@@ -82,13 +82,11 @@ RSpec.describe Gatherlogs::CLI do
 
   it 'should run inspec' do
     expect(cli).to receive(:find_profile_path).with('chef-server') { 'chef-server-profile' }
-    expect(cli).to receive(:shellout!).with(
-      [
-        'inspec', 'exec', 'chef-server-profile', '--no-create-lockfile',
-        '--reporter', 'json'
-      ],
-      returns: [0, 100, 101]
-    ) { double('shellout', stdout: '{ "test": "bar" }', stderr: 'foo') }
+    runner = double('runner')
+    expect(runner).to receive(:add_target).with('chef-server-profile')
+    expect(runner).to receive(:run)
+    expect(runner).to receive(:report) { { 'test' => 'bar' } }
+    expect(cli).to receive(:inspec_runner).exactly(3).times.and_return(runner)
 
     expect(cli.inspec_exec('.', 'chef-server')).to eq('test' => 'bar')
   end

@@ -35,10 +35,10 @@ module Gatherlogs
       }
     end
 
-    def report(r)
+    def report(report)
       output = { system_info: {}, report: [] }
 
-      r[:profiles].each do |profile|
+      report[:profiles].each do |profile|
         debug profile[:title]
         # don't show profiles that have no controls
         next if profile[:controls].empty?
