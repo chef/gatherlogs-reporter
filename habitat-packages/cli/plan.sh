@@ -12,7 +12,7 @@ pkg_deps=(
   core/grep
   core/bash
   core/findutils
-  chef/inspec
+  core/git
 )
 
 pkg_build_deps=(

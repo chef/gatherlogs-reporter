@@ -42,4 +42,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'clamp', '~> 1.3'
   spec.add_dependency 'mixlib-shellout', '~> 2.4'
   spec.add_dependency 'paint', '~> 2.0'
+  spec.add_dependency 'tty-spinner', '~> 0.9'
 end

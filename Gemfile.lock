@@ -6,6 +6,7 @@ PATH
       inspec-core (>= 4.10.4)
       mixlib-shellout (~> 2.4)
       paint (~> 2.0)
+      tty-spinner
 
 GEM
   remote: https://rubygems.org/
@@ -160,6 +161,8 @@ GEM
       tty-screen (~> 0.7)
       wisper (~> 2.0.0)
     tty-screen (0.7.0)
+    tty-spinner (0.9.1)
+      tty-cursor (~> 0.7)
     tty-table (0.11.0)
       equatable (~> 0.6)
       necromancer (~> 0.5)

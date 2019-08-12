@@ -78,10 +78,13 @@ module Gatherlogs
 
     def generate_report
       product = inspec_profile.dup
+      output = {}
 
-      output = log_working_dir do |log_path|
+      log_working_dir do |log_path|
         product ||= detect_product(log_path)
-        reporter.report(inspec_exec(log_path, product))
+        spinner("Running inspec profile for #{product}") do
+          output = reporter.report(inspec_exec(log_path, product))
+        end
       end
 
       print_report('System report', output[:system_info])
@@ -163,8 +166,10 @@ module Gatherlogs
         'tar', 'xvf', filename, '-C', path,
         '--strip-components', '2'
       ]
-      shellout!(cmd)
-      fix_archive_perms(path)
+      spinner "Extracting log bundle" do |s|
+        shellout!(cmd)
+        fix_archive_perms(path)
+      end
       path
     end
 
@@ -180,13 +185,14 @@ module Gatherlogs
     def fetch_remote_tar(url)
       return if url.nil?
 
-      info 'Fetching remote gatherlogs bundle'
       tmp_cache_file = ::Tempfile.new('gatherlogs')
       tmp_cache_file.close
       debug "tmp_cache_file: #{tmp_cache_file.path}"
 
-      shellout!(['wget', url, '-O', tmp_cache_file.path])
-      @cleanup_paths << tmp_cache_file.path
+      spinner 'Fetching remote gatherlogs bundle' do
+        shellout!(['wget', url, '-O', tmp_cache_file.path])
+        @cleanup_paths << tmp_cache_file.path
+      end
 
       tmp_cache_file.path
     end
@@ -215,29 +221,24 @@ module Gatherlogs
 
     def inspec_exec(path, product)
       signal_usage_error 'Please specify a profile to use' if product.nil?
-      info "Running inspec profile for #{product}..."
 
       profile = find_profile_path(product)
+      tmpfile = Tempfile.new('inspec_exec')
 
       require 'inspec'
       opts = {
-        "reporter" => ['json'],
+        "logger" => Gatherlogs.logger,
+        "report" => false,
+        "reporter" => {
+          "json" => { stdout: false }
+        },
         "create_lockfile" => false
       }
-      opts["log-level"] = "debug" if debug?
 
-
-      cmd = [
-        'inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json'
-      ]
-      cmd << '--log-level=debug' if debug?
       runner = Inspec::Runner.new(opts)
       runner.add_target(profile, opts)
 
       Dir.chdir(path) do
-        # inspec = shellout!(cmd, returns: [0, 100, 101])
-        # debug inspec.stderr unless inspec.stderr.empty?
-        # JSON.parse(inspec.stdout)
         runner.run
       end
 
