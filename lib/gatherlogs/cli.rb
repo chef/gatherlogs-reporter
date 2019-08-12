@@ -219,15 +219,29 @@ module Gatherlogs
 
       profile = find_profile_path(product)
 
+      require 'inspec'
+      opts = {
+        "reporter" => ['json'],
+        "create_lockfile" => false
+      }
+      opts["log-level"] = "debug" if debug?
+
+
       cmd = [
         'inspec', 'exec', profile, '--no-create-lockfile', '--reporter', 'json'
       ]
       cmd << '--log-level=debug' if debug?
+      runner = Inspec::Runner.new(opts)
+      runner.add_target(profile, opts)
+
       Dir.chdir(path) do
-        inspec = shellout!(cmd, returns: [0, 100, 101])
-        debug inspec.stderr unless inspec.stderr.empty?
-        JSON.parse(inspec.stdout)
+        # inspec = shellout!(cmd, returns: [0, 100, 101])
+        # debug inspec.stderr unless inspec.stderr.empty?
+        # JSON.parse(inspec.stdout)
+        runner.run
       end
+
+      runner.report
     end
   end
 end

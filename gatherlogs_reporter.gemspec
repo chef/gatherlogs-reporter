@@ -38,6 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'simplecov'
+  spec.add_dependency 'inspec-core', '>= 4.10.4'
   spec.add_dependency 'clamp', '~> 1.3'
   spec.add_dependency 'mixlib-shellout', '~> 2.4'
   spec.add_dependency 'paint', '~> 2.0'

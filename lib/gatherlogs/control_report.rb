@@ -41,18 +41,18 @@ module Gatherlogs
     end
 
     def ordered_control_ids
-      keys = controls.map.with_index { |c, index| [index, c['id']] }
+      keys = controls.map.with_index { |c, index| [index, c[:id]] }
       keys.sort_by(&:last)
     end
 
     def update_system_info(tags)
-      return unless tags.include?('system')
+      return unless tags.include?(:system)
 
-      system_info.merge!(tags['system'])
+      system_info.merge!(tags[:system])
     end
 
     def update_verbose_control(tags)
-      @verbose = tags.include?('verbose') ? tags['verbose'] : false
+      @verbose = tags.include?(:verbose) ? tags[:verbose] : false
     end
 
     def verbose_control?
@@ -63,9 +63,9 @@ module Gatherlogs
     # Control snippet:
     #    desc "This is a description from the control!"
     def desc_text(control)
-      return unless control.key?('desc')
+      return unless control.key?(:desc)
 
-      text = control['desc']
+      text = control[:desc]
       return if text.nil? || text.empty?
 
       labeled_output DESC_ICON, tabbed_text(text) + "\n"
@@ -75,7 +75,7 @@ module Gatherlogs
     # Control snippet:
     #    tag kb: "http://test.com"
     def kb_text(control)
-      text = Array(control['tags']['kb'])
+      text = Array(control[:tags][:kb])
       return if text.empty?
 
       labeled_output KB_ICON, tabbed_text(text) + "\n"
@@ -85,7 +85,7 @@ module Gatherlogs
     # Control snippet:
     #    tag summary: "Some output in the control"
     def summary_text(control)
-      text = control['tags']['summary']
+      text = control[:tags][:summary]
       return if text.nil?
 
       labeled_output SUMMARY_ICON, tabbed_text(text) + "\n"
@@ -97,16 +97,16 @@ module Gatherlogs
       @badge = PASSED_ICON
       @verbose = false
 
-      update_system_info(control['tags'])
+      update_system_info(control[:tags])
 
       # included controls show up in the parent but with no results
       # so we need to skip them but make sure to grab sys info first
-      return if control['results'].empty?
+      return if control[:results].empty?
 
-      update_verbose_control(control['tags'])
+      update_verbose_control(control[:tags])
 
-      result_messages = control['results'].map do |result|
-        update_status(result['status'])
+      result_messages = control[:results].map do |result|
+        update_status(result[:status])
         format_result(result)
       end.compact
 
@@ -125,7 +125,7 @@ module Gatherlogs
     def show_control?(control)
       return true if show_all_controls?
 
-      control_impact = control['impact'].to_f || 0
+      control_impact = control[:impact].to_f || 0
 
       @status == FAILED && control_impact >= min_impact
     end
@@ -143,28 +143,28 @@ module Gatherlogs
     end
 
     def control_title(control)
-      colorize "#{@badge} #{control['id']}: #{control['title']}", @status
+      colorize "#{@badge} #{control[:id]}: #{control[:title]}", @status
     end
 
     def source_error?(result)
-      result['code_desc'].match?(/Control Source Code Error/)
+      result[:code_desc].match?(/Control Source Code Error/)
     end
 
     # Format the output used for showing the control test results
     def format_result_message(result)
-      output = case result['status']
+      output = case result[:status]
                when 'skipped'
                  badge = SKIPPED_ICON
                  color = SKIPPED
-                 result['skip_message']
+                 result[:skip_message]
                when 'failed'
                  badge = FAILED_ICON
                  color = FAILED
-                 truncate "#{result['code_desc']}\n#{result['message']}".chomp
+                 truncate "#{result[:code_desc]}\n#{result[:message]}".chomp
                else
                  badge = PASSED_ICON
                  color = PASSED
-                 result['code_desc']
+                 result[:code_desc]
                end
       message = tabbed_text "#{badge} #{output}"
       colorize message.to_s, color
@@ -185,7 +185,7 @@ module Gatherlogs
 
     def show_result?(result)
       show_all_tests? || source_error?(result) ||
-        (verbose_control? && result['status'] == 'failed')
+        (verbose_control? && result[:status] == 'failed')
     end
 
     def format_result(result)
