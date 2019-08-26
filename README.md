@@ -7,18 +7,15 @@ This is a set of tools to generate reports from gather-log bundles for various C
 
 ## Requirements
 
-1. Chef InSpec >= 4.10.4
-2. ruby 2.5+
-3. bundler >= 2.0
-4. git >= 2.22
+1. ruby 2.6+
+2. bundler >= 2.0
+3. git >= 2.22
 
 ## Installation
 
-**NOTE**: This brings in Chef InSpec v4 which requires [license acceptance](https://docs.chef.io/chef_license_accept.html) in order to run.
-
 ```bash
-hab pkg install will/gatherlogs_reporter
-hab pkg exec will/gatherlogs_reporter gatherlogs_report --help
+hab pkg install chef/gatherlogs_reporter
+hab pkg exec chef/gatherlogs_reporter gatherlogs_report --help
 ```
 
 ## Usage
