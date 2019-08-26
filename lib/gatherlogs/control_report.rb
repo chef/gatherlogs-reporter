@@ -135,8 +135,8 @@ module Gatherlogs
       summary << control_title(control)
       if @status == FAILED
         summary << subsection(desc_text(control))
-        summary << subsection(summary_text(control))
         summary << subsection(kb_text(control))
+        summary << subsection(summary_text(control))
       end
 
       summary
