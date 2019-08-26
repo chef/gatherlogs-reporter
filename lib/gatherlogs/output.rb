@@ -49,6 +49,20 @@ module Gatherlogs
       Gatherlogs.logger.info(msg)
     end
 
+    def spinner(*msg)
+      require 'tty/spinner'
+
+      color = find_color(msg, GREEN)
+      msg = colorize(msg.join(' ').chomp, color)
+      @spinner ||= TTY::Spinner.new("[:spinner] :title", format: :dots)
+      @spinner.update(title: msg)
+
+      @spinner.run do |s|
+        yield
+        s.success
+      end
+    end
+
     def error(*msg)
       color = find_color(msg, FAILED)
       msg = colorize(msg.join(' ').chomp, color)

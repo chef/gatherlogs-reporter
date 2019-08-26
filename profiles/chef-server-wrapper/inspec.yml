@@ -1,0 +1,19 @@
+name: chef-server-wrapper
+title: Chef InSpec profile for Chef-Server generated gather-logs
+maintainer: Will Fisher <will@chef.io>
+copyright: Will Fisher
+copyright_email: will@chef.io
+license: Apache-2.0
+summary: Chef InSpec profile for Chef-Server generated gather-logs
+version: 1.0.0
+
+depends:
+  - name: chef-server
+    <% unless ENV['GL_DEV'] %>
+    git: https://github.com/teknofire/glprofiles
+    <% else %>
+    path: ../../../glprofiles/chef-server
+    <% end %>
+    relative_path: chef-server
+  - name: common-wrapper
+    path: ../common-wrapper

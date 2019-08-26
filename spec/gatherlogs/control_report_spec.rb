@@ -1,36 +1,36 @@
 RSpec.describe Gatherlogs::ControlReport do
   let(:controls) do
     [{
-      'id' => '010.d.e.f',
-      'tags' => {
+      id: '010.d.e.f',
+      tags: {
         'summary' => 'Summary text',
         'system' => { 'test' => 'foo' },
         'kb' => ['https://test.com', 'http://google.com']
       },
-      'desc' => 'DEF Description text',
-      'results' => [{
-        'status' => 'success',
-        'code_desc' => 'It worked!'
+      desc: 'DEF Description text',
+      results: [{
+        status: 'success',
+        code_desc: 'It worked!'
       }, {
-        'status' => 'failed',
-        'code_desc' => 'Control Source Code Error'
+        status: 'failed',
+        code_desc: 'Control Source Code Error'
       }]
     }, {
-      'id' => '000.a.b.c',
-      'impact' => '0.7',
-      'tags' => { 'verbose' => true },
-      'desc' => 'ABC Description text',
-      'results' => [{
-        'status' => 'failed',
-        'code_desc' => 'Missing all the things'
+      id: '000.a.b.c',
+      impact: '0.7',
+      tags: { 'verbose' => true },
+      desc: 'ABC Description text',
+      results: [{
+        status: 'failed',
+        code_desc: 'Missing all the things'
       }]
     }, {
-      'id' => '010.a.b.c',
-      'tags' => {},
-      'desc' => 'ABC2 Description text',
-      'results' => [{
-        'status' => 'skipped',
-        'code_desc' => 'Skipped because of reasons'
+      id: '010.a.b.c',
+      tags: {},
+      desc: 'ABC2 Description text',
+      results: [{
+        status: 'skipped',
+        code_desc: 'Skipped because of reasons'
       }]
     }]
   end
@@ -45,61 +45,61 @@ RSpec.describe Gatherlogs::ControlReport do
 
   let(:success_result) do
     {
-      'status' => 'success',
-      'code_desc' => 'CODE_DESC',
-      'message' => 'Something failed',
-      'skip_message' => 'We skipped it'
+      status: 'success',
+      code_desc: 'CODE_DESC',
+      message: 'Something failed',
+      skip_message: 'We skipped it'
     }
   end
 
   let(:failed_result) do
     {
-      'status' => 'failed',
-      'code_desc' => 'CODE_DESC',
-      'message' => 'Something failed',
-      'skip_message' => 'We skipped it'
+      status: 'failed',
+      code_desc: 'CODE_DESC',
+      message: 'Something failed',
+      skip_message: 'We skipped it'
     }
   end
 
   let(:skipped_result) do
     {
-      'status' => 'skipped',
-      'code_desc' => 'CODE_DESC',
-      'message' => 'Something failed',
-      'skip_message' => 'We skipped it'
+      status: 'skipped',
+      code_desc: 'CODE_DESC',
+      message: 'Something failed',
+      skip_message: 'We skipped it'
     }
   end
 
   let(:source_error_result) do
     {
-      'status' => 'failed',
-      'code_desc' => 'Control Source Code Error',
-      'message' => 'Something failed',
-      'skip_message' => 'We skipped it'
+      status: 'failed',
+      code_desc: 'Control Source Code Error',
+      message: 'Something failed',
+      skip_message: 'We skipped it'
     }
   end
 
   it 'should return nil if no text' do
     expect(reporter.desc_text({})).to eq nil
-    expect(reporter.desc_text('desc' => '')).to eq nil
+    expect(reporter.desc_text(desc: '')).to eq nil
 
-    expect(reporter.kb_text('tags' => {})).to eq nil
-    expect(reporter.summary_text('tags' => {})).to eq nil
+    expect(reporter.kb_text(tags: {})).to eq nil
+    expect(reporter.summary_text(tags: {})).to eq nil
   end
 
   it 'should return desc text' do
-    simple = { 'desc' => 'Description text' }
+    simple = { desc: 'Description text' }
     expect(reporter.desc_text(simple)).to eq "#{Gatherlogs::Output::DESC_ICON} Description text\n"
   end
 
   it 'should return summary text' do
-    simple = { 'tags' => { 'summary' => 'Summary text' } }
+    simple = { tags: { summary: 'Summary text' } }
     expect(reporter.summary_text(simple)).to eq "#{Gatherlogs::Output::SUMMARY_ICON} Summary text\n"
   end
 
   it 'should return kb link text' do
-    single = { 'tags' => { 'kb' => 'https://test.com' } }
-    array = { 'tags' => { 'kb' => ['https://test.com', 'http://google.com'] } }
+    single = { tags: { kb: 'https://test.com' } }
+    array = { tags: { kb: ['https://test.com', 'http://google.com'] } }
     expect(reporter.kb_text(single)).to eq "#{Gatherlogs::Output::KB_ICON} https://test.com\n"
     expect(reporter.kb_text(array)).to eq "#{Gatherlogs::Output::KB_ICON} https://test.com\n    http://google.com\n"
   end

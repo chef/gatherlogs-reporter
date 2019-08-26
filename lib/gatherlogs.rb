@@ -1,3 +1,5 @@
+require 'rubygems'
+
 require 'gatherlogs/version'
 require 'gatherlogs/product'
 require 'gatherlogs/reporter'

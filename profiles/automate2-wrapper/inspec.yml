@@ -1,0 +1,19 @@
+name: automate2-wrapper
+title: Chef InSpec profile for automate2 generated gather-logs
+maintainer: Will Fisher <will@chef.io>
+copyright: Will Fisher
+copyright_email: will@chef.io
+license: Apache-2.0
+summary: Chef InSpec profile for automate2 generated gather-logs
+version: 1.0.0
+
+depends:
+  - name: automate2
+    <% unless ENV['GL_DEV'] %>
+    git: https://github.com/teknofire/glprofiles
+    <% else %>
+    path: ../../../glprofiles/automate2
+    <% end %>
+    relative_path: automate2
+  - name: common-wrapper
+    path: ../common-wrapper
