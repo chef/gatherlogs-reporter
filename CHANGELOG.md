@@ -1,11 +1,16 @@
 # Change Log
 
-<!-- latest_release 1.2.8 -->
+<!-- latest_release 1.2.9 -->
+## [v1.2.9](https://github.com/chef/gatherlogs-reporter/tree/v1.2.9) (2019-08-26)
+
+#### Merged Pull Requests
+- This switches profiles to pull form a remote git repo [#121](https://github.com/chef/gatherlogs-reporter/pull/121) ([teknofire](https://github.com/teknofire))
+<!-- latest_release -->
+
 ## [v1.2.8](https://github.com/chef/gatherlogs-reporter/tree/v1.2.8) (2019-07-31)
 
 #### Merged Pull Requests
 - Add build promotions [#119](https://github.com/chef/gatherlogs-reporter/pull/119) ([teknofire](https://github.com/teknofire))
-<!-- latest_release -->
 
 #### Merged Pull Requests
 - Documentation and various text fixes [#111](https://github.com/chef/gatherlogs-reporter/pull/111) ([teknofire](https://github.com/teknofire))
