@@ -8,11 +8,11 @@ module Gatherlogs
     extend Gatherlogs::Shellout
 
     def self.inspec_version
-      "inspec: #{shellout!('inspec --version').stdout.lines.first}"
+      "inspec: #{Gem.loaded_specs['inspec-core'].version}"
     end
 
     def self.cli_version
-      "check_logs: #{Gatherlogs::VERSION}"
+      "gatherlogs_report: #{Gatherlogs::VERSION}"
     end
   end
 end
