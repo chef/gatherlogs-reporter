@@ -1,11 +1,16 @@
 # Change Log
 
-<!-- latest_release 1.2.10 -->
+<!-- latest_release 1.2.11 -->
+## [v1.2.11](https://github.com/chef/gatherlogs-reporter/tree/v1.2.11) (2019-08-27)
+
+#### Merged Pull Requests
+- Update to pull gem version and cli name [#125](https://github.com/chef/gatherlogs-reporter/pull/125) ([teknofire](https://github.com/teknofire))
+<!-- latest_release -->
+
 ## [v1.2.10](https://github.com/chef/gatherlogs-reporter/tree/v1.2.10) (2019-08-26)
 
 #### Merged Pull Requests
 - Move summary after the KB link [#124](https://github.com/chef/gatherlogs-reporter/pull/124) ([teknofire](https://github.com/teknofire))
-<!-- latest_release -->
 
 ## [v1.2.9](https://github.com/chef/gatherlogs-reporter/tree/v1.2.9) (2019-08-26)
 
