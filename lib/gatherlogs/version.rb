@@ -9,9 +9,11 @@ module Gatherlogs
 
     def self.inspec_version
       if Gem.loaded_specs.include?('inspec-core')
-        inspec_version = 'inspec-core-' + Gem.loaded_specs['inspec-core'].version.to_s
+        inspec_version = 'inspec-core-'
+        inspec_version += Gem.loaded_specs['inspec-core'].version.to_s
       elsif Gem.loaded_specs.include?('inspec')
-        inspec_version = 'inspec-' + Gem.loaded_specs['inspec'].version.to_s
+        inspec_version = 'inspec-'
+        inspec_version += Gem.loaded_specs['inspec'].version.to_s
       else
         inspec_version = 'Unable to find inspec gem'
       end

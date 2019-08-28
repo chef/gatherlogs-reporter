@@ -10,10 +10,6 @@ Metrics/LineLength:
     - grese.gemspec
     - spec/**/*.rb
 
-Metrics/BlockLength:
-  Exclude:
-    - spec/**/*.rb
-
 Style/Documentation:
   Enabled: false
 
