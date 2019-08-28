@@ -208,6 +208,7 @@ module Gatherlogs
     def parse_args
       if debug?
         Gatherlogs.logger.level = ::Logger::DEBUG
+        Inspec::Log.level = :debug
       elsif quiet?
         Gatherlogs.logger.level = ::Logger::ERROR
       else
