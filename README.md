@@ -15,7 +15,7 @@ This is a set of tools to generate reports from gather-log bundles for various C
 
 ```bash
 hab pkg install chef/gatherlogs_reporter
-hab pkg exec chef/gatherlogs_reporter gatherlogs_report --help
+hab pkg exec chef/gatherlogs_reporter gatherlogs report --help
 ```
 
 ## Usage
@@ -53,16 +53,16 @@ To run this tool you will need access to the `gather-log` output from a supporte
     # default directory structure <SERVER_HOSTNAME>/<BUNDLE_TIMESTAMP>
     cd chef.myhostname.com/2019-06-20-16:54:01
     ```
-3. Run the reporter: `gatherlogs_report`
+3. Run the reporter: `gatherlog report`
 
     *No options are required as it will look in the current directory for the extracted files by default.*
 
-The `gatherlogs_report` command will attempt to detect the product used to generate the gather-logs bundle, if for some reason it's unable to do so, ensure that you are in the correct directory with the log bundle or specify the product name manually.
+The `gatherlogs report` command will attempt to detect the product used to generate the gather-logs bundle, if for some reason it's unable to do so, ensure that you are in the correct directory with the log bundle or specify the product name manually.
 
 To see all the available options use
 
 ```bash
-gatherlogs_report --help
+gatherlogs report --help
 ```
 
 ## Example output
@@ -157,17 +157,18 @@ source "/PATH/TO/gatherlogs/completions/gatherlogs_report.zsh"
   git clone https://github.com/chef/gatherlogs-reporter
   git clone https://github.com/teknofire/glprofiles
   cd gatherlogs-reporter
-  bundle
+  bundle install
   ```
 
-2. Add `gatherlogs-reporter/bin` to your path, put this in your `.bashrc` or the equivalent file for your shell.
+2. Setup the gatherlog CLI environment for your shell.
 
   ```bash
-  export PATH=$PATH:PATH/TO/gatherlogs-reporter/bin;
+  # follow the instructions
+  gatherlog init
   ```
 
 3. Run the reporter
 
   ```bash
-  GL_DEV=true gatherlogs_report -p PATH/TO/LOGS
+  GL_DEV=true gatherlogs report -p PATH/TO/LOGS
   ```

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Usage: gatherlog commands
+# Summary: List all gatherlog commands
+# Help: This command is mostly used for autocompletion in various shells, and for `gatherlog help`.
+# Also, this command helps find commands that are named the same as potentially builtin shell commands (which, cd, etc)
+
+set -e
+
+shopt -s nullglob
+
+{ for path in ${PATH//:/$'\n'}; do
+    for command in "${path}/gl-"*; do
+      command="${command##*gl-}"
+      echo $command
+    done
+  done
+} | sort | uniq

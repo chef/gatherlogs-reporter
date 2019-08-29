@@ -58,7 +58,7 @@ module Grese
         return { error: 'Invalid gather-log bundle', status: 1 }
       end
 
-      cmd = ['gatherlogs_report', '-m', '--remote', remote_url]
+      cmd = ['gatherlog', 'report', '-m', '--remote', remote_url]
 
       puts "[EXECUTING] #{cmd.join(' ')}"
       checklog = shellout(cmd)
