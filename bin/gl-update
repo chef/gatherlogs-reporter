@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Usage: gatherlog update
+# Summary: Update the cloned copy of the gatherlog code
+# Help: This command will do a git pull and bundle install for the gatherlog code.
+
+pushd $_GL_ROOT > /dev/null
+
+echo "Pulling latest git code"
+echo "-----------------------"
+git pull
+echo ""
+
+echo "Updating bundled gems"
+echo "-----------------------"
+bundle install

@@ -1,6 +1,8 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
+set -e
 
-SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export BUNDLE_GEMFILE="$SCRIPT_PATH/../Gemfile"
+bold=$(tput bold)
+normal=$(tput sgr0)
+echo "${bold}You are using the deprecated CLI, please use \"gatherlog report\" instead${normal}"
 
-gatherlogs_report.rb $*
+gatherlog report $*

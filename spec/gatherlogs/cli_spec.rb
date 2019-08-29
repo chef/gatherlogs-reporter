@@ -3,27 +3,9 @@ RSpec.describe Gatherlogs::CLI do
     Gatherlogs::CLI.new({})
   end
 
-  it 'should gather the tool versions' do
-    allow(cli).to receive(:info)
-
-    # expect(Gatherlogs).to receive(:VERSION)
-    expect(Gatherlogs::Version).to receive(:cli_version) { 'check_logs: 1.0' }
-    expect(Gatherlogs::Version).to receive(:inspec_version) { 'inspec: 1.0' }
-    # expect(cli).to receive(:exit)
-
-    cli.show_versions
-  end
-
   it 'should call show_versions if cli flag is set' do
     expect(cli).to receive(:version?) { true }
     expect(cli).to receive(:show_versions)
-
-    cli.execute
-  end
-
-  it 'should call show_profiles if cli flag is set' do
-    expect(cli).to receive(:list_profiles?) { true }
-    expect(cli).to receive(:show_profiles)
 
     cli.execute
   end
@@ -37,13 +19,6 @@ RSpec.describe Gatherlogs::CLI do
   it 'should setup a new reporter' do
     expect(Gatherlogs::Reporter).to receive(:new).with(min_impact: nil, show_all_controls: nil, show_all_tests: nil)
     cli.reporter
-  end
-
-  it 'should print the profile list alphabetically' do
-    cli.profiles = %w[beta alpha gamma common glresources]
-    allow(cli).to receive(:exit)
-
-    expect { cli.show_profiles }.to output("alpha\nbeta\ngamma\n").to_stdout
   end
 
   it 'should call out to product.detect with the log path' do

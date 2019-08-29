@@ -1,14 +1,3 @@
-require 'json'
-require 'clamp'
-require 'fileutils'
-require 'logger'
-require 'tempfile'
-require 'inspec'
-
-require 'gatherlogs'
-require 'gatherlogs/shellout'
-
-PROFILES_PATH = File.expand_path('../../profiles', __dir__).freeze
 Clamp.allow_options_after_parameters = true
 
 module Gatherlogs
@@ -28,8 +17,6 @@ module Gatherlogs
     option ['-d', '--debug'], :flag, 'Enable debug output'
     option ['-s', '--system-only'], :flag, 'Only show system report',
            attribute_name: :summary_only
-    option ['--profiles'], :flag, 'Show available profiles',
-           attribute_name: :list_profiles
     option ['-v', '--verbose'], :flag, 'Show output from all control tests'
     option ['-a', '--all'], :flag,
            'Show all tests, default is to only show failed tests'
@@ -51,11 +38,6 @@ module Gatherlogs
       @cleanup_paths = []
     end
 
-    def show_versions
-      puts Gatherlogs::Version.cli_version
-      puts Gatherlogs::Version.inspec_version
-    end
-
     def reporter
       @reporter ||= Gatherlogs::Reporter.new(
         show_all_controls: all?,
@@ -67,7 +49,6 @@ module Gatherlogs
     def execute
       parse_args
       return show_versions if version?
-      return show_profiles if list_profiles?
 
       generate_report
     ensure
@@ -75,6 +56,10 @@ module Gatherlogs
         debug "cleaning up #{d}"
         FileUtils.remove_entry(d, true)
       end
+    end
+
+    def show_versions
+      puts shellout!('gatherlog version').stdout
     end
 
     def generate_report
@@ -100,17 +85,8 @@ module Gatherlogs
       Gatherlogs::Product.detect(log_path)
     end
 
-    def show_profiles
-      puts profiles.sort.join("\n").gsub('-wrapper', '')
-    end
-
     def profiles
-      if @profiles.nil?
-        possible_profiles = Dir.glob(File.join(PROFILES_PATH, '*/inspec.yml'))
-        @profiles = possible_profiles.map { |p| File.basename(File.dirname(p)) }
-      end
-      @profiles.reject! { |p| %w[common glresources].include?(p) }
-      @profiles
+      @profiles ||= Profiles.list
     end
 
     def print_report(title, report)
@@ -199,10 +175,7 @@ module Gatherlogs
     end
 
     def find_profile_path(profile)
-      path = File.join(::PROFILES_PATH, "#{profile}-wrapper")
-      return path if File.exist?(path)
-
-      raise "Couldn't find '#{profile}' profile, tried in '#{path}'"
+      Profiles.path(profile)
     end
 
     def parse_args

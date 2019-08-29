@@ -6,10 +6,17 @@ $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
 require 'rubygems'
 require 'bundler/setup'
 require 'gatherlogs'
-require 'gatherlogs/cli'
+
+module Gatherlogs
+  class VersionCLI < Clamp::Command
+    def execute
+      Gatherlogs::Version.show
+    end
+  end
+end
 
 begin
-  Gatherlogs::CLI.run
+  Gatherlogs::VersionCLI.run
 rescue StandardError => e
   puts "[ERROR] #{e}"
   puts 'Backtrace:'

@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# Usage: gatherlog report [command]
+# Summary: Generate a report for the profile
+# Help: This command will generate a report for the gatherlog bundle in the
+# current path by default
+# built-in help
+
+libdir = File.expand_path('../lib', __dir__)
+$LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
+
+require 'rubygems'
+require 'bundler/setup'
+require 'gatherlogs'
+require 'gatherlogs/cli'
+
+begin
+  Gatherlogs::CLI.run
+rescue StandardError => e
+  puts "[ERROR] #{e}"
+  puts 'Backtrace:'
+  puts e.backtrace
+  exit 1
+end
