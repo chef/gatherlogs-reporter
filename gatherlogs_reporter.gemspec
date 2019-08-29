@@ -26,9 +26,11 @@ Gem::Specification.new do |spec|
                    Gemfile Gemfile.lock] + Dir.glob(
                      '{bin,lib,etc,profiles,completions}/**/*', File::FNM_DOTMATCH
                    ).reject { |f| File.directory?(f) || f.match?('inspec.lock') }
+
   if ENV['BUILD_GEM']
     spec.bindir        = 'bin'
-    spec.executables   = %w[gatherlogs_report check_logs]
+    scripts            = Dir.glob('bin/*', File::FNM_DOTMATCH)
+    spec.executables   = scripts.map { |f| File.basename(f) }.reject { |f| f.match?("check_log") }
   end
   spec.require_paths = ['lib']
 

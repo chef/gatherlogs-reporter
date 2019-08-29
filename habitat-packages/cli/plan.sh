@@ -13,6 +13,7 @@ pkg_deps=(
   core/bash
   core/findutils
   core/git
+  core/coreutils
 )
 
 pkg_build_deps=(
@@ -51,6 +52,7 @@ do_unpack() {
 do_build() {
   pushd "$HAB_CACHE_SRC_PATH/$pkg_dirname/"
     build_line "gem build $pkg_name.gemspec ${GEM_HOME}"
+    fix_interpreter "bin/*" core/coreutils bin/env
 
     gem build ${pkg_name}.gemspec
   popd
@@ -62,9 +64,7 @@ do_install() {
     gem install ${pkg_name}-*.gem --no-document
   popd
 
-  wrap_bin 'gatherlogs_report'
-  # old bin name, kept for now for backwards compatability.
-  wrap_bin 'check_logs'
+  wrap_bin 'gatherlog'
 }
 
 # Need to wrap the gatherlogs binary to ensure GEM_HOME/GEM_PATH is correct
@@ -80,7 +80,7 @@ set -e
 source $pkg_prefix/RUNTIME_ENVIRONMENT
 export GEM_PATH GEM_HOME PATH
 
-exec $(pkg_path_for core/ruby)/bin/ruby $real_bin \$@
+exec $real_bin \$@
 EOF
   chmod -v 755 "$bin"
 }
