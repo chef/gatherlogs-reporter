@@ -1,7 +1,5 @@
 require 'bundler/gem_tasks'
 
-Bump.tag_by_default = true
-
 task default: :test
 
 require 'rspec/core/rake_task'
