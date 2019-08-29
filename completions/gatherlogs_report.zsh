@@ -2,7 +2,7 @@ _gatherlog_profiles() {
   local args
   read -cA args
 
-  completions="$(gatherlog report --profiles)"
+  completions="$(gatherlog profiles)"
 
   reply=("${(ps:\n:)completions}")
 }

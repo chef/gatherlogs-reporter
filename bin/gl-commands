@@ -6,37 +6,12 @@
 
 set -e
 
-# Provide gatherlog completions
-if [ "$1" = "--complete" ]; then
-  echo --sh
-  echo --no-sh
-  exit
-fi
-
-if [ "$1" = "--sh" ]; then
-  sh=1
-  shift
-elif [ "$1" = "--no-sh" ]; then
-  nosh=1
-  shift
-fi
-
 shopt -s nullglob
 
 { for path in ${PATH//:/$'\n'}; do
     for command in "${path}/gl-"*; do
       command="${command##*gl-}"
-      if [ -n "$sh" ]; then
-        if [ ${command:0:3} = "sh-" ]; then
-          echo ${command##sh-}
-        fi
-      elif [ -n "$nosh" ]; then
-        if [ ${command:0:3} != "sh-" ]; then
-          echo ${command##sh-}
-        fi
-      else
-        echo ${command##sh-}
-      fi
+      echo $command
     done
   done
 } | sort | uniq

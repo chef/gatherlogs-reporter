@@ -57,7 +57,13 @@ fi
 
 echo "export PATH=\"\${PATH}:${_GL_ROOT}/bin\""
 
-commands=(`gatherlog commands --sh`)
+case "$shell" in
+zsh )
+  echo "source \"$root/completions/gatherlogs_report.${shell}\""
+  ;;
+esac
+
+commands=(`gatherlog commands`)
 IFS="|"
 cat <<EOS
 _gl_wrapper() {
@@ -65,12 +71,8 @@ _gl_wrapper() {
   if [ "\$#" -gt 0 ]; then
     shift
   fi
-  case "\$command" in
-  ${commands[*]})
-    eval \`gatherlog "sh-\$command" "\$@"\`;;
-  *)
-    command gatherlog "\$command" "\$@";;
-  esac
+
+  command gatherlog "\$command" "\$@"
 }
 EOS
 

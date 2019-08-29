@@ -59,7 +59,7 @@ old_print_help() {
 }
 
 command_path() {
-  command -v "gl-$command" || command -v "gl-sh-$command" || true
+  command -v "gl-$command" || true
 }
 
 summary() {
