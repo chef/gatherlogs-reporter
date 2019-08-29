@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gatherlogs_reporter (1.2.10)
+    gatherlogs_reporter (1.2.12)
       clamp (~> 1.3)
       inspec-core (= 4.12.0)
       mixlib-shellout (~> 2.4)

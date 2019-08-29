@@ -1,4 +1,9 @@
 #!/usr/bin/env ruby
+# Usage: gatherlog report [command]
+# Summary: Generate a report for the profile
+# Help: This command will generate a report for the gatherlog bundle in the
+# current path by default
+# built-in help
 
 libdir = File.expand_path('../lib', __dir__)
 $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
