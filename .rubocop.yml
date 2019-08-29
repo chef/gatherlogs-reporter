@@ -24,6 +24,7 @@ Metrics/BlockLength:
   Max: 35
   Exclude: 
     - spec/**/*.rb
+    - gatherlogs_reporter.gemspec
 
 Layout/IndentFirstHashElement:
   Enabled: false
