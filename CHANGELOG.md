@@ -1,11 +1,16 @@
 # Change Log
 
-<!-- latest_release 2.0.2 -->
+<!-- latest_release 2.0.3 -->
+## [v2.0.3](https://github.com/chef/gatherlogs-reporter/tree/v2.0.3) (2019-09-04)
+
+#### Merged Pull Requests
+- Misc updates [#130](https://github.com/chef/gatherlogs-reporter/pull/130) ([teknofire](https://github.com/teknofire))
+<!-- latest_release -->
+
 ## [v2.0.2](https://github.com/chef/gatherlogs-reporter/tree/v2.0.2) (2019-09-04)
 
 #### Merged Pull Requests
 - Add help for version command [#129](https://github.com/chef/gatherlogs-reporter/pull/129) ([teknofire](https://github.com/teknofire))
-<!-- latest_release -->
 
 ## [v2.0.1](https://github.com/chef/gatherlogs-reporter/tree/v2.0.1) (2019-08-29)
 
