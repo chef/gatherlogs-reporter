@@ -5,6 +5,8 @@
 
 pushd $_GL_ROOT > /dev/null
 
+# TODO: add some sort of detection to determine if we are installed via hab instead of git
+
 echo "Pulling latest git code"
 echo "-----------------------"
 git pull
