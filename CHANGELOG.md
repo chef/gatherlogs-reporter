@@ -1,11 +1,16 @@
 # Change Log
 
-<!-- latest_release 2.0.1 -->
+<!-- latest_release 2.0.2 -->
+## [v2.0.2](https://github.com/chef/gatherlogs-reporter/tree/v2.0.2) (2019-09-04)
+
+#### Merged Pull Requests
+- Add help for version command [#129](https://github.com/chef/gatherlogs-reporter/pull/129) ([teknofire](https://github.com/teknofire))
+<!-- latest_release -->
+
 ## [v2.0.1](https://github.com/chef/gatherlogs-reporter/tree/v2.0.1) (2019-08-29)
 
 #### Merged Pull Requests
 - Fix building the hab pkg [#128](https://github.com/chef/gatherlogs-reporter/pull/128) ([teknofire](https://github.com/teknofire))
-<!-- latest_release -->
 
 ## [v2.0.0](https://github.com/chef/gatherlogs-reporter/tree/v2.0.0) (2019-08-29)
 
