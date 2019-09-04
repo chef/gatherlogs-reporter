@@ -1,4 +1,7 @@
 #!/usr/bin/env ruby
+# Usage: gatherlog version
+# Summary: Display version info about gatherlog cli and inspec
+# Help: Displays version information about gatherlog cli and inspec.
 
 libdir = File.expand_path('../lib', __dir__)
 $LOAD_PATH.unshift(libdir) unless $LOAD_PATH.include?(libdir)
