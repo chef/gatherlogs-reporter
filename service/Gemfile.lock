@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gatherlogs_service (1.2.12)
+    gatherlogs_service (2.0.5)
       mixlib-shellout (~> 2.4)
       puma
       sinatra (~> 2.0)
@@ -20,9 +20,9 @@ GEM
     inflection (1.0.0)
     jaro_winkler (1.5.1)
     json (2.1.0)
-    mime-types (3.2.2)
+    mime-types (3.3)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.0331)
+    mime-types-data (3.2019.0904)
     mixlib-shellout (2.4.4)
     multipart-post (2.1.1)
     mustermann (1.0.3)
@@ -73,7 +73,7 @@ GEM
     string_utf8 (0.1.1)
     tilt (2.0.9)
     unicode-display_width (1.4.0)
-    zendesk_api (1.19.0)
+    zendesk_api (1.19.1)
       faraday (~> 0.9)
       hashie (>= 3.5.2, < 4.0.0)
       inflection
