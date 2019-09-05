@@ -1,11 +1,16 @@
 # Change Log
 
-<!-- latest_release 2.0.5 -->
+<!-- latest_release 2.0.6 -->
+## [v2.0.6](https://github.com/chef/gatherlogs-reporter/tree/v2.0.6) (2019-09-05)
+
+#### Merged Pull Requests
+- Removing all references for bundler/setup [#133](https://github.com/chef/gatherlogs-reporter/pull/133) ([teknofire](https://github.com/teknofire))
+<!-- latest_release -->
+
 ## [v2.0.5](https://github.com/chef/gatherlogs-reporter/tree/v2.0.5) (2019-09-05)
 
 #### Merged Pull Requests
 - Remove bundler setup require [#132](https://github.com/chef/gatherlogs-reporter/pull/132) ([teknofire](https://github.com/teknofire))
-<!-- latest_release -->
 
 ## [v2.0.4](https://github.com/chef/gatherlogs-reporter/tree/v2.0.4) (2019-09-04)
 
