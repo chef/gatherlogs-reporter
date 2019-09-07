@@ -1,0 +1,19 @@
+name: automate-ha-wrapper
+title: Chef InSpec profile for Automate2 HA backend gather-logs
+maintainer: Will Fisher <will@chef.io>
+copyright: Will Fisher
+copyright_email: will@chef.io
+license: Apache-2.0
+summary: Chef InSpec profile for Automate2 HA backend gather-logs
+version: 1.0.0
+
+depends:
+  - name: automate-ha
+    <% unless ENV['GL_DEV'] %>
+    git: https://github.com/teknofire/glprofiles
+    <% else %>
+    path: ../../../glprofiles/automate-ha
+    <% end %>
+    relative_path: automate-ha
+  - name: common-wrapper
+    path: ../common-wrapper
