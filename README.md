@@ -128,6 +128,7 @@ Gather-log report
 
 ## Currently supported product profiles:
   * `automate`
+  * `automate-ha`
   * `automate2`
   * `chef-server`
   * `chef-backend`
@@ -137,6 +138,7 @@ Gather-log report
 * Chef Infra Server: `chef-server-ctl gather-logs`
 * Chef Automate v1: `automate-ctl gather-logs`
 * Chef Automate v2: `chef-automate gather-logs`
+* Chef Automate HA: `automate-backend-ctl gather-logs`
 * Chef Backend: `chef-backend-ctl gather-logs`
 
 ## Autocompletions
@@ -172,3 +174,4 @@ source "/PATH/TO/gatherlogs/completions/gatherlogs_report.zsh"
   ```bash
   GL_DEV=true gatherlogs report -p PATH/TO/LOGS
   ```
+  
