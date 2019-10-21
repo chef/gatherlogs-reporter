@@ -9,6 +9,9 @@ pipelines:
       description: Run pull request verification tests (spec/lint)
   - habitat/build
 
+changelog:
+  rollup_header: Changes not yet released to stable
+
 promote:
   channels:
     - unstable
