@@ -14,6 +14,7 @@ promote:
     - unstable
     - stable
   actions:
+    - built_in:rollover_changelog
     - built_in:promote_habitat_packages
     - built_in:notify_chefio_slack_channels
 
