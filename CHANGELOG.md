@@ -1,11 +1,16 @@
 # Change Log
 
-<!-- latest_release 2.0.7 -->
+<!-- latest_release 2.0.8 -->
+## [v2.0.8](https://github.com/chef/gatherlogs-reporter/tree/v2.0.8) (2019-10-21)
+
+#### Merged Pull Requests
+- Bump rubocop from 0.74.0 to 0.75.1 [#137](https://github.com/chef/gatherlogs-reporter/pull/137) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+<!-- latest_release -->
+
 ## [v2.0.7](https://github.com/chef/gatherlogs-reporter/tree/v2.0.7) (2019-10-21)
 
 #### Merged Pull Requests
 - Bump simplecov from 0.17.0 to 0.17.1 [#136](https://github.com/chef/gatherlogs-reporter/pull/136) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
-<!-- latest_release -->
 
 ## [v2.0.6](https://github.com/chef/gatherlogs-reporter/tree/v2.0.6) (2019-09-05)
 
