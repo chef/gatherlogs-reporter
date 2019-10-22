@@ -9,11 +9,15 @@ pipelines:
       description: Run pull request verification tests (spec/lint)
   - habitat/build
 
+changelog:
+  rollup_header: Changes not yet released to stable
+
 promote:
   channels:
     - unstable
     - stable
   actions:
+    - built_in:rollover_changelog
     - built_in:promote_habitat_packages
     - built_in:notify_chefio_slack_channels
 

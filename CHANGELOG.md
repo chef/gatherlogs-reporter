@@ -7,6 +7,12 @@
 - Bump rspec from 3.8.0 to 3.9.0 [#140](https://github.com/chef/gatherlogs-reporter/pull/140) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
 <!-- latest_release -->
 
+<!-- release_rollup -->
+<!-- release_rollup -->
+
+<!-- latest_stable_release -->
+<!-- latest_stable_release -->
+
 ## [v2.0.10](https://github.com/chef/gatherlogs-reporter/tree/v2.0.10) (2019-10-21)
 
 #### Merged Pull Requests
