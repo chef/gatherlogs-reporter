@@ -1,13 +1,17 @@
 # Change Log
 
-<!-- latest_release 2.0.11 -->
-## [v2.0.11](https://github.com/chef/gatherlogs-reporter/tree/v2.0.11) (2019-10-21)
+<!-- latest_release 2.0.12 -->
+## [v2.0.12](https://github.com/chef/gatherlogs-reporter/tree/v2.0.12) (2019-10-22)
 
 #### Merged Pull Requests
-- Bump rspec from 3.8.0 to 3.9.0 [#140](https://github.com/chef/gatherlogs-reporter/pull/140) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Add changelog rollup expeditor configs [#144](https://github.com/chef/gatherlogs-reporter/pull/144) ([teknofire](https://github.com/teknofire))
 <!-- latest_release -->
 
 <!-- release_rollup -->
+### Changes not yet released to stable
+
+#### Merged Pull Requests
+- Add changelog rollup expeditor configs [#144](https://github.com/chef/gatherlogs-reporter/pull/144) ([teknofire](https://github.com/teknofire)) <!-- 2.0.12 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
