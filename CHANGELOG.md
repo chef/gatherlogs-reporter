@@ -1,16 +1,17 @@
 # Change Log
 
-<!-- latest_release 2.0.12 -->
-## [v2.0.12](https://github.com/chef/gatherlogs-reporter/tree/v2.0.12) (2019-10-22)
+<!-- latest_release 2.0.13 -->
+## [v2.0.13](https://github.com/chef/gatherlogs-reporter/tree/v2.0.13) (2019-10-24)
 
 #### Merged Pull Requests
-- Add changelog rollup expeditor configs [#144](https://github.com/chef/gatherlogs-reporter/pull/144) ([teknofire](https://github.com/teknofire))
+- Update mixlib-shellout requirement from ~&gt; 2.4 to &gt;= 2.4, &lt; 4.0 [#141](https://github.com/chef/gatherlogs-reporter/pull/141) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
 <!-- latest_release -->
 
 <!-- release_rollup -->
 ### Changes not yet released to stable
 
 #### Merged Pull Requests
+- Update mixlib-shellout requirement from ~&gt; 2.4 to &gt;= 2.4, &lt; 4.0 [#141](https://github.com/chef/gatherlogs-reporter/pull/141) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.13 -->
 - Add changelog rollup expeditor configs [#144](https://github.com/chef/gatherlogs-reporter/pull/144) ([teknofire](https://github.com/teknofire)) <!-- 2.0.12 -->
 <!-- release_rollup -->
 
