@@ -1,16 +1,17 @@
 # Change Log
 
-<!-- latest_release 2.0.13 -->
-## [v2.0.13](https://github.com/chef/gatherlogs-reporter/tree/v2.0.13) (2019-10-24)
+<!-- latest_release 2.0.14 -->
+## [v2.0.14](https://github.com/chef/gatherlogs-reporter/tree/v2.0.14) (2019-11-06)
 
 #### Merged Pull Requests
-- Update mixlib-shellout requirement from ~&gt; 2.4 to &gt;= 2.4, &lt; 4.0 [#141](https://github.com/chef/gatherlogs-reporter/pull/141) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump rubocop from 0.75.1 to 0.76.0 [#145](https://github.com/chef/gatherlogs-reporter/pull/145) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
 <!-- latest_release -->
 
 <!-- release_rollup -->
 ### Changes not yet released to stable
 
 #### Merged Pull Requests
+- Bump rubocop from 0.75.1 to 0.76.0 [#145](https://github.com/chef/gatherlogs-reporter/pull/145) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.14 -->
 - Update mixlib-shellout requirement from ~&gt; 2.4 to &gt;= 2.4, &lt; 4.0 [#141](https://github.com/chef/gatherlogs-reporter/pull/141) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.13 -->
 - Add changelog rollup expeditor configs [#144](https://github.com/chef/gatherlogs-reporter/pull/144) ([teknofire](https://github.com/teknofire)) <!-- 2.0.12 -->
 <!-- release_rollup -->
