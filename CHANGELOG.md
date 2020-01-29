@@ -1,16 +1,17 @@
 # Change Log
 
-<!-- latest_release 2.0.16 -->
-## [v2.0.16](https://github.com/chef/gatherlogs-reporter/tree/v2.0.16) (2019-12-17)
+<!-- latest_release 2.0.17 -->
+## [v2.0.17](https://github.com/chef/gatherlogs-reporter/tree/v2.0.17) (2020-01-29)
 
 #### Merged Pull Requests
-- Bump tty-spinner from 0.9.1 to 0.9.2 [#148](https://github.com/chef/gatherlogs-reporter/pull/148) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Bump tty-spinner from 0.9.2 to 0.9.3 [#153](https://github.com/chef/gatherlogs-reporter/pull/153) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
 <!-- latest_release -->
 
 <!-- release_rollup -->
 ### Changes not yet released to stable
 
 #### Merged Pull Requests
+- Bump tty-spinner from 0.9.2 to 0.9.3 [#153](https://github.com/chef/gatherlogs-reporter/pull/153) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.17 -->
 - Bump tty-spinner from 0.9.1 to 0.9.2 [#148](https://github.com/chef/gatherlogs-reporter/pull/148) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.16 -->
 - Bump rake from 13.0.0 to 13.0.1 [#146](https://github.com/chef/gatherlogs-reporter/pull/146) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.15 -->
 - Bump rubocop from 0.75.1 to 0.76.0 [#145](https://github.com/chef/gatherlogs-reporter/pull/145) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.14 -->
