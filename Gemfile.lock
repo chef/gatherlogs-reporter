@@ -68,7 +68,7 @@ GEM
     net-scp (2.0.0)
       net-ssh (>= 2.6.5, < 6.0.0)
     net-ssh (5.2.0)
-    paint (2.1.1)
+    paint (2.2.0)
     parallel (1.18.0)
     parser (2.6.5.0)
       ast (~> 2.4.0)
