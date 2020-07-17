@@ -8,5 +8,12 @@ export ZENDESK_USER={{cfg.server.zendesk_user}}
 export ZENDESK_TOKEN={{cfg.server.zendesk_token}}
 export AUTH_TOKEN={{cfg.server.auth_token}}
 export CHEF_LICENSE={{cfg.server.chef_license}}
+export SS_API_KEY={{cfg.server.ss_api_key}}
+export SS_API_SECRET={{cfg.server.ss_api_secret}}
+export SS_API_HOSTNAME={{cfg.server.ss_api_hostname}}
+export SS_API_PATH={{cfg.server.ss_api_path}}
+export SS_S3_MOUNTPOINT={{cfg.server.ss_s3_mountpoint}}
+export SS_S3_PATH={{cfg.server.ss_s3_path}}
+export WORKING_DIR={{cfg.server.working_dir}}
 
 exec grese -e production

@@ -11,7 +11,15 @@ require 'grese/webhook_server'
 server = Grese::WebhookServer.new({
   url: ENV['ZENDESK_URL'],
   user: ENV['ZENDESK_USER'],
-  token: ENV['ZENDESK_TOKEN']
+  token: ENV['ZENDESK_TOKEN'],
+  ssApiKey: ENV['SS_API_KEY'],
+  ssApiSecret: ENV['SS_API_SECRET'],
+  ssApiHost: ENV['SS_API_HOSTNAME'],
+  ssApiPath: ENV['SS_API_PATH'],
+  ssS3Mountpoint: ENV['SS_S3_MOUNTPOINT'],
+  ssS3Path: ENV['SS_S3_PATH'],
+  workingDir: ENV['WORKING_DIR']
+
 }, development?)
 
 def authenticate!(token)
@@ -42,24 +50,58 @@ post '/:token' do
   end
 end
 
+
+
+#TODO: fork a thread for slowness yo
+
 get '/zendesk/:token' do
   if (info = params['info'])
-    ticket_info = JSON.parse(info)
-    attachments = ticket_info['attachments'].split('|')
+    begin
+      # legacy code for processing ticket attachments
+      ticket_info = JSON.parse(info)
+      attachments = ticket_info['attachments'].split('|')
+      attachments.each do |attachment|
+        filename = attachment.split('=').last
+        results = server.check_logs(attachment)
+        server.update_zendesk(ticket_info['ticket_id'].to_i, filename, results)
+        puts results.to_json
+        
+        status 204
+      end
+    rescue JSON::ParserError => e
 
-    attachments.each do |attachment|
-      filename = attachment.split('=').last
+      # if we can't parse json, assume it's new functionality for sendsafely 
+      
+      # parse out ticket id and content from Zendesk post
+      ticket_id = info.split(',',2)[0]
+      ticket_content = info.split(',',2)[1]
 
-      results = server.check_logs(attachment)
-      server.update_zendesk(ticket_info['ticket_id'].to_i, filename, results)
-      puts results.to_json
+      # parse out sendsafely links from content
 
-      status 204
+      sendsafely_links = ticket_content.scan(/(https:\/\/[a-zA-Z\.]+\/receive\/\?[A-Za-z0-9&=\-]+packageCode=[A-Za-z0-9\-_]+#keyCode=[A-Za-z0-9\-_]+)/).flatten
+
+      # for each sendsafely link
+      sendsafely_links.each do |link|
+
+        results = server.check_link(link,ticket_id)
+
+        # update zendesk ticket with results of report
+        results.each do |result|
+          server.update_zendesk(ticket_id.to_i, result['filename'], result['report'])
+        end
+        
+        puts results.to_json
+        status 204
+        
+      end
+      
+#      status 204      
+
     end
-  else
-    # Invalid request no info param
-    invalid_request
-  end
+    else
+      # Invalid request no info param
+      invalid_request
+    end
 end
 
 get '/' do
