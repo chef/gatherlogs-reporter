@@ -1,0 +1,15 @@
+[server]
+zendesk_url=""
+zendesk_user=""
+zendesk_token=""
+auth_token=""
+chef_license=""
+ss_api_key=""
+ss_api_secret=""
+ss_api_hostname=""
+ss_api_path=""
+ss_s3_mountpoint=""
+ss_s3_path=""
+working_dir=""
+
+
