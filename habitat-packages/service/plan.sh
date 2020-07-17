@@ -1,5 +1,5 @@
 pkg_name=gatherlogs_service
-pkg_origin=chef
+pkg_origin=glasschef
 pkg_maintainer="Chef Support <support@chef.io>"
 pkg_license=('Apache-2.0')
 pkg_deps=(
