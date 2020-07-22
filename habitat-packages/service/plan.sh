@@ -5,8 +5,8 @@ pkg_license=('Apache-2.0')
 pkg_deps=(
   core/bash
   core/ruby
+  glass/gatherlogs_reporter
   core/gnupg
-  chef/gatherlogs_reporter
 )
 
 pkg_build_deps=(

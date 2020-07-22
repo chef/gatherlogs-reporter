@@ -41,7 +41,7 @@ module Grese
     
     def valid_zendesk_request(url)
       uri = URI.parse(url)
-      http_request?(uri) && uri.hostname == 'getchef.zendesk.com'
+      ( http_request?(uri) && uri.hostname == 'getchef.zendesk.com' || http_request?(uri) && uri.hostname == 'getchef1569263994.zendesk.com')
     end
 
     def valid_gatherlog_bundle(url)
@@ -104,8 +104,8 @@ module Grese
             decrypted_file = decrypt(file,serverSecret+keyCode,ticket_id)
 
             # run gatherlogs profiles against file
-            cmd = ['gatherlog', 'report', '-p', decrypted_file]
-            cmd = ['hab','pkg','exec','chef/gatherlogs_reporter','gatherlog', 'report', '-p', decrypted_file]
+            cmd = ['gatherlog', 'report', '-m', '-p', decrypted_file]
+#            cmd = ['hab','pkg','exec','chef/gatherlogs_reporter','gatherlog', 'report', '-p', decrypted_file]
             checklog = shellout(cmd)
             
             # add to results array
@@ -164,7 +164,7 @@ module Grese
 
       cmd = "cat "
       (1..file['parts']).each do |n|
-        cmd = cmd + ticket_dir+ "/#{file['fileId']}-#{n}"
+        cmd = cmd + ticket_dir+ "/#{file['fileId']}-#{n} "
       end
 
       cmd = cmd + " >> "

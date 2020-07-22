@@ -51,9 +51,6 @@ post '/:token' do
 end
 
 
-
-#TODO: fork a thread for slowness yo
-
 get '/zendesk/:token' do
   if (info = params['info'])
     begin
@@ -62,10 +59,15 @@ get '/zendesk/:token' do
       attachments = ticket_info['attachments'].split('|')
       attachments.each do |attachment|
         filename = attachment.split('=').last
-        results = server.check_logs(attachment)
+        child_pid = Process.fork do
+          settings.running_server = nil
+
+	results = server.check_logs(attachment)
         server.update_zendesk(ticket_info['ticket_id'].to_i, filename, results)
         puts results.to_json
-        
+	Process.exit
+	end	        
+	Process.detach child_pid
         status 204
       end
     rescue JSON::ParserError => e
@@ -82,15 +84,20 @@ get '/zendesk/:token' do
 
       # for each sendsafely link
       sendsafely_links.each do |link|
-
-        results = server.check_link(link,ticket_id)
-
-        # update zendesk ticket with results of report
-        results.each do |result|
-          server.update_zendesk(ticket_id.to_i, result['filename'], result['report'])
-        end
-        
-        puts results.to_json
+        child_pid = Process.fork do
+          settings.running_server = nil
+ 
+          results = server.check_link(link,ticket_id)
+          
+          # update zendesk ticket with results of report
+          results.each do |result|
+            server.update_zendesk(ticket_id.to_i, result['filename'], result['report'])
+          end
+          
+          puts results.to_json
+	Process.exit
+	end	
+        Process.detach child_pid
         status 204
         
       end
