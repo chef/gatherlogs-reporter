@@ -12,14 +12,14 @@ pipelines:
 changelog:
   rollup_header: Changes not yet released to stable
 
-promote:
-  channels:
-    - unstable
-    - stable
-  actions:
-    - built_in:rollover_changelog
-    - built_in:promote_habitat_packages
-    - built_in:notify_chefio_slack_channels
+#promote:
+ # channels:
+  # - unstable
+   # - stable
+  #actions:
+   # - built_in:rollover_changelog
+    #- built_in:promote_habitat_packages
+    #- built_in:notify_chefio_slack_channels
 
 github:
   # This deletes the GitHub PR branch after successfully merged into the release branch
