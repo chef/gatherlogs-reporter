@@ -61,7 +61,7 @@ do_build() {
 do_install() {
   pushd "$HAB_CACHE_SRC_PATH/$pkg_dirname/"
     build_line "Gem install ${pkg_name} gem"
-    yes | gem install ${pkg_name}-*.gem --no-document --force
+    gem install ${pkg_name}-*.gem --no-document --force
   popd
 
   wrap_bin 'gatherlog'
