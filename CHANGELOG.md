@@ -1,16 +1,17 @@
 # Change Log
 
-<!-- latest_release 2.0.18 -->
-## [v2.0.18](https://github.com/chef/gatherlogs-reporter/tree/v2.0.18) (2020-01-29)
+<!-- latest_release 2.0.19 -->
+## [v2.0.19](https://github.com/chef/gatherlogs-reporter/tree/v2.0.19) (2020-10-16)
 
 #### Merged Pull Requests
-- Bump mixlib-shellout from 3.0.7 to 3.0.9 [#150](https://github.com/chef/gatherlogs-reporter/pull/150) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Buildkite failure [#191](https://github.com/chef/gatherlogs-reporter/pull/191) ([FaizanSRE](https://github.com/FaizanSRE))
 <!-- latest_release -->
 
 <!-- release_rollup -->
 ### Changes not yet released to stable
 
 #### Merged Pull Requests
+- Buildkite failure [#191](https://github.com/chef/gatherlogs-reporter/pull/191) ([FaizanSRE](https://github.com/FaizanSRE)) <!-- 2.0.19 -->
 - Bump mixlib-shellout from 3.0.7 to 3.0.9 [#150](https://github.com/chef/gatherlogs-reporter/pull/150) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.18 -->
 - Bump tty-spinner from 0.9.2 to 0.9.3 [#153](https://github.com/chef/gatherlogs-reporter/pull/153) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.17 -->
 - Bump tty-spinner from 0.9.1 to 0.9.2 [#148](https://github.com/chef/gatherlogs-reporter/pull/148) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.16 -->
