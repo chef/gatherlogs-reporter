@@ -7,7 +7,7 @@ module Grese
   class WebhookServer
     attr_accessor :zdconfig
 
-    def initialize(config, debug = false)
+    def initialize(config, debug = false) # rubocop:disable Style/OptionalBooleanParameter
       @debug = debug
       @zdconfig = config
       zdclient
@@ -20,7 +20,7 @@ module Grese
 
     def zdclient
       # puts 'Initializing Zendesk Client'
-      logger = Logger.new(STDOUT)
+      logger = Logger.new($stdout)
       logger.level = Logger::ERROR
 
       @zdclient ||= ZendeskAPI::Client.new do |config|
@@ -51,12 +51,8 @@ module Grese
     end
 
     def check_logs(remote_url)
-      unless valid_zendesk_request(remote_url)
-        return { error: 'Invalid URL', status: 1 }
-      end
-      unless valid_gatherlog_bundle(remote_url)
-        return { error: 'Invalid gather-log bundle', status: 1 }
-      end
+      return { error: 'Invalid URL', status: 1 } unless valid_zendesk_request(remote_url)
+      return { error: 'Invalid gather-log bundle', status: 1 } unless valid_gatherlog_bundle(remote_url)
 
       cmd = ['gatherlog', 'report', '-m', '--remote', remote_url]
 

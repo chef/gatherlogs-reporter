@@ -68,7 +68,7 @@ module Gatherlogs
       text = control[:desc]
       return if text.nil? || text.empty?
 
-      labeled_output DESC_ICON, tabbed_text(text) + "\n"
+      labeled_output DESC_ICON, "#{tabbed_text(text)}\n"
     end
 
     # Format output for kb tagged text in the control\
@@ -78,7 +78,7 @@ module Gatherlogs
       text = Array(control[:tags][:kb])
       return if text.empty?
 
-      labeled_output KB_ICON, tabbed_text(text) + "\n"
+      labeled_output KB_ICON, "#{tabbed_text(text)}\n"
     end
 
     # Format output for summary tagged text in the control
@@ -88,7 +88,7 @@ module Gatherlogs
       text = control[:tags][:summary]
       return if text.nil?
 
-      labeled_output SUMMARY_ICON, tabbed_text(text) + "\n"
+      labeled_output SUMMARY_ICON, "#{tabbed_text(text)}\n"
     end
 
     def process_control(control)
