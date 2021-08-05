@@ -1,6 +1,6 @@
 ---
 steps:
-  - label: "Reporter Spec Tests :ruby: 2.6"
+  - label: "Reporter Spec Tests :ruby:"
     commands:
       - /workdir/scripts/bk_container_prep.sh
       - cd /workdir; bundle install --jobs=3 --retry=3
@@ -11,7 +11,7 @@ steps:
           image: rubydistros/ubuntu-18.04
           environment:
             - CHEF_LICENSE=accept-no-persist
-  - label: "Service Spec Tests :ruby: 2.6"
+  - label: "Service Spec Tests :ruby:"
     commands:
       - /workdir/scripts/bk_container_prep.sh
       - cd /workdir/service; bundle install --jobs=3 --retry=3
@@ -22,7 +22,7 @@ steps:
           image: rubydistros/ubuntu-18.04
           environment:
             - CHEF_LICENSE=accept-no-persist
-  - label: "Lint Tests :ruby: 2.6"
+  - label: "Lint Tests :ruby:"
     commands:
       - /workdir/scripts/bk_container_prep.sh
       - cd /workdir; bundle install --jobs=3 --retry=3
