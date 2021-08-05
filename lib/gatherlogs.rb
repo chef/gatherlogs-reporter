@@ -11,7 +11,6 @@ require 'gatherlogs/product'
 require 'gatherlogs/profiles'
 require 'gatherlogs/reporter'
 require 'gatherlogs/shellout'
-require 'logger'
 
 module Gatherlogs
   def self.logger
