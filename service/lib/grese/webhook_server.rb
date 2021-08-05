@@ -51,12 +51,8 @@ module Grese
     end
 
     def check_logs(remote_url)
-      unless valid_zendesk_request(remote_url)
-        return { error: 'Invalid URL', status: 1 }
-      end
-      unless valid_gatherlog_bundle(remote_url)
-        return { error: 'Invalid gather-log bundle', status: 1 }
-      end
+      return { error: 'Invalid URL', status: 1 } unless valid_zendesk_request(remote_url)
+      return { error: 'Invalid gather-log bundle', status: 1 } unless valid_gatherlog_bundle(remote_url)
 
       cmd = ['gatherlog', 'report', '-m', '--remote', remote_url]
 

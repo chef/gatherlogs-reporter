@@ -4,6 +4,6 @@ RSpec.describe Grese do
   end
 
   it 'shows version' do
-    expect(Grese::Version.version).to match(/grese: [\d+\.]/)
+    expect(Grese::Version.version).to match(/grese: [\d+.]/)
   end
 end
