@@ -98,7 +98,7 @@ module Gatherlogs
     # Print out detailed info for each test subsection
     # For example the description, summary or kb info provided in the control
     def subsection(output)
-      '  ' + output unless output.nil? || output.empty?
+      " #{output}" unless output.nil? || output.empty?
     end
   end
 end
