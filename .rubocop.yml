@@ -4,7 +4,7 @@ AllCops:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-Metrics/LineLength:
+Layout/LineLength:
   Exclude:
     - profiles/**/*.rb
     - gatherlogs.gemspec
@@ -52,4 +52,7 @@ Style/Alias:
   Enabled: false
 
 Style/StringLiterals:
+  Enabled: false
+
+Gemspec/RequiredRubyVersion:
   Enabled: false

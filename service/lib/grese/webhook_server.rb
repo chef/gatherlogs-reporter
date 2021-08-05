@@ -7,7 +7,7 @@ module Grese
   class WebhookServer
     attr_accessor :zdconfig
 
-    def initialize(config, debug = false)
+    def initialize(config, debug = false) # rubocop:disable Style/OptionalBooleanParameter
       @debug = debug
       @zdconfig = config
       zdclient

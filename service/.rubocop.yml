@@ -48,3 +48,6 @@ Style/NumericLiterals:
 
 Style/Alias:
   Enabled: false
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
