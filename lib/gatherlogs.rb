@@ -14,7 +14,7 @@ require 'gatherlogs/shellout'
 
 module Gatherlogs
   def self.logger
-    @logger ||= ::Logger.new(STDERR)
+    @logger ||= ::Logger.new($stderr)
   end
 
   def self.logger=(custom_logger)

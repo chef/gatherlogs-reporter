@@ -20,7 +20,7 @@ module Grese
 
     def zdclient
       # puts 'Initializing Zendesk Client'
-      logger = Logger.new(STDOUT)
+      logger = Logger.new($stdout)
       logger.level = Logger::ERROR
 
       @zdclient ||= ZendeskAPI::Client.new do |config|
