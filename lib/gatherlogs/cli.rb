@@ -1,4 +1,7 @@
 Clamp.allow_options_after_parameters = true
+# Need to require set here to fix issue with Inspec not requireing this
+# When using it as a lib
+require 'set' unless defined?(Set)
 
 module Gatherlogs
   class CLI < Clamp::Command
