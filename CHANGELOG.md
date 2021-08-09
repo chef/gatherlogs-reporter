@@ -1,16 +1,17 @@
 # Change Log
 
-<!-- latest_release 2.0.22 -->
-## [v2.0.22](https://github.com/chef/gatherlogs-reporter/tree/v2.0.22) (2021-08-09)
+<!-- latest_release 2.0.23 -->
+## [v2.0.23](https://github.com/chef/gatherlogs-reporter/tree/v2.0.23) (2021-08-09)
 
 #### Merged Pull Requests
-- Remove test that depends on specific version of dep [#255](https://github.com/chef/gatherlogs-reporter/pull/255) ([teknofire](https://github.com/teknofire))
+- Update inspec-core requirement from ~&gt; 4.37.30 to &gt;= 4.37.30, &lt; 4.39.0 [#254](https://github.com/chef/gatherlogs-reporter/pull/254) ([dependabot[bot]](https://github.com/dependabot[bot]))
 <!-- latest_release -->
 
 <!-- release_rollup -->
 ### Changes not yet released to stable
 
 #### Merged Pull Requests
+- Update inspec-core requirement from ~&gt; 4.37.30 to &gt;= 4.37.30, &lt; 4.39.0 [#254](https://github.com/chef/gatherlogs-reporter/pull/254) ([dependabot[bot]](https://github.com/dependabot[bot])) <!-- 2.0.23 -->
 - Remove test that depends on specific version of dep [#255](https://github.com/chef/gatherlogs-reporter/pull/255) ([teknofire](https://github.com/teknofire)) <!-- 2.0.22 -->
 - Upgrade to GitHub-native Dependabot [#235](https://github.com/chef/gatherlogs-reporter/pull/235) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.21 -->
 - Update Inspec version to 4.37.30 [#253](https://github.com/chef/gatherlogs-reporter/pull/253) ([teknofire](https://github.com/teknofire)) <!-- 2.0.20 -->
