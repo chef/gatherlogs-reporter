@@ -1,8 +1,4 @@
 RSpec.describe Gatherlogs::Reporter do
-  it 'should show the inspec version' do
-    expect(Gatherlogs::Version.inspec_version).to eq 'inspec-core: 4.37.30'
-  end
-
   it 'should show the check_logs version' do
     Gatherlogs::VERSION = '1.0'.freeze
     expect(Gatherlogs::Version.cli_version).to eq 'gatherlog: 1.0'
