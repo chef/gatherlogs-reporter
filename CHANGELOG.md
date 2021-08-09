@@ -1,16 +1,17 @@
 # Change Log
 
-<!-- latest_release 2.0.21 -->
-## [v2.0.21](https://github.com/chef/gatherlogs-reporter/tree/v2.0.21) (2021-08-09)
+<!-- latest_release 2.0.22 -->
+## [v2.0.22](https://github.com/chef/gatherlogs-reporter/tree/v2.0.22) (2021-08-09)
 
 #### Merged Pull Requests
-- Upgrade to GitHub-native Dependabot [#235](https://github.com/chef/gatherlogs-reporter/pull/235) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot]))
+- Remove test that depends on specific version of dep [#255](https://github.com/chef/gatherlogs-reporter/pull/255) ([teknofire](https://github.com/teknofire))
 <!-- latest_release -->
 
 <!-- release_rollup -->
 ### Changes not yet released to stable
 
 #### Merged Pull Requests
+- Remove test that depends on specific version of dep [#255](https://github.com/chef/gatherlogs-reporter/pull/255) ([teknofire](https://github.com/teknofire)) <!-- 2.0.22 -->
 - Upgrade to GitHub-native Dependabot [#235](https://github.com/chef/gatherlogs-reporter/pull/235) ([dependabot-preview[bot]](https://github.com/dependabot-preview[bot])) <!-- 2.0.21 -->
 - Update Inspec version to 4.37.30 [#253](https://github.com/chef/gatherlogs-reporter/pull/253) ([teknofire](https://github.com/teknofire)) <!-- 2.0.20 -->
 - Buildkite failure [#191](https://github.com/chef/gatherlogs-reporter/pull/191) ([FaizanSRE](https://github.com/FaizanSRE)) <!-- 2.0.19 -->
